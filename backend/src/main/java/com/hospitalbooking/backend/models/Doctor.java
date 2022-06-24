@@ -234,4 +234,8 @@ public class Doctor {
     public void setRetired(boolean retired) {
         this.retired = retired;
     }
+
+    public String DisplayName(){
+        return firstName + " " + lastName;
+    }
 }

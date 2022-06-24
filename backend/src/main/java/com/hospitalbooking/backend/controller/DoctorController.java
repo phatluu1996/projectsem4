@@ -29,32 +29,38 @@ public class DoctorController {
     @Autowired
     private EmployeeRepos employeeRepos;
 
+    @GetMapping("/doctors/{id}")
     public ResponseEntity<Doctor> one(@PathVariable Long id){
+//        return new ResponseEntity<Doctor>(new Doctor(), HttpStatus.OK);
         return doctorRepos.findById(id).map(doctor -> new ResponseEntity<>(doctor, HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
+    @GetMapping("/doctors")
     public ResponseEntity<List<Doctor>> all(){
         return new ResponseEntity<>(doctorRepos.findAll(), HttpStatus.OK);
     }
 
+    @PostMapping("/doctors")
     public ResponseEntity<Doctor> add(@RequestBody Doctor doctor){
         return new ResponseEntity<>(doctorRepos.save(doctor), HttpStatus.OK);
     }
 
+    @PutMapping("/doctors/{id}")
     public ResponseEntity<Doctor> update(@RequestBody Doctor doctor, @PathVariable Long id){
-        Optional<Doctor> doctorOptional = doctorRepos.findById(id);
-        return doctorOptional.map(doc -> {
-            doctor.setId(doc.getId());
+        Optional<Doctor> optional = doctorRepos.findById(id);
+        return optional.map(model -> {
+            doctor.setId(model.getId());
             return new ResponseEntity<>(doctorRepos.save(doctor), HttpStatus.OK);
         }).orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
+    @DeleteMapping("/doctors/{id}")
     public ResponseEntity<Doctor> delete(@PathVariable Long id){
-        Optional<Doctor> doctorOptional = doctorRepos.findById(id);
-        return doctorOptional.map(doc -> {
-            doc.setRetired(false);
-            return new ResponseEntity<>(doc, HttpStatus.OK);
+        Optional<Doctor> optional = doctorRepos.findById(id);
+        return optional.map(model -> {
+            model.setRetired(true);
+            return new ResponseEntity<>(model, HttpStatus.OK);
         }).orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 }
