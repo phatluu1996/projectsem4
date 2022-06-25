@@ -2,8 +2,8 @@ import React, { Component } from "react";
 import config from "config";
 
 import { Route, BrowserRouter as Router, Switch } from "react-router-dom";
-import PrivateRoute from './privateroute.jsx';
-import PublicRoute from './publicroute.jsx';
+import BusinessRoute from './businessroute.jsx';
+import AdminRoute from './adminroute.jsx';
 
 import Header from "./user/components/header/index";
 import Footer from "./user/components/footer";
@@ -162,11 +162,11 @@ class AppUniversal extends Component {
     }
     return (
       <Router basename="/">
-        {/* <div className="main-wrapper"> */}
+        <div className="main-wrapper">
 
-          {/* <Route render={(props) => <Header {...props} />} /> */}
+          <Route render={(props) => <Header {...props} />} />
           <Switch>
-            <PublicRoute restricted={false} path="/" exact component={Home} />
+            {/* <PublicRoute restricted={false} path="/" exact component={Home} />
             <PublicRoute restricted={false} path="/departments" exact component={Departments} />
             <PublicRoute restricted={false} path="/department-details" exact component={DepartmentDetails} />
             <PublicRoute restricted={false} path="/services" exact component={Service} />
@@ -184,7 +184,7 @@ class AppUniversal extends Component {
             <PublicRoute restricted={false} path="/login" exact component={Login} />
             <PublicRoute restricted={false} path="/register" exact component={Register} />
             <PublicRoute restricted={false} path="/forgot-password" exact component={ForgotPassword} />
-            <PublicRoute restricted={false} path="/404" exact component={Error404} />
+            <PublicRoute restricted={false} path="/404" exact component={Error404} /> */}
 
             {/* <PublicRoute restricted={false} component={Home} path="/" exact />
             <PublicRoute restricted={true} component={Login} path="/login" exact />
@@ -192,11 +192,12 @@ class AppUniversal extends Component {
             <PublicRoute restricted={true} component={ForgotPassword} path="/forgot-password" exact /> */}
 
             {/* <PrivateRoute component={AdminDashboard} path="/admin/dashboard" exact /> */}
-
+            <BusinessRoute component={Home} path="/" exact />
+            <AdminRoute component={AdminDashboard} path="/admin/dashboard" exact />
 
           </Switch>
-          {/* <Route render={(props) => <Footer {...props} />} /> */}
-        {/* </div> */}
+          <Route render={(props) => <Footer {...props} />} />
+        </div>
       </Router>
     );
   };
