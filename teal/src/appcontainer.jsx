@@ -162,9 +162,7 @@ class AppUniversal extends Component {
     }
     return (
       <Router basename="/">
-        <div className="main-wrapper">
-
-          <Route render={(props) => <Header {...props} />} />
+        <div className="main-wrapper"> 
           <Switch>
             {/* <PublicRoute restricted={false} path="/" exact component={Home} />
             <PublicRoute restricted={false} path="/departments" exact component={Departments} />
@@ -196,7 +194,6 @@ class AppUniversal extends Component {
             <AdminRoute component={AdminDashboard} path="/admin/dashboard" exact />
 
           </Switch>
-          <Route render={(props) => <Footer {...props} />} />
         </div>
       </Router>
     );
