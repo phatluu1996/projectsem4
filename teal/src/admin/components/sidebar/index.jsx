@@ -1,72 +1,76 @@
 import React, { Component } from "react";
 import { Link, withRouter } from "react-router-dom";
 import $ from "jquery"
+import MenuItem from "./ext_menuitem";
 
 class SidebarNav extends Component {
-     componentDidMount(){
-       
+  componentDidMount() {
+
     if ($('.main-wrapper').length > 0) {
-			var $wrapper = $(".main-wrapper");
-			$('#mobile_btn').on('click',function() {
+      var $wrapper = $(".main-wrapper");
+      $('#mobile_btn').on('click', function () {
         $wrapper.addClass('slide-nav');
-				$wrapper.toggleClass('slide-nav');
-				$('#chat_sidebar').removeClass('opened');
-				$(".dropdown.open > .dropdown-toggle").dropdown("toggle");
-				return false;
-			});
-     
-		}
-      this.$menuItem = $("#sidebar-menu a");
-      this.$menuItem.on('click', function(e) {
-        if ($(this).parent().hasClass("submenu")) {
-          e.preventDefault();
-        }
-        if (!$(this).hasClass("subdrop")) {
-          $("ul", $(this).parents("ul:first")).slideUp(350);
-          $("a", $(this).parents("ul:first")).removeClass("subdrop");
-          $(this).next("ul").slideDown(350);
-          $(this).addClass("subdrop");
-        } else if ($(this).hasClass("subdrop")) {
-          $(this).removeClass("subdrop");
-          $(this).next("ul").slideUp(350);
-        }
+        $wrapper.toggleClass('slide-nav');
+        $('#chat_sidebar').removeClass('opened');
+        $(".dropdown.open > .dropdown-toggle").dropdown("toggle");
+        return false;
       });
-        $("#sidebar-menu ul li.submenu a.active").parents("li:last").children("a:first").addClass("active").trigger("click");
-     }
+
+    }
+    this.$menuItem = $("#sidebar-menu a");
+    this.$menuItem.on('click', function (e) {
+      if ($(this).parent().hasClass("submenu")) {
+        e.preventDefault();
+      }
+      if (!$(this).hasClass("subdrop")) {
+        $("ul", $(this).parents("ul:first")).slideUp(350);
+        $("a", $(this).parents("ul:first")).removeClass("subdrop");
+        $(this).next("ul").slideDown(350);
+        $(this).addClass("subdrop");
+      } else if ($(this).hasClass("subdrop")) {
+        $(this).removeClass("subdrop");
+        $(this).next("ul").slideUp(350);
+      }
+    });
+    $("#sidebar-menu ul li.submenu a.active").parents("li:last").children("a:first").addClass("active").trigger("click");
+  }
   render() {
-    const exclusionArray = ["login", "register", "forgot-password", "error-404", "error-500","email","mail-view","components",
-  "coming-soon","lock-screen"];
+    const exclusionArray = ["login", "register", "forgot-password", "error-404", "error-500", "email", "mail-view", "components",
+      "coming-soon", "lock-screen"];
     if (
       exclusionArray.indexOf(this.props.location.pathname.split("/")[1]) >= 0
     ) {
       return "";
     }
-   const url = this.props.location.pathname.split("/")[1];
-   return (
-    <div className="sidebar" id="sidebar">
-    <div className="sidebar-inner slimscroll">
-      <div id="sidebar-menu" className="sidebar-menu">
-        <ul>
-          <li className="menu-title">Main</li>
-          <li className={`${url === "/" || url === "" ? "active" : ""}`}>
-            <Link to="/"><i className="fas fa-tachometer-alt" /> Dashboard</Link>
-          </li>
-          <li className={`${url === "doctors" || url === "add-doctor" || url === "edit-doctor" ? "active" : ""}`}>
-            <Link to="/doctors"><i className="fas fa-user-md" /> Doctors</Link>
-          </li>
-          <li className={`${url === "patients" || url === "add-patients" || url === "edit-patient" ? "active" : ""}`}>
-            <Link to="/patients"><i className="fas fa-wheelchair" /> Patients</Link>
-          </li>
-          <li className={`${url === "appointments" || url === "add-appointment" ||url === "edit-appointment" ? "active" : ""}`}>
-            <Link to="/appointments"><i className="far fa-calendar-alt" /> Appointments</Link>
-          </li>
-          <li className={`${url === "schedule" || url === "add-schedule" || url === "edit-schedule" ? "active" : ""}`}>
-            <Link to="/schedule"><i className="far fa-calendar-check" /> Doctor Schedule</Link>
-          </li>
-          <li className={`${url === "departments" || url === "add-department" || url === "edit-department" ? "active" : ""}`}>
-            <Link to="/departments"><i className="far fa-hospital" /> Departments</Link>
-          </li>
-          <li className="submenu">
+    const path = this.props.location.pathname;
+    const urlArr = this.props.location.pathname.split("/");
+    const url = urlArr.at(-1);
+    return (
+      <div className="sidebar" id="sidebar">
+        <div className="sidebar-inner slimscroll">
+          <div id="sidebar-menu" className="sidebar-menu">
+            <ul>
+              <li className="menu-title">Main</li>
+              <MenuItem to="/admin" icon="fas fa-tachometer-alt" title="Dashboard" />
+              
+              <MenuItem to="/admin/doctors" icon="fas fa-user-md" title="Doctors" />
+              <MenuItem to="/admin/appointments" icon="far fa-calendar-alt" title="Appointments" />
+              <MenuItem to="/admin/departments" icon="far fa-hospital" title="Departments List" />
+              
+
+              {/* <li className={`${url === "patients" || url === "add-patients" || url === "edit-patient" ? "active" : ""}`}>
+                <Link to="/admin/patients"><i className="fas fa-wheelchair" /> Patients</Link>
+              </li>
+              <li className={`${url === "appointments" || url === "add-appointment" || url === "edit-appointment" ? "active" : ""}`}>
+                <Link to="/admin/appointments"><i className="far fa-calendar-alt" /> Appointments</Link>
+              </li>
+              <li className={`${url === "schedule" || url === "add-schedule" || url === "edit-schedule" ? "active" : ""}`}>
+                <Link to="/admin/schedule"><i className="far fa-calendar-check" /> Doctor Schedule</Link>
+              </li>
+              <li className={`${url === "departments" || url === "add-department" || url === "edit-department" ? "active" : ""}`}>
+                <Link to="/admin/departments"><i className="far fa-hospital" /> Departments</Link>
+              </li> */}
+              {/* <li className="submenu">
             <a href="#"><i className="fas fa-user" /> <span> Employees </span> <span className="menu-arrow" /></a>
             <ul style={{display: 'none'}}>
               <li><Link className={`${url === "employees" || url === "add-employee"|| url === "edit-employee" ? "active" : ""}`} to="/employees">Employees List</Link></li>
@@ -208,13 +212,13 @@ class SidebarNav extends Component {
                 <a href=""><span>Level 1</span></a>
               </li>
             </ul>
-          </li>
-        </ul>
+          </li> */}
+            </ul>
+          </div>
+        </div>
       </div>
-    </div>
-  </div>
-  );
-}
+    );
+  }
 }
 
 export default withRouter(SidebarNav);

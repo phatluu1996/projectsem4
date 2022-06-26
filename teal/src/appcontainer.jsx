@@ -191,8 +191,14 @@ class AppUniversal extends Component {
 
             {/* <PrivateRoute component={AdminDashboard} path="/admin/dashboard" exact /> */}
             <BusinessRoute component={Home} path="/" exact />
-            <AdminRoute component={AdminDashboard} path="/admin/dashboard" exact />
-
+            <AdminRoute component={AdminDashboard} path="/admin" exact />
+            <AdminRoute component={AdminDoctors} path="/admin/doctors" exact />
+            <AdminRoute component={AdminDepartments} path="/admin/departments" exact />
+            <AdminRoute component={AdminAddDepartment} path="/admin/departments/add" exact />
+            <AdminRoute component={AdminEditDepartment} path="/admin/departments/update/:id" exact />
+            <AdminRoute component={AdminAppointments} path="/admin/appointments" exact />
+            <AdminRoute component={AdminAddAppointments} path="/admin/appointments/add" exact />
+            <AdminRoute component={AdminEditAppointments} path="/admin/appointments/update/:id" exact />
           </Switch>
         </div>
       </Router>
