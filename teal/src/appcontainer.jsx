@@ -52,8 +52,8 @@ import AdminAddPatient from './admin/components/patients/addpatients';
 import AdminEditPatient from './admin/components/patients/editpatients';
 //Appointments
 import AdminAppointments from './admin/components/appointments';
-import AdminAddAppointments from './admin/components/appointments/addappointment';
-import AdminEditAppointments from './admin/components/appointments/editappointment';
+import AdminAddAppointment from './admin/components/appointments/addappointment';
+import AdminEditAppointment from './admin/components/appointments/editappointment';
 //Schedule
 import AdminSchedule from './admin/components/schedule';
 import AdminAddSchedule from './admin/components/schedule/addschedule';
@@ -152,7 +152,6 @@ import AdminError500 from './admin/components/pages/error-500';
 import AdminComingSoon from './admin/components/pages/comingsoon';
 import AdminBlankPage from './admin/components/pages/blank';
 import $ from 'jquery';
-import { string } from "prop-types";
 
 class AppUniversal extends Component {
   render() {
@@ -193,12 +192,14 @@ class AppUniversal extends Component {
             <BusinessRoute component={Home} path="/" exact />
             <AdminRoute component={AdminDashboard} path="/admin" exact />
             <AdminRoute component={AdminDoctors} path="/admin/doctors" exact />
+            <AdminRoute component={AdminAddDoctor} path="/admin/doctors/add" exact />
+            <AdminRoute component={AdminEditDoctor} path="/admin/doctors/update/:id" exact />
             <AdminRoute component={AdminDepartments} path="/admin/departments" exact />
             <AdminRoute component={AdminAddDepartment} path="/admin/departments/add" exact />
             <AdminRoute component={AdminEditDepartment} path="/admin/departments/update/:id" exact />
             <AdminRoute component={AdminAppointments} path="/admin/appointments" exact />
-            <AdminRoute component={AdminAddAppointments} path="/admin/appointments/add" exact />
-            <AdminRoute component={AdminEditAppointments} path="/admin/appointments/update/:id" exact />
+            <AdminRoute component={AdminAddAppointment} path="/admin/appointments/add" exact />
+            <AdminRoute component={AdminEditAppointment} path="/admin/appointments/update/:id" exact />
           </Switch>
         </div>
       </Router>

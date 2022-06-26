@@ -2,16 +2,16 @@ import React, {Component} from 'react';
 import OpenChat from "../../sidebar/openchatheader" 
 import $ from "jquery"
 
-class AddAppointments extends Component{
+class AddAppointment extends Component{
    componentDidMount(){
-    $('#datetimepicker3').datetimepicker({
-        format: 'LT'
-    });
-    if ($('.datetimepicker').length > 0) {
-      $('.datetimepicker').datetimepicker({
-          format: 'DD/MM/YYYY'
-      });
-    }
+    // $('#datetimepicker3').datetimepicker({
+    //     format: 'LT'
+    // });
+    // if ($('.datetimepicker').length > 0) {
+    //   $('.datetimepicker').datetimepicker({
+    //       format: 'DD/MM/YYYY'
+    //   });
+    // }
    }
     render(){
       
@@ -136,4 +136,4 @@ class AddAppointments extends Component{
     }
 };
 
-export default AddAppointments;
+export default AddAppointment;

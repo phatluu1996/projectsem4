@@ -15,7 +15,7 @@ class MenuItem extends Component {
     render() {
 
         return (
-            <li className={`${this.props.location.pathname === this.props.to ? "active" : ""}`}>
+            <li className={`${this.props.location.pathname === this.props.to || this.props.location.pathname === this.props.to + "/add" || this.props.location.pathname === this.props.to + "/update" ? "active" : ""}`}>
                 <Link to={this.props.to}><i className={this.props.icon} />{this.props.title}</Link>
             </li>
         );

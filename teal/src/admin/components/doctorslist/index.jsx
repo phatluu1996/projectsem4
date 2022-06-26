@@ -14,7 +14,7 @@ class Doctors extends Component {
                 <h4 className="page-title">Doctors</h4>
               </div>
               <div className="col-sm-8 col-9 text-right m-b-20">
-                <Link to="/add-doctor" className="btn btn-primary btn-rounded float-right"><i className="fas fa-plus" /> Add Doctor</Link>
+                <Link to="/admin/doctors/add" className="btn btn-primary btn-rounded float-right"><i className="fas fa-plus" /> Add Doctor</Link>
               </div>
             </div>
             <div className="row doctor-grid">

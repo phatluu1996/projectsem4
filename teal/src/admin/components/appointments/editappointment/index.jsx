@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import OpenChat from "../../sidebar/openchatheader";
 import $ from "jquery"
 
-class EditAppointments extends Component{
+class EditAppointment extends Component{
     componentDidMount(){
         $('#datetimepicker3').datetimepicker({
             format: 'LT'
@@ -135,4 +135,4 @@ class EditAppointments extends Component{
     }
 };
 
-export default EditAppointments;
+export default EditAppointment;

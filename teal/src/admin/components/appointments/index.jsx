@@ -138,7 +138,7 @@ class Appointments extends Component {
           <div className="row">
             <div className="col-sm-4 col-3"> <h4 className="page-title">Appointments</h4> </div>
             <div className="col-sm-8 col-9 text-right m-b-20">
-              <Link to="/add-appointment" className="btn btn btn-primary btn-rounded float-right" >
+              <Link to="/admin/appointments/add" className="btn btn btn-primary btn-rounded float-right" >
                 <i className="fa fa-plus"></i> Add Appointments
               </Link>
             </div>
