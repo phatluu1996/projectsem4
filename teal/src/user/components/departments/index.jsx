@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 
+
 import OwlCarousel from 'react-owl-carousel';
 import 'owl.carousel/dist/assets/owl.carousel.css';
 import 'owl.carousel/dist/assets/owl.theme.default.css';
@@ -8,7 +9,15 @@ import 'owl.carousel/dist/assets/owl.theme.default.css';
 import { Icon_04,Icon_05,Icon_06,Icon_07,Icon_08,Icon_09,Doctor_thumb_01,Doctor_thumb_02,Doctor_thumb_03,
   Doctor_thumb_04,Doctor_thumb_05,Doctor_thumb_06,Doctor_thumb_07,Doctor_thumb_08,Doctor_thumb_09 } from "../imagepath"
 
+
+  
+
 class Departments extends Component {
+  constructor(){
+   
+  }
+  
+  
 
   render() {
     var responsive = {
@@ -49,18 +58,18 @@ class Departments extends Component {
               </div>
             </div>
             <div className="row department-row">
-              <div className="col-md-4">
+              {this.departments?this.departments.map((department) => ( 
+              <div key={department.id} className="col-md-4">
                 <div className="dept-box">
                   <div className="dept-img"> 
-                    <Link to="/department-details"><img width={67} height={80} alt="Dentists" src={Icon_04} /></Link>
+                     <Link to="/department-details"><img width={67} height={80} alt="Dentists" src={Icon_04} /></Link>
                   </div>
-                  <h4><Link to="/department-details">Dentists</Link></h4>
-                  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-                    tempor.
-                  </p>
+                  <h4><Link to="/department-details">{department.name}</Link></h4>
+                  <p>{department.description}</p>
                 </div>
               </div>
-              <div className="col-md-4">
+              )):""}
+              {/* <div className="col-md-4">
                 <div className="dept-box">
                   <div className="dept-img"> 
                     <Link to="/department-details"><img width={63} height={80} alt="Neurology" src={Icon_05} /></Link>
@@ -81,8 +90,8 @@ class Departments extends Component {
                     tempor.
                   </p>
                 </div>
-              </div>
-              <div className="col-md-4">
+              </div> */}
+              {/* <div className="col-md-4">
                 <div className="dept-box">
                   <div className="dept-img"> 
                     <Link to="/department-details"><img width={40} height={80} alt="Orthopedics" src={Icon_07} /></Link>
@@ -116,7 +125,7 @@ class Departments extends Component {
                     tempor.
                   </p>
                 </div>
-              </div>
+              </div> */}
             </div>
             <div className="row">
               <div className="col-12">

@@ -5,51 +5,45 @@ import { Sent_img } from "../imagepath"
 import { Tag } from 'antd';
 import { Link } from 'react-router-dom';
 import { itemRender, onShowSizeChange, } from "../../components/paginationfunction";
+import { getDepartments } from './action'
+
 
 class Departments extends Component {
+
+
+
   constructor(props) {
     super(props);
+    super();
     this.state = {
-      show: null,
-      data: [
-        {
-          id: 1,
-          Department: 'Cancer Department',
-          tags: 'active',
-         },
-         {
-          id: 2,
-          Department: 'Dentists',
-          tags: 'Inactive',
-         },
-         {
-          id: 3,
-          Department: 'ENT Department',
-          tags: 'active',
-         },
-         {
-          id: 4,
-          Department: 'Neurology',
-          tags: 'Inactive',
-         },
-         {
-          id: 5,
-          Department: 'Opthalmology',
-          tags: 'Inactive',
-         },
-
-      ],
+      isComponentWillUnMount: false,
+      loading: true,
+      data: [],
     };
   }
+
+  componentDidMount() {
+    this.isComponentWillUnMount = true;
+    getDepartments(this);
+  }
+
+
+
+
+  componentWillUnmount() {
+    this.isComponentWillUnMount = false
+  }
+
+
   handleClose = () => {
     this.setState({
-      show: false,
+      loading: false,
     });
   };
 
   handleShow = (id) => {
     this.setState({
-      show: id,
+      loading: id,
     });
   };
   render() {
@@ -62,21 +56,21 @@ class Departments extends Component {
       },
       {
         title: "Department Name",
-        dataIndex: "Department",
+        dataIndex: "name",
         render: (text, record) => <div>{text}</div>,
         sorter: (a, b) => a.Department.length - b.Department.length,
-       
+
       },
       {
         title: "Status",
-        dataIndex: "tags",
+        dataIndex: "status",
         render: (text, record) => (
-          <Tag color={text.length > 6 ? "green" : "red"} key={text} className="custom-badge">
-            {text}
+          <Tag color={text ? "green" : "red"} key={text} className="custom-badge">
+            {text ? "Active" : "InActive"}
           </Tag>
         ),
         sorter: (a, b) => a.tags.length - b.tags.length,
-       
+
       },
       {
         title: "Action",
@@ -90,7 +84,7 @@ class Departments extends Component {
             </div>
           </div>
         ),
-      
+
       },
     ];
 
@@ -114,6 +108,7 @@ class Departments extends Component {
             <div className="col-md-12">
               <div className="table-responsive">
                 <Table
+                  loading = {this.state.loading}
                   className="table-striped right-item"
                   style={{ overflowX: "auto" }}
                   columns={columns}
@@ -134,20 +129,20 @@ class Departments extends Component {
             </div>
           </div>
         </div>
-        <OpenChat/>
+        <OpenChat />
         <div id="delete_department" className="modal fade delete-modal" role="dialog">
-        <div className="modal-dialog modal-dialog-centered">
-          <div className="modal-content">
-            <div className="modal-body text-center">
-              <img src={Sent_img} alt="" width={50} height={46} />
-              <h3>Are you sure want to delete this Department?</h3>
-              <div className="m-t-20"> <a href="#" className="btn btn-white mr-0" data-dismiss="modal">Close</a>
-                <button type="submit" className="btn btn-danger">Delete</button>
+          <div className="modal-dialog modal-dialog-centered">
+            <div className="modal-content">
+              <div className="modal-body text-center">
+                <img src={Sent_img} alt="" width={50} height={46} />
+                <h3>Are you sure want to delete this Department?</h3>
+                <div className="m-t-20"> <a href="#" className="btn btn-white mr-0" data-dismiss="modal">Close</a>
+                  <button type="submit" className="btn btn-danger">Delete</button>
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
       </div>
     );
   }
