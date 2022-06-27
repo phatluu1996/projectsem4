@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import OpenChat from "../../sidebar/openchatheader" 
 import $ from "jquery"
+import { DatePicker } from 'antd';
 
 class AddAppointment extends Component{
    componentDidMount(){
@@ -76,17 +77,13 @@ class AddAppointment extends Component{
                       <div className="col-md-6">
                         <div className="form-group">
                           <label>Date</label>
-                          <div className="cal-icon">
-                            <input type="text" className="form-control datetimepicker" />
-                          </div>
+                          <DatePicker className="form-control" picker='date' clearIcon={true} allowClear={true} format="y-MM-DD"></DatePicker>
                         </div>
                       </div>
                       <div className="col-md-6">
                         <div className="form-group">
                           <label>Time</label>
-                          <div className="time-icon">
-                            <input type="text" className="form-control" id="datetimepicker3" />
-                          </div>
+                          <DatePicker className="form-control" picker='time' clearIcon={true} allowClear={true}  format="hh:mm"></DatePicker>   
                         </div>
                       </div>
                     </div>

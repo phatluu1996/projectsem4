@@ -4,7 +4,11 @@ import { Tag } from 'antd';
 import { Link } from 'react-router-dom';
 import { User_img,Sent_img } from "../imagepath"
 import { itemRender, onShowSizeChange, } from "../../components/paginationfunction";
-import OpenChat from "../sidebar/openchatheader"
+import OpenChat from "../sidebar/openchatheader";
+import { appointmentAction } from './actions';
+import "../../../constants";
+import { GET_ALL } from "../../../constants";
+
 
 class Appointments extends Component {
   constructor(props) {
@@ -51,6 +55,13 @@ class Appointments extends Component {
       ],
     };
   }
+
+  componentDidMount(){
+    appointmentAction("/appointments", GET_ALL, res => {
+      console.log(res);
+    });
+  }
+
   render() {
     const { data } = this.state;
 
@@ -146,7 +157,8 @@ class Appointments extends Component {
           <div className="row">
             <div className="col-md-12">              
                 <Table
-                   className="table-striped"
+                  loading={true}
+                  className="table-striped"
                   style={{ overflowX: "scroll" }}
                   columns={columns}
                   // bordered
