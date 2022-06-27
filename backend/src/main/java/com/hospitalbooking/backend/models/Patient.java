@@ -19,7 +19,7 @@ public class Patient {
     private String lastName;
     @Column(name = "gender", length = 20)
     private String gender;
-    @Column(name = "birth_day", length = 20)
+    @Column(name = "birth_day")
     private Date dateOfBirth;
     @Column(name = "email", length = 250, columnDefinition = "nvarchar(250)")
     private String email;

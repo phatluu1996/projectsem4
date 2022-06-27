@@ -14,6 +14,10 @@ public class Appointment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @ManyToOne
+    @JoinColumn(name = "department_id", referencedColumnName = "id")
+    private Department department;
+
+    @ManyToOne
     @JoinColumn(name = "patient_id", referencedColumnName = "id")
     @JsonIgnoreProperties("appointments")
     private Patient patient;
@@ -23,8 +27,6 @@ public class Appointment {
     private Doctor doctor;
     @Column(name = "date")
     private Date date;
-    @Column(name = "time")
-    private Instant time;
     @Column(name = "status")
     private boolean status;
     @Column(name = "retired")
@@ -33,14 +35,31 @@ public class Appointment {
     public Appointment() {
     }
 
-    public Appointment(Long id, Patient patient, Doctor doctor, Date date, Instant time, boolean status, boolean retired) {
+    public Appointment(Long id, Patient patient, Doctor doctor, Date date, boolean status, boolean retired) {
         this.id = id;
         this.patient = patient;
         this.doctor = doctor;
         this.date = date;
-        this.time = time;
         this.status = status;
         this.retired = retired;
+    }
+
+    public Appointment(Long id, Department department, Patient patient, Doctor doctor, Date date, boolean status, boolean retired) {
+        this.id = id;
+        this.department = department;
+        this.patient = patient;
+        this.doctor = doctor;
+        this.date = date;
+        this.status = status;
+        this.retired = retired;
+    }
+
+    public Department getDepartment() {
+        return department;
+    }
+
+    public void setDepartment(Department department) {
+        this.department = department;
     }
 
     public Long getId() {
@@ -73,14 +92,6 @@ public class Appointment {
 
     public void setDate(Date date) {
         this.date = date;
-    }
-
-    public Instant getTime() {
-        return time;
-    }
-
-    public void setTime(Instant time) {
-        this.time = time;
     }
 
     public boolean isStatus() {

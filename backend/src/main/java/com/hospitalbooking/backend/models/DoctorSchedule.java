@@ -18,9 +18,9 @@ public class DoctorSchedule {
     @JsonIgnoreProperties("doctorSchedules")
     private Doctor doctor;
     @Column(name = "start_time")
-    private Instant start;
+    private String start;
     @Column(name = "end_time")
-    private Instant end;
+    private String end;
     @Column(name = "availableDays", length = 7, columnDefinition = "nvarchar(7)")
     private String availableDays;
     @Column(name = "message", length = 7, columnDefinition = "text")
@@ -31,7 +31,7 @@ public class DoctorSchedule {
     public DoctorSchedule() {
     }
 
-    public DoctorSchedule(Long id, Doctor doctor, Instant start, Instant end, String availableDays, String message, boolean retired) {
+    public DoctorSchedule(Long id, Doctor doctor, String start, String end, String availableDays, String message, boolean retired) {
         this.id = id;
         this.doctor = doctor;
         this.start = start;
@@ -57,19 +57,19 @@ public class DoctorSchedule {
         this.doctor = doctor;
     }
 
-    public Instant getStart() {
+    public String getStart() {
         return start;
     }
 
-    public void setStart(Instant start) {
+    public void setStart(String start) {
         this.start = start;
     }
 
-    public Instant getEnd() {
+    public String getEnd() {
         return end;
     }
 
-    public void setEnd(Instant end) {
+    public void setEnd(String end) {
         this.end = end;
     }
 

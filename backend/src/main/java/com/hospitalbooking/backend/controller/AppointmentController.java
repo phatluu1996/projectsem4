@@ -1,6 +1,8 @@
 package com.hospitalbooking.backend.controller;
 
 import com.hospitalbooking.backend.models.Appointment;
+import com.hospitalbooking.backend.models.Doctor;
+import com.hospitalbooking.backend.models.Patient;
 import com.hospitalbooking.backend.repository.AppointmentRepos;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -50,5 +52,13 @@ public class AppointmentController {
             model.setRetired(true);
             return new ResponseEntity<>(model, HttpStatus.OK);
         }).orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
+
+    @GetMapping("/appointments/model")
+    public ResponseEntity<Appointment> model(){
+        Appointment model = new Appointment();
+        model.setDoctor(new Doctor());
+        model.setPatient(new Patient());
+        return new ResponseEntity<>(model, HttpStatus.OK);
     }
 }

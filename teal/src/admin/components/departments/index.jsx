@@ -27,9 +27,6 @@ class Departments extends Component {
     getDepartments(this);
   }
 
-
-
-
   componentWillUnmount() {
     this.isComponentWillUnMount = false
   }

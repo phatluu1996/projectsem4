@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import OpenChat from "../../sidebar/openchatheader" 
-import $ from "jquery"
 import { DatePicker } from 'antd';
 
 class AddAppointment extends Component{

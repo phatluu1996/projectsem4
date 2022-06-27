@@ -2,63 +2,29 @@ import React, { Component } from "react";
 import { Table } from "antd";
 import { Tag } from 'antd';
 import { Link } from 'react-router-dom';
-import { User_img,Sent_img } from "../imagepath"
+import { User_img, Sent_img } from "../imagepath"
 import { itemRender, onShowSizeChange, } from "../../components/paginationfunction";
 import OpenChat from "../sidebar/openchatheader";
 import { appointmentAction } from './actions';
 import "../../../constants";
-import { GET_ALL } from "../../../constants";
+import { GET } from "../../../constants";
 
 
 class Appointments extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      data: [
-        {
-          id: 1,
-          AppointmentID: 'APT0001',
-          image: User_img,
-          Name: "Denise Stevens",
-          Age: "32",
-          Doctor:"Henry Daniels	",
-          Department: 'Cardiology',
-          Date:'30 Dec 2018',
-          Time: '10:00am - 11:00am',
-          tags: ['Inactive'],
-         },
-         {
-          id: 2,
-          AppointmentID: 'APT0002',
-          image: User_img,
-          Name: "Denise Stevens",
-          Age: "38",
-          Doctor:"Henry Daniels	",
-          Department: 'Cardiology',
-          Date:'30 Dec 2018',
-          Time: '10:00am - 11:00am',
-          tags: ['active'],
-         },
-         {
-          id: 3,
-          AppointmentID: 'APT0003',
-          image: User_img,
-          Name: "Denise Stevens",
-          Age: "38",
-          Doctor:"Henry Daniels	",
-          Department: 'Cardiology',
-          Date:'30 Dec 2018',
-          Time: '10:00am - 11:00am',
-          tags: ['active'],
-         },
-
-      ],
+      loading: true,
+      data: [],
     };
   }
 
-  componentDidMount(){
-    appointmentAction("/appointments", GET_ALL, res => {
-      console.log(res);
+  componentDidMount() {
+    appointmentAction("/appointments", GET, res => {
+      this.setState({
+        data: res.data,
+        loading: false,
+      });
     });
   }
 
@@ -68,12 +34,12 @@ class Appointments extends Component {
     const columns = [
       {
         title: "ID",
-        dataIndex: "AppointmentID",
-      
+        dataIndex: "id",
+
       },
       {
         title: "Patient Name",
-        dataIndex: "Name",
+        dataIndex: "patient.firstName",
         render: (text, record) => (
           <div className="table-avatar">
             <a href="#0" className="avatar avatar-sm mr-2">
@@ -82,64 +48,63 @@ class Appointments extends Component {
             {text}
           </div>
         ),
-      
+
       },
       {
         title: "Age",
-        dataIndex: "Age",
+        dataIndex: "patient.dateOfBirth",
         render: (text, record) => <div className="text-center">{text}</div>,
-      
+
       },
       {
         title: "Doctor Name",
-        dataIndex: "Doctor",
-       
+        dataIndex: "doctor.firstName",
+
       },
       {
         title: "Department",
-        dataIndex: "Department",
-        
+        dataIndex: "doctor.firstName",
       },
       {
         title: "Appointment Date",
-        dataIndex: "Date",
-        
+        dataIndex: "date",
+
       },
       {
         title: "Appointment Time",
-        dataIndex: "Time",
-        
+        dataIndex: "date",
       },
       {
         title: "Status",
-        dataIndex: "tags",
-        render: tags => (
+        render: (text, record) => (
           <span>
-            {tags.map(tag => {
+            {/* {status.map(tag => {
               let color = tag.length > 6 ? "green" : "red";
               return (
                 <Tag color={color} key={tag} className="custom-badge">
                   {tag}
                 </Tag>
               );
-            })}
+            })} */}
+            <Tag color={record.status ? "green" : "red"} className="custom-badge">
+              {record.status ? "Active" : "Inactive"}
+            </Tag>
           </span>
         ),
-        
+
       },
       {
         title: "Action",
-        dataIndex: "Action",
         render: (text, record) => (
           <div className="dropdown dropdown-action">
             <a href="#" className="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i className="fas fa-ellipsis-v" /></a>
             <div className="dropdown-menu dropdown-menu-right">
-              <Link className="dropdown-item" to="/edit-appointment"><i className="fas fa-pencil-alt m-r-5" /> Edit</Link>
+              <Link className="dropdown-item" to={"/admin/appointments/update/"+record.id}><i className="fas fa-pencil-alt m-r-5" /> Edit</Link>
               <a className="dropdown-item" href="#" data-toggle="modal" data-target="#delete_appointment"><i className="fas fa-trash m-r-5" /> Delete</a>
             </div>
           </div>
         ),
-       
+
       },
     ];
 
@@ -155,42 +120,42 @@ class Appointments extends Component {
             </div>
           </div>
           <div className="row">
-            <div className="col-md-12">              
-                <Table
-                  loading={true}
-                  className="table-striped"
-                  style={{ overflowX: "scroll" }}
-                  columns={columns}
-                  // bordered
-                  dataSource={data}
-                  rowKey={(record) => record.id}
-                  showSizeChanger={true}
-                  pagination={{
-                    total: data.length,
-                    showTotal: (total, range) =>
-                      `Showing ${range[0]} to ${range[1]} of ${total} entries`,
-                    showSizeChanger: true,
-                    onShowSizeChange: onShowSizeChange,
-                    itemRender: itemRender,
-                  }}
-                />          
+            <div className="col-md-12">
+              <Table
+                loading={this.state.loading}
+                className="table-striped"
+                style={{ overflowX: "scroll" }}
+                columns={columns}
+                // bordered
+                dataSource={data}
+                rowKey={(record) => record.id}
+                showSizeChanger={true}
+                pagination={{
+                  total: data.length,
+                  showTotal: (total, range) =>
+                    `Showing ${range[0]} to ${range[1]} of ${total} entries`,
+                  showSizeChanger: true,
+                  onShowSizeChange: onShowSizeChange,
+                  itemRender: itemRender,
+                }}
+              />
             </div>
           </div>
         </div>
-        <OpenChat/>
+        <OpenChat />
         <div id="delete_appointment" className="modal fade delete-modal" role="dialog">
-        <div className="modal-dialog modal-dialog-centered">
-          <div className="modal-content">
-            <div className="modal-body text-center">
-              <img src={Sent_img} alt="" width={50} height={46} />
-              <h3>Are you sure want to delete this Appointment?</h3>
-              <div className="m-t-20"> <a href="#" className="btn btn-white mr-0" data-dismiss="modal">Close</a>
-                <button type="submit" className="btn btn-danger">Delete</button>
+          <div className="modal-dialog modal-dialog-centered">
+            <div className="modal-content">
+              <div className="modal-body text-center">
+                <img src={Sent_img} alt="" width={50} height={46} />
+                <h3>Are you sure want to delete this Appointment?</h3>
+                <div className="m-t-20"> <a href="#" className="btn btn-white mr-0" data-dismiss="modal">Close</a>
+                  <button type="submit" className="btn btn-danger">Delete</button>
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
       </div>
     );
   }

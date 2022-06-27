@@ -1,18 +1,11 @@
-import { api, ADD, DELETE, GET_ALL, GET_ONE, UPDATE } from '../../../constants';
+import axios from 'axios';
+import { api, ADD, DELETE, UPDATE, GET } from '../../../constants';
 
-export const appointmentAction = (url, method, callback, data = {}, id = undefined) => {
+export const appointmentAction = (url, method, callback, data = {}) => {
     const response = undefined;
     switch (method) {
-        case GET_ALL:
+        case GET:
             api.get(url).then(res => {
-                callback(res);
-            }).catch(err => {
-                console.log(err);
-            });
-            break;
-
-        case GET_ONE:
-            api.get(url + "/" + id).then(res => {
                 callback(res);
             }).catch(err => {
                 console.log(err);
@@ -28,7 +21,7 @@ export const appointmentAction = (url, method, callback, data = {}, id = undefin
             break;
 
         case UPDATE:
-            api.put(url + "/" + id, data).then(res => {
+            api.put(url, data).then(res => {
                 callback(res);
             }).catch(err => {
                 console.log(err);
@@ -36,7 +29,7 @@ export const appointmentAction = (url, method, callback, data = {}, id = undefin
             break;
 
         case DELETE:
-            api.delete(url + "/" + id).then(res => {
+            api.delete(url).then(res => {
                 callback(res);
             }).catch(err => {
                 console.log(err);
@@ -51,5 +44,52 @@ export const appointmentAction = (url, method, callback, data = {}, id = undefin
             });
             break;
     }
+}
+
+// {
+//     url: "", method : "", callback : null, data : { }
+// }
+
+export const axiosActions = (params = [{
+    url: "",
+    method: "",
+    callback: null,
+    data: {}
+}]) => {
+    const requests = [];
+    const callbacks = [];
+    params.map(param => {
+        switch (param.method) {
+            case GET:
+                requests.push(api.get(param.url))
+                callbacks.push(param.callback);
+                break;
+
+            case ADD:
+                requests.push(api.post(param.url, param.data))
+                callbacks.push(param.callback);
+                break;
+
+            case UPDATE:
+                requests.push(api.put(param.url, param.data))
+                callbacks.push(param.callback);
+                break;
+
+            case DELETE:
+                requests.push(api.delete(param.url))
+                callbacks.push(param.callback);
+                break;
+        }
+    });
+    axios.all(requests).then(resArr => {
+        resArr.map((res, idx) => {
+            callbacks[idx](res);
+        })
+    }).catch(errArr => {
+        // errArr.map(err => {
+        //     console.log(err);
+        // })
+        console.log(errArr);
+    });
 }
 
