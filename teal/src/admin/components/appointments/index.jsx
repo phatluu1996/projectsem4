@@ -5,9 +5,9 @@ import { Link } from 'react-router-dom';
 import { User_img, Sent_img } from "../imagepath"
 import { itemRender, onShowSizeChange, } from "../../components/paginationfunction";
 import OpenChat from "../sidebar/openchatheader";
-import { axiosAction } from '../../../actions';
+import { axiosAction, axiosActions } from '../../../actions';
 import "../../../constants";
-import { GET } from "../../../constants";
+import { DELETE, GET } from "../../../constants";
 import moment from 'moment';
 import { toMoment } from "../../../utils";
 
@@ -18,12 +18,15 @@ class Appointments extends Component {
     this.state = {
       loading: true,
       data: [],
+      selectdId: 0
     };
 
     this.toMoment = this.toMoment.bind(this);
+    this.fetchData = this.fetchData.bind(this);
+    this.deleteData = this.deleteData.bind(this);
   }
 
-  componentDidMount() {
+  fetchData() {
     axiosAction("/appointments", GET, res => {
       this.setState({
         data: res.data,
@@ -32,7 +35,36 @@ class Appointments extends Component {
     });
   }
 
-  toMoment(date){
+  deleteData() {
+
+    const deleteReq = {
+      url: "/appointments/" + this.state.selectdId,
+      method: DELETE,
+      callback: (res) => {
+      },
+      data: {}
+    }
+
+    const fetchReq = {
+      url: "/appointments",
+      method: GET,
+      callback: (res) => {
+        this.setState({
+          data: res.data,
+          loading: false,
+          selectdId: 0
+        });
+      },
+      data: {}
+    }
+    axiosActions([deleteReq]);
+  }
+
+  componentDidMount() {
+    this.fetchData();
+  }
+
+  toMoment(date) {
     return toMoment(date);
   }
 
@@ -43,34 +75,34 @@ class Appointments extends Component {
       {
         title: "ID",
         render: (text, record) => (
-          <div>            
-            {"PAT-" + record.patient.id}
+          <div>
+            {"PAT-" + record.patient?.id}
           </div>
         ),
       },
       {
         title: "Patient Name",
         render: (text, record) => (
-          <div>            
-            {record.patient.lastName + " " + record.patient.firstName}
+          <div>
+            {record.patient?.lastName + " " + record.patient?.firstName}
           </div>
         ),
 
       },
       {
-        title: "Age",
+        title: "BirthDay",
         render: (text, record) => (
-          <div>            
-            {toMoment(record.patient.dateOfBirth).format("DD-MM-YYYY")}
+          <div>
+            {record.patient?.dateOfBirth ? toMoment(record.patient?.dateOfBirth).format("DD-MM-YYYY") : ""}
           </div>
         ),
-        
+
       },
       {
         title: "Doctor Name",
         render: (text, record) => (
-          <div>            
-            {record.doctor.lastName + " " + record.doctor.firstName}
+          <div>
+            {record.doctor?.lastName + " " + record.doctor?.firstName}
           </div>
         ),
 
@@ -78,17 +110,17 @@ class Appointments extends Component {
       {
         title: "Department",
         render: (text, record) => (
-          <div>            
-            {record.department.name}
+          <div>
+            {record.department?.name}
           </div>
         ),
       },
       {
         title: "Appointment Date",
         render: (text, record) => (
-          <div>            
-               
-            {toMoment(record.date).format('DD-MM-YYYY h:mm:ss')}         
+          <div>
+            {record.date ? toMoment(record.date).format('DD-MM-YYYY h:mm:ss') : ""}
+
           </div>
         ),
       },
@@ -109,8 +141,8 @@ class Appointments extends Component {
           <div className="dropdown dropdown-action">
             <a href="#" className="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i className="fas fa-ellipsis-v" /></a>
             <div className="dropdown-menu dropdown-menu-right">
-              <Link className="dropdown-item" to={"/admin/appointments/update/"+record.id}><i className="fas fa-pencil-alt m-r-5" /> Edit</Link>
-              <a className="dropdown-item" href="#" data-toggle="modal" data-target="#delete_appointment"><i className="fas fa-trash m-r-5" /> Delete</a>
+              <Link className="dropdown-item" to={"/admin/appointments/update/" + record.id}><i className="fas fa-pencil-alt m-r-5" /> Edit</Link>
+              <a className="dropdown-item" href="#" data-toggle="modal" data-target="#delete_appointment" onClick={() => this.setState({ selectdId: record.id })}><i className="fas fa-trash m-r-5" /> Delete</a>
             </div>
           </div>
         ),
@@ -159,8 +191,10 @@ class Appointments extends Component {
               <div className="modal-body text-center">
                 <img src={Sent_img} alt="" width={50} height={46} />
                 <h3>Are you sure want to delete this Appointment?</h3>
-                <div className="m-t-20"> <a href="#" className="btn btn-white mr-0" data-dismiss="modal">Close</a>
-                  <button type="submit" className="btn btn-danger">Delete</button>
+                <div className="m-t-20">
+                  <a href="#" className="btn btn-white mr-0" data-dismiss="modal">Close</a>
+                  {/* <button type="submit" className="btn btn-danger" >Delete</button> */}
+                  <a href="#" className="btn btn-danger" data-dismiss="modal" onClick={this.deleteData}>Delete</a>
                 </div>
               </div>
             </div>

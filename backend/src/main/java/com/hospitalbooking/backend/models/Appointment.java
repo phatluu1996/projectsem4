@@ -25,7 +25,7 @@ public class Appointment {
     private Patient patient;
     @ManyToOne
     @JoinColumn(name = "doctor_id", referencedColumnName = "id")
-    @JsonIgnoreProperties("appointments")
+    @JsonIgnoreProperties({"appointments","doctorSchedules"})
     private Doctor doctor;
     @Column(name = "date")
     @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX")

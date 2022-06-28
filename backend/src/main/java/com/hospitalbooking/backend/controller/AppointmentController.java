@@ -4,7 +4,10 @@ import com.hospitalbooking.backend.models.Appointment;
 import com.hospitalbooking.backend.models.Doctor;
 import com.hospitalbooking.backend.models.Patient;
 import com.hospitalbooking.backend.repository.AppointmentRepos;
+import com.hospitalbooking.backend.repository.PatientRepos;
+import com.hospitalbooking.backend.specification.DBSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,6 +23,9 @@ public class AppointmentController {
     @Autowired
     private AppointmentRepos appointmentRepos;
 
+    @Autowired
+    private PatientRepos patientRepos;
+
     @GetMapping("/appointments/{id}")
     public ResponseEntity<Appointment> one(@PathVariable Long id){
         return appointmentRepos.findById(id).map(appointment -> new ResponseEntity<>(appointment, HttpStatus.OK))
@@ -28,7 +34,8 @@ public class AppointmentController {
 
     @GetMapping("/appointments")
     public ResponseEntity<List<Appointment>> all(){
-        return new ResponseEntity<>(appointmentRepos.findAll(), HttpStatus.OK);
+        Specification<?> spec = DBSpecification.createSpecification(Boolean.FALSE);
+        return new ResponseEntity<List<Appointment>>(appointmentRepos.findAll(spec), HttpStatus.OK);
     }
 
     @PostMapping("/appointments")
@@ -41,6 +48,7 @@ public class AppointmentController {
         Optional<Appointment> optional = appointmentRepos.findById(id);
         return optional.map(model -> {
             appointment.setId(model.getId());
+//            patientRepos.save(appointment.getPatient());
             return new ResponseEntity<>(appointmentRepos.save(appointment), HttpStatus.OK);
         }).orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
@@ -50,7 +58,7 @@ public class AppointmentController {
         Optional<Appointment> optional = appointmentRepos.findById(id);
         return optional.map(model -> {
             model.setRetired(true);
-            return new ResponseEntity<>(model, HttpStatus.OK);
+            return new ResponseEntity<>(appointmentRepos.save(model), HttpStatus.OK);
         }).orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 

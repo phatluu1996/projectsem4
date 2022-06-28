@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
 import OpenChat from "../../sidebar/openchatheader";
-import { DatePicker } from 'antd';
-import { GET } from '../../../../constants';
-import { appointmentAction, axiosActions } from '../../../../actions';
+import { DatePicker, Select } from 'antd';
+import { GET, UPDATE } from '../../../../constants';
+import { appointmentAction, axiosAction, axiosActions } from '../../../../actions';
 import moment from 'moment';
 import { toMoment } from '../../../../utils';
+import $ from 'jquery';
+const { Option } = Select;
 
 class EditAppointment extends Component {
   id = this.props.match.params.id;
@@ -17,9 +19,13 @@ class EditAppointment extends Component {
       doctors: [],
       departments: []
     };
-    this.onChange = this.onChange.bind(this);
+
     this.onSubmit = this.onSubmit.bind(this);
-    this.toMoment = this.toMoment.bind(this);
+    this.onChangeDepartment = this.onChangeDepartment.bind(this);
+    this.onChangeDoctor = this.onChangeDoctor.bind(this);
+    this.onChangePatient = this.onChangePatient.bind(this);
+    this.onChangeDate = this.onChangeDate.bind(this);
+    this.onChange = this.onChange.bind(this);
   }
 
   componentDidMount() {
@@ -70,24 +76,60 @@ class EditAppointment extends Component {
     axiosActions([appointmentParam, patientsParam, doctorsParam, departmentsParam]);
   }
 
-  toMoment(date) {
-    return toMoment(date);
-  }
-
   onSubmit(e) {
-
-  }
-
-  onChange(e){
     e.preventDefault();
-    const tmp = {...this.state.data};
-    switch(e.target.name){
-      case 'patient':
-        tmp.data.patient = this.state.patients.filter(pat => pat.id === e.target.value)[0];
-        this.setState({data : tmp});
-        break;
-    }    
+    axiosAction("/appointments/"+this.id, UPDATE, (res) => {
+      console.log(res);
+    }, this.state.data);
   }
+
+  onChangePatient(value) {
+    const tmp = { ...this.state.data };
+    tmp.patient = this.state.patients.filter(elt => elt.id === value)[0];
+    this.setState({ data: tmp });
+  }
+
+  onChangeDepartment(value) {
+    const tmp = { ...this.state.data };
+    tmp.department = this.state.departments.filter(elt => elt.id === value)[0];
+    this.setState({ data: tmp });
+  }
+
+  onChangeDoctor(value) {
+    const tmp = { ...this.state.data };
+    tmp.doctor = this.state.doctors.filter(elt => elt.id === value)[0];
+    this.setState({ data: tmp });
+  }
+  
+  onChangeDate(value) {
+    const tmp = { ...this.state.data };
+    tmp.date = value;
+    this.setState({ data: tmp });
+  }
+
+  onChange(e) {
+    const tmp = { ...this.state.data };
+    const value = e.target.value;
+    switch (e.target.name) {
+      case 'email':
+        tmp.patient.email = value;
+        break;
+
+      case 'phone':
+        tmp.patient.phoneNumber = value;
+        break;
+
+      case 'message':
+        tmp.message = value;
+        break;
+
+      case 'status':
+        tmp.status = value;
+        break;
+    }
+    this.setState({ data: tmp });
+  }
+
 
   render() {
 
@@ -113,11 +155,11 @@ class EditAppointment extends Component {
                   <div className="col-md-6">
                     <div className="form-group">
                       <label>Patient Name</label>
-                      <select name='patient' className="form-control select" defaultValue={this.state.data.patient?.id} onChange={this.onChange}>
+                      <Select bordered={false} size={"small"} style={{ width: '100%' }} name='patient' className="form-control" value={this.state.data.patient?.id} onSelect={this.onChangePatient}>
                         {this.state.patients?.map(patient => {
-                          return (<option key={patient.id} value={patient.id}>{patient.firstName + " " + patient.lastName}</option>)
+                          return (<Option key={patient.id} value={patient.id}>{patient.firstName + " " + patient.lastName}</Option>)
                         })}
-                      </select>
+                      </Select>
                     </div>
                   </div>
                 </div>
@@ -125,21 +167,21 @@ class EditAppointment extends Component {
                   <div className="col-md-6">
                     <div className="form-group">
                       <label>Department</label>
-                      <select name='department' className="form-control select" defaultValue={this.state.data.department?.id}>
+                      <Select bordered={false} size={"small"} style={{ width: '100%' }} name='department' className="form-control" value={this.state.data.department?.id} onSelect={this.onChangeDepartment}>
                         {this.state.departments?.map(department => {
-                          return (<option key={department.id} value={department.id}>{department.name}</option>)
+                          return (<Option key={department.id} value={department.id}>{department.name}</Option>)
                         })}
-                      </select>
+                      </Select>
                     </div>
                   </div>
                   <div className="col-md-6">
                     <div className="form-group">
                       <label>Doctor</label>
-                      <select name='doctor' className="form-control select" defaultValue={this.state.data.doctor?.id}>
+                      <Select bordered={false} size={"small"} style={{ width: '100%' }} name='doctor' className="form-control" value={this.state.data.doctor?.id} onSelect={this.onChangeDoctor}>
                         {this.state.doctors?.map(doctor => {
-                          return (<option key={doctor.id} value={doctor.id}>{doctor.firstName + " " + doctor.lastName}</option>)
+                          return (<Option key={doctor.id} value={doctor.id}>{doctor.firstName + " " + doctor.lastName}</Option>)
                         })}
-                      </select>
+                      </Select>
                     </div>
                   </div>
                 </div>
@@ -149,7 +191,7 @@ class EditAppointment extends Component {
                       <label>Date</label>
                       <DatePicker name='date' className="form-control"
                         showTime={true} minuteStep={15} showSecond={false} format="YYYY-MM-DD HH:mm" clearIcon={true}
-                        allowClear={true} defaultValue={this.toMoment(this.state.data.date)}></DatePicker>
+                        allowClear={true} value={toMoment(this.state.data.date)} onChange={this.onChangeDate} onSelect={this.onChangeDate}></DatePicker>
                     </div>
                   </div>
                 </div>
@@ -157,37 +199,37 @@ class EditAppointment extends Component {
                   <div className="col-md-6">
                     <div className="form-group">
                       <label>Patient Email</label>
-                      <input name='email' className="form-control" type="email" value={this.state.data.patient.email} />
+                      <input name='email' className="form-control" type="email" value={this.state.data.patient?.email} onChange={this.onChange} />
                     </div>
                   </div>
                   <div className="col-md-6">
                     <div className="form-group">
                       <label>Patient Phone Number</label>
-                      <input name='phone' className="form-control" type="tel" value={this.state.data.patient.phoneNumber} />
+                      <input name='phone' className="form-control" type="tel" value={this.state.data.patient?.phoneNumber} onChange={this.onChange} />
                     </div>
                   </div>
                 </div>
                 <div className="form-group">
                   <label>Message</label>
-                  <textarea name='message' cols={30} rows={4} className="form-control" defaultValue={this.state.data.message} />
+                  <textarea name='message' cols={30} rows={4} className="form-control" value={this.state.data.message} onChange={this.onChange} />
                 </div>
                 <div className="form-group">
                   <label className="display-block">Appointment Status</label>
                   <div className="form-check form-check-inline">
-                    <input className="form-check-input" type="radio" name="status" id="product_active" defaultValue={true} defaultChecked={this.state.data.status} />
+                    <input className="form-check-input" type="radio" name="status" id="product_active" defaultValue={true} defaultChecked={this.state.data?.status} onChange={this.onChange} />
                     <label className="form-check-label" htmlFor="product_active">
                       Active
                     </label>
                   </div>
                   <div className="form-check form-check-inline">
-                    <input className="form-check-input" type="radio" name="status" id="product_inactive" defaultValue={false} defaultChecked={!this.state.data.status}/>
+                    <input className="form-check-input" type="radio" name="status" id="product_inactive" defaultValue={false} defaultChecked={!this.state.data?.status} onChange={this.onChange} />
                     <label className="form-check-label" htmlFor="product_inactive">
                       Inactive
                     </label>
                   </div>
                 </div>
                 <div className="m-t-20 text-center">
-                  <button className="btn btn-primary submit-btn">Save</button>
+                  <button className="btn btn-primary submit-btn" type='submit'>Save</button>
                 </div>
               </form>
             </div>
