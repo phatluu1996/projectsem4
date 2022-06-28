@@ -1,6 +1,8 @@
 package com.hospitalbooking.backend.models;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.time.Instant;
@@ -26,9 +28,13 @@ public class Appointment {
     @JsonIgnoreProperties("appointments")
     private Doctor doctor;
     @Column(name = "date")
+    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX")
     private Date date;
     @Column(name = "status")
     private boolean status;
+
+    @Column(name = "message", columnDefinition = "text")
+    private String message;
     @Column(name = "retired")
     private boolean retired;
 
@@ -51,6 +57,17 @@ public class Appointment {
         this.doctor = doctor;
         this.date = date;
         this.status = status;
+        this.retired = retired;
+    }
+
+    public Appointment(Long id, Department department, Patient patient, Doctor doctor, Date date, boolean status, String message, boolean retired) {
+        this.id = id;
+        this.department = department;
+        this.patient = patient;
+        this.doctor = doctor;
+        this.date = date;
+        this.status = status;
+        this.message = message;
         this.retired = retired;
     }
 
@@ -108,5 +125,13 @@ public class Appointment {
 
     public void setRetired(boolean retired) {
         this.retired = retired;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
     }
 }

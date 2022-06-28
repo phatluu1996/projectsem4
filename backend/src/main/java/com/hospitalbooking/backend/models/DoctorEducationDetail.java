@@ -1,6 +1,7 @@
 package com.hospitalbooking.backend.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -17,8 +18,10 @@ public class DoctorEducationDetail {
     @Column(name = "subject", length = 250, columnDefinition = "nvarchar(250)")
     private String subject;
     @Column(name = "start_period")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date start;
     @Column(name = "end_period")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date end;
     @Column(name = "degree", length = 100, columnDefinition = "nvarchar(100)")
     private String degree;

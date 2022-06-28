@@ -1,6 +1,7 @@
 package com.hospitalbooking.backend.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -14,9 +15,11 @@ public class EmployeeLeave {
     private Long Id;
 
     @Column(name = "start_from")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date startFrom;
 
     @Column(name = "leave_day")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private int leaveDay;
 
     @Column(name = "leave_reason", length = 250, columnDefinition = "nvarchar(250)")

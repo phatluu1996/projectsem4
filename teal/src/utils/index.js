@@ -1,3 +1,5 @@
+import moment from "moment";
+
 const TOKEN_KEY = 'jwt';
 
 export const login = () => {
@@ -14,4 +16,13 @@ export const isLogin = () => {
     }
 
     return false;
+}
+
+export const toMoment = (date) => {
+    if (date) {
+        const dateJs = new Date(date);
+        const dateMoment = moment(dateJs, false);
+        return dateMoment
+    }
+    return ""
 }

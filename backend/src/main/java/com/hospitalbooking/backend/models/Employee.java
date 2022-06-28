@@ -2,6 +2,7 @@ package com.hospitalbooking.backend.models;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -22,6 +23,7 @@ public class Employee {
     private String employeeRole;
 
     @Column(name = "joining_date")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date joiningDate;
 
     @Column(name = "first_name", length = 250, columnDefinition = "nvarchar(250)")
@@ -30,7 +32,8 @@ public class Employee {
     private String lastName;
     @Column(name = "gender", length = 20, columnDefinition = "nvarchar(20)")
     private String gender;
-    @Column(name = "birth_day", length = 20, columnDefinition = "nvarchar(20)")
+    @Column(name = "birth_day")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date birthDay;
     @Column(name = "email", length = 250, columnDefinition = "nvarchar(250)")
     private String email;

@@ -5,9 +5,11 @@ import { Link } from 'react-router-dom';
 import { User_img, Sent_img } from "../imagepath"
 import { itemRender, onShowSizeChange, } from "../../components/paginationfunction";
 import OpenChat from "../sidebar/openchatheader";
-import { appointmentAction } from './actions';
+import { axiosAction } from '../../../actions';
 import "../../../constants";
 import { GET } from "../../../constants";
+import moment from 'moment';
+import { toMoment } from "../../../utils";
 
 
 class Appointments extends Component {
@@ -17,15 +19,21 @@ class Appointments extends Component {
       loading: true,
       data: [],
     };
+
+    this.toMoment = this.toMoment.bind(this);
   }
 
   componentDidMount() {
-    appointmentAction("/appointments", GET, res => {
+    axiosAction("/appointments", GET, res => {
       this.setState({
         data: res.data,
         loading: false,
       });
     });
+  }
+
+  toMoment(date){
+    return toMoment(date);
   }
 
   render() {
@@ -34,58 +42,60 @@ class Appointments extends Component {
     const columns = [
       {
         title: "ID",
-        dataIndex: "id",
-
+        render: (text, record) => (
+          <div>            
+            {"PAT-" + record.patient.id}
+          </div>
+        ),
       },
       {
         title: "Patient Name",
-        dataIndex: "patient.firstName",
         render: (text, record) => (
-          <div className="table-avatar">
-            <a href="#0" className="avatar avatar-sm mr-2">
-              <img alt="" src={record.image} />
-            </a>
-            {text}
+          <div>            
+            {record.patient.lastName + " " + record.patient.firstName}
           </div>
         ),
 
       },
       {
         title: "Age",
-        dataIndex: "patient.dateOfBirth",
-        render: (text, record) => <div className="text-center">{text}</div>,
-
+        render: (text, record) => (
+          <div>            
+            {toMoment(record.patient.dateOfBirth).format("DD-MM-YYYY")}
+          </div>
+        ),
+        
       },
       {
         title: "Doctor Name",
-        dataIndex: "doctor.firstName",
+        render: (text, record) => (
+          <div>            
+            {record.doctor.lastName + " " + record.doctor.firstName}
+          </div>
+        ),
 
       },
       {
         title: "Department",
-        dataIndex: "doctor.firstName",
+        render: (text, record) => (
+          <div>            
+            {record.department.name}
+          </div>
+        ),
       },
       {
         title: "Appointment Date",
-        dataIndex: "date",
-
-      },
-      {
-        title: "Appointment Time",
-        dataIndex: "date",
+        render: (text, record) => (
+          <div>            
+               
+            {toMoment(record.date).format('DD-MM-YYYY h:mm:ss')}         
+          </div>
+        ),
       },
       {
         title: "Status",
         render: (text, record) => (
           <span>
-            {/* {status.map(tag => {
-              let color = tag.length > 6 ? "green" : "red";
-              return (
-                <Tag color={color} key={tag} className="custom-badge">
-                  {tag}
-                </Tag>
-              );
-            })} */}
             <Tag color={record.status ? "green" : "red"} className="custom-badge">
               {record.status ? "Active" : "Inactive"}
             </Tag>

@@ -1,6 +1,7 @@
 package com.hospitalbooking.backend.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -17,6 +18,7 @@ public class Asset {
     private String assetName;
 
     @Column(name = "purchase_date")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date purchaseDate;
 
     @Column(name = "manufacture", length = 250, columnDefinition = "nvarchar(250)")

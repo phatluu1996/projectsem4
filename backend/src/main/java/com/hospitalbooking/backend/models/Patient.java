@@ -1,6 +1,7 @@
 package com.hospitalbooking.backend.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -20,6 +21,7 @@ public class Patient {
     @Column(name = "gender", length = 20)
     private String gender;
     @Column(name = "birth_day")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date dateOfBirth;
     @Column(name = "email", length = 250, columnDefinition = "nvarchar(250)")
     private String email;

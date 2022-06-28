@@ -1,7 +1,7 @@
 import axios from 'axios';
-import { api, ADD, DELETE, UPDATE, GET } from '../../../constants';
+import { api, ADD, DELETE, UPDATE, GET } from './constants';
 
-export const appointmentAction = (url, method, callback, data = {}) => {
+export const axiosAction = (url, method, callback, data = {}) => {
     const response = undefined;
     switch (method) {
         case GET:

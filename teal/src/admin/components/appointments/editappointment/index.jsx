@@ -2,8 +2,9 @@ import React, { Component } from 'react';
 import OpenChat from "../../sidebar/openchatheader";
 import { DatePicker } from 'antd';
 import { GET } from '../../../../constants';
-import { appointmentAction, axiosActions } from '../actions';
+import { appointmentAction, axiosActions } from '../../../../actions';
 import moment from 'moment';
+import { toMoment } from '../../../../utils';
 
 class EditAppointment extends Component {
   id = this.props.match.params.id;
@@ -17,6 +18,8 @@ class EditAppointment extends Component {
       departments: []
     };
     this.onChange = this.onChange.bind(this);
+    this.onSubmit = this.onSubmit.bind(this);
+    this.toMoment = this.toMoment.bind(this);
   }
 
   componentDidMount() {
@@ -24,8 +27,6 @@ class EditAppointment extends Component {
       url: "/appointments/" + this.id,
       method: GET,
       callback: (res) => {
-        console.log(this.state.data.date);
-
         this.setState({
           data: res.data,
           loading: false,
@@ -39,8 +40,7 @@ class EditAppointment extends Component {
       method: GET,
       callback: (res) => {
         this.setState({
-          patients: res.data,
-          loading: false,
+          patients: res.data
         });
       },
       data: {}
@@ -51,8 +51,7 @@ class EditAppointment extends Component {
       method: GET,
       callback: (res) => {
         this.setState({
-          doctors: res.data,
-          loading: false,
+          doctors: res.data
         });
       },
       data: {}
@@ -63,8 +62,7 @@ class EditAppointment extends Component {
       method: GET,
       callback: (res) => {
         this.setState({
-          departments: res.data,
-          loading: false,
+          departments: res.data
         });
       },
       data: {}
@@ -72,13 +70,29 @@ class EditAppointment extends Component {
     axiosActions([appointmentParam, patientsParam, doctorsParam, departmentsParam]);
   }
 
+  toMoment(date) {
+    return toMoment(date);
+  }
+
+  onSubmit(e) {
+
+  }
+
   onChange(e){
-    console.log(e.target);
+    e.preventDefault();
+    const tmp = {...this.state.data};
+    switch(e.target.name){
+      case 'patient':
+        tmp.data.patient = this.state.patients.filter(pat => pat.id === e.target.value)[0];
+        this.setState({data : tmp});
+        break;
+    }    
   }
 
   render() {
 
-    return (
+
+    return (!this.state.loading &&
       <div className="page-wrapper">
         <div className="content">
           <div className="row">
@@ -88,20 +102,20 @@ class EditAppointment extends Component {
           </div>
           <div className="row">
             <div className="col-md-8 offset-md-2">
-              <form>
+              <form onSubmit={this.onSubmit}>
                 <div className="row">
                   <div className="col-md-6">
                     <div className="form-group">
                       <label>Appointment ID</label>
-                      <input className="form-control" type="text" value={this.state.data.id} readOnly />
+                      <input name='id' className="form-control" type="text" defaultValue={this.state.data.id} readOnly />
                     </div>
                   </div>
                   <div className="col-md-6">
                     <div className="form-group">
                       <label>Patient Name</label>
-                      <select className="form-control select">
+                      <select name='patient' className="form-control select" defaultValue={this.state.data.patient?.id} onChange={this.onChange}>
                         {this.state.patients?.map(patient => {
-                          return (<option key={patient.id} value={patient.id} className={this.state.data.patient?.id === patient.id ? "selected" : ""}>{patient.firstName + " " + patient.lastName}</option>)
+                          return (<option key={patient.id} value={patient.id}>{patient.firstName + " " + patient.lastName}</option>)
                         })}
                       </select>
                     </div>
@@ -111,9 +125,9 @@ class EditAppointment extends Component {
                   <div className="col-md-6">
                     <div className="form-group">
                       <label>Department</label>
-                      <select className="form-control select">
+                      <select name='department' className="form-control select" defaultValue={this.state.data.department?.id}>
                         {this.state.departments?.map(department => {
-                          return (<option key={department.id} value={department.id} className={this.state.data.department?.id === department.id ? "selected" : ""}>{department.name}</option>)
+                          return (<option key={department.id} value={department.id}>{department.name}</option>)
                         })}
                       </select>
                     </div>
@@ -121,13 +135,9 @@ class EditAppointment extends Component {
                   <div className="col-md-6">
                     <div className="form-group">
                       <label>Doctor</label>
-                      <select className="form-control select">
-                        {/* <option>Select</option>
-                        <option>Cristina Groves</option>
-                        <option>Marie Wells</option>
-                        <option value="">Henry Daniels</option> */}
+                      <select name='doctor' className="form-control select" defaultValue={this.state.data.doctor?.id}>
                         {this.state.doctors?.map(doctor => {
-                          return (<option key={doctor.id} value={doctor.id} className={this.state.data.doctor?.id === doctor.id ? "selected" : ""}>{doctor.firstName + " " + doctor.lastName}</option>)
+                          return (<option key={doctor.id} value={doctor.id}>{doctor.firstName + " " + doctor.lastName}</option>)
                         })}
                       </select>
                     </div>
@@ -137,7 +147,9 @@ class EditAppointment extends Component {
                   <div className="col-md-6">
                     <div className="form-group">
                       <label>Date</label>
-                      <DatePicker className="form-control" showTime={true} showSecond={false} format="YYYY-MM-DD HH:mm" clearIcon={true} allowClear={true} onChange={this.onChange}></DatePicker>
+                      <DatePicker name='date' className="form-control"
+                        showTime={true} minuteStep={15} showSecond={false} format="YYYY-MM-DD HH:mm" clearIcon={true}
+                        allowClear={true} defaultValue={this.toMoment(this.state.data.date)}></DatePicker>
                     </div>
                   </div>
                 </div>
@@ -145,30 +157,30 @@ class EditAppointment extends Component {
                   <div className="col-md-6">
                     <div className="form-group">
                       <label>Patient Email</label>
-                      <input className="form-control" type="email" />
+                      <input name='email' className="form-control" type="email" value={this.state.data.patient.email} />
                     </div>
                   </div>
                   <div className="col-md-6">
                     <div className="form-group">
                       <label>Patient Phone Number</label>
-                      <input className="form-control" type="text" />
+                      <input name='phone' className="form-control" type="tel" value={this.state.data.patient.phoneNumber} />
                     </div>
                   </div>
                 </div>
                 <div className="form-group">
                   <label>Message</label>
-                  <textarea cols={30} rows={4} className="form-control" defaultValue={""} />
+                  <textarea name='message' cols={30} rows={4} className="form-control" defaultValue={this.state.data.message} />
                 </div>
                 <div className="form-group">
                   <label className="display-block">Appointment Status</label>
                   <div className="form-check form-check-inline">
-                    <input className="form-check-input" type="radio" name="status" id="product_active" defaultValue="option1" defaultChecked />
+                    <input className="form-check-input" type="radio" name="status" id="product_active" defaultValue={true} defaultChecked={this.state.data.status} />
                     <label className="form-check-label" htmlFor="product_active">
                       Active
                     </label>
                   </div>
                   <div className="form-check form-check-inline">
-                    <input className="form-check-input" type="radio" name="status" id="product_inactive" defaultValue="option2" />
+                    <input className="form-check-input" type="radio" name="status" id="product_inactive" defaultValue={false} defaultChecked={!this.state.data.status}/>
                     <label className="form-check-label" htmlFor="product_inactive">
                       Inactive
                     </label>
