@@ -5,12 +5,9 @@ import { Sent_img } from "../imagepath"
 import { Tag } from 'antd';
 import { Link } from 'react-router-dom';
 import { itemRender, onShowSizeChange, } from "../../components/paginationfunction";
-import { getDepartments } from './action'
-
-
+import { axiosAction } from '../../../actions';
+import { GET } from "../../../constants";
 class Departments extends Component {
-
-
 
   constructor(props) {
     super(props);
@@ -24,7 +21,12 @@ class Departments extends Component {
 
   componentDidMount() {
     this.isComponentWillUnMount = true;
-    getDepartments(this);
+    axiosAction("/departments",GET, res => {
+      this.setState({
+        data: res.data,
+        loading: false,
+      });
+    });
   }
 
   componentWillUnmount() {
@@ -94,7 +96,7 @@ class Departments extends Component {
             </div>
             <div className="col-sm-8 col-9 text-right m-b-20">
               <Link
-                to="/add-department"
+                to="/admin/departments/add"
                 className="btn btn btn-primary btn-rounded float-right"
               >
                 <i className="fa fa-plus"></i> Add Departments
