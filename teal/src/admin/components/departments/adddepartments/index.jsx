@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import OpenChat from "../../sidebar/openchatheader";
-import { axiosAction } from '../../../../actions';
+import { axiosAction,notify } from '../../../../actions';
 import { ADD } from "../../../../constants";
 import {Redirect} from 'react-router-dom';
 
@@ -46,9 +46,11 @@ class AddDepartment extends Component{
           description:this.state.description,
           status:this.state.status
     };
+    
    axiosAction("/departments",ADD, res => {
-    if(res.data.status = 200) this.setState({goBack:true})
-  },department);
+    notify('success', "Success")
+    this.setState({goBack:true})
+  },(err) => notify('error', "Error"),department);
    
   }
 

@@ -5,36 +5,42 @@ import { Sent_img } from "../imagepath"
 import { Tag } from 'antd';
 import { Link } from 'react-router-dom';
 import { itemRender, onShowSizeChange, } from "../../components/paginationfunction";
-import { axiosAction } from '../../../actions';
-import { GET } from "../../../constants";
+import { axiosAction,notify } from '../../../actions';
+import { GET,DELETE } from "../../../constants";
+ 
 class Departments extends Component {
 
   constructor(props) {
     super(props);
-    super();
     this.state = {
       isComponentWillUnMount: false,
       loading: true,
       data: [],
+      idDtl:""
     };
-    this.onChangeDlt = this.onChangeDlt.bind(this)
+    this.handleDel = this.handleDel.bind(this);
+    this.onClickDlt = this.onClickDlt.bind(this);
+    this.fetchData = this.fetchData.bind(this);
   }
    
 
   componentDidMount() {
     this.isComponentWillUnMount = true;
-    axiosAction("/departments",GET, res => {
-      this.setState({
-        data: res.data,
-        loading: false,
-      });
-    });
+    this.fetchData();
   }
 
   componentWillUnmount() {
     this.isComponentWillUnMount = false
   }
 
+  fetchData = () =>{
+    axiosAction("/departments",GET, res => {
+      this.setState({
+        data: res.data,
+        loading: false,
+      });
+    },(err) => notify('error', "Error"));
+  }
 
   handleClose = () => {
     this.setState({
@@ -48,13 +54,17 @@ class Departments extends Component {
     });
   };
 
-  onChangeDlt = (id) => {
-    // axiosAction("/departments",GET, res => {
-    //   this.setState({
-    //     data: res.data,
-    //     loading: false,
-    //   });
-    // });
+  handleDel = (id) => {
+    this.setState({
+      idDtl: id,
+    });
+  };
+
+  onClickDlt = () => {
+    axiosAction("/departments/"+this.state.idDtl,DELETE, res => {
+      notify('success', "Success")
+      this.fetchData();
+    },(err) => notify('error', "Error"));
   }
 
   render() {
@@ -91,7 +101,7 @@ class Departments extends Component {
             <a href="#" className="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i className="fas fa-ellipsis-v" /></a>
             <div className="dropdown-menu dropdown-menu-right">
               <Link className="dropdown-item" to={"/admin/departments/update/"+record.id}><i className="fas fa-pencil-alt m-r-5" /> Edit</Link>
-              <a className="dropdown-item" href="#" onChange={this.onChangeDlt(record.id)} data-toggle="modal" data-target="#delete_department"><i className="fas fa-trash m-r-5" /> Delete</a>
+              <a className="dropdown-item" onClick={() => this.handleDel(record.id)} href="#" data-toggle="modal" data-target="#delete_department"><i className="fas fa-trash m-r-5" /> Delete</a>
             </div>
           </div>
         ),
@@ -148,8 +158,10 @@ class Departments extends Component {
               <div className="modal-body text-center">
                 <img src={Sent_img} alt="" width={50} height={46} />
                 <h3>Are you sure want to delete this Department?</h3>
-                <div className="m-t-20"> <a href="#" className="btn btn-white mr-0" data-dismiss="modal">Close</a>
-                  <button type="submit" className="btn btn-danger">Delete</button>
+                <div className="m-t-20"> 
+                  <a  className="btn btn-white mr-0" data-dismiss="modal">Close</a>
+                  <a  className="btn btn-danger" onClick={this.onClickDlt} data-dismiss="modal">Delete</a>
+                  {/* <button onClick={() => this.onClickDlt()} className="btn btn-danger">Delete</button> */}
                 </div>
               </div>
             </div>
