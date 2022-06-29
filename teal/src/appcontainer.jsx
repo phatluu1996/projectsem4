@@ -185,9 +185,17 @@ import "./assets/js/bootstrap-datetimepicker.min.js";
 import "./assets/plugins/light-gallery/js/lightgallery-all.min.js";
 import "./assets/js/app.js";
 
-
+import {NotificationContainer, NotificationManager} from 'react-notifications';
+import 'react-notifications/lib/notifications.css';
 
 class AppUniversal extends Component {
+
+  constructor(props){
+    super(props);
+  }
+
+  
+
   render() {
     const url = this.props.location.pathname.split("/")[1];
     if (url.includes("error-404") || url.includes("error-500")) {
@@ -228,6 +236,9 @@ class AppUniversal extends Component {
             <AdminRoute component={AdminDoctors} path="/admin/doctors" exact />
             <AdminRoute component={AdminAddDoctor} path="/admin/doctors/add" exact />
             <AdminRoute component={AdminEditDoctor} path="/admin/doctors/update/:id" exact />
+            <AdminRoute component={AdminPatients} path="/admin/patients" exact />
+            <AdminRoute component={AdminAddPatient} path="/admin/patients/add" exact />
+            <AdminRoute component={AdminEditPatient} path="/admin/patients/update/:id" exact />
             <AdminRoute component={AdminDepartments} path="/admin/departments" exact />
             <AdminRoute component={AdminAddDepartment} path="/admin/departments/add" exact />
             <AdminRoute component={AdminEditDepartment} path="/admin/departments/update/:id" exact />
@@ -235,7 +246,9 @@ class AppUniversal extends Component {
             <AdminRoute component={AdminAddAppointment} path="/admin/appointments/add" exact />
             <AdminRoute component={AdminEditAppointment} path="/admin/appointments/update/:id" exact />
           </Switch>
+          <NotificationContainer/>
         </div>
+        
       </Router>
     );
   };

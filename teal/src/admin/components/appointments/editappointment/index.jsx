@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import OpenChat from "../../sidebar/openchatheader";
 import { DatePicker, Select } from 'antd';
 import { GET, UPDATE } from '../../../../constants';
-import { appointmentAction, axiosAction, axiosActions } from '../../../../actions';
+import { axiosAction, axiosActions, notify } from '../../../../actions';
 import moment from 'moment';
 import { toMoment } from '../../../../utils';
 import $ from 'jquery';
@@ -46,7 +46,8 @@ class EditAppointment extends Component {
       method: GET,
       callback: (res) => {
         this.setState({
-          patients: res.data
+          patients: res.data,
+          loading: false
         });
       },
       data: {}
@@ -57,7 +58,8 @@ class EditAppointment extends Component {
       method: GET,
       callback: (res) => {
         this.setState({
-          doctors: res.data
+          doctors: res.data,
+          loading: false
         });
       },
       data: {}
@@ -68,7 +70,8 @@ class EditAppointment extends Component {
       method: GET,
       callback: (res) => {
         this.setState({
-          departments: res.data
+          departments: res.data,
+          loading: false
         });
       },
       data: {}
@@ -79,8 +82,9 @@ class EditAppointment extends Component {
   onSubmit(e) {
     e.preventDefault();
     axiosAction("/appointments/"+this.id, UPDATE, (res) => {
-      console.log(res);
-    }, this.state.data);
+      notify('success', "Success")
+      this.props.history.push("/admin/appointments");
+    }, (err) => notify('error', "Error"),this.state.data);
   }
 
   onChangePatient(value) {
@@ -132,8 +136,6 @@ class EditAppointment extends Component {
 
 
   render() {
-
-
     return (!this.state.loading &&
       <div className="page-wrapper">
         <div className="content">
@@ -230,6 +232,7 @@ class EditAppointment extends Component {
                 </div>
                 <div className="m-t-20 text-center">
                   <button className="btn btn-primary submit-btn" type='submit'>Save</button>
+                  <button className="btn btn-danger submit-btn" onClick={()=>this.props.history.push("/admin/appointments")}>Back</button>
                 </div>
               </form>
             </div>

@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import { User_img, Sent_img } from "../imagepath"
 import { itemRender, onShowSizeChange, } from "../../components/paginationfunction";
 import OpenChat from "../sidebar/openchatheader";
-import { axiosAction, axiosActions } from '../../../actions';
+import { axiosAction, axiosActions, notify } from '../../../actions';
 import "../../../constants";
 import { DELETE, GET } from "../../../constants";
 import { toMoment } from "../../../utils";
@@ -34,7 +34,7 @@ class Appointments extends Component {
         data: res.data,
         loading: false,
       });
-    });
+    }, ()=>{});
   }
 
   deleteData() {
@@ -43,7 +43,7 @@ class Appointments extends Component {
       url: "/appointments/" + this.state.selectdId,
       method: DELETE,
       callback: (res) => {
-        
+        axiosActions([fetchReq]);        
       },
       data: {}
     }
@@ -52,17 +52,17 @@ class Appointments extends Component {
       url: "/appointments",
       method: GET,
       callback: (res) => {
+        notify('success', "Success");
         this.setState({
           data: res.data,
           loading: false,
           selectdId: 0
-        });
-        
+        });        
       },
       data: {}
     }
     axiosActions([deleteReq]);
-    this.props.history.push("/admin/appointments");
+    // this.props.history.push("/admin/appointments");
   }
 
   componentDidMount() {
@@ -81,7 +81,7 @@ class Appointments extends Component {
         title: "ID",
         render: (text, record) => (
           <div>
-            {"PAT-" + record.patient?.id}
+            {"APM-" + record.id}
           </div>
         ),
       },

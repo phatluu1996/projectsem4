@@ -9,12 +9,11 @@ import config from 'config';
 const history = createBrowserHistory();
 
 const AppRouter = (props) => {
-    return(
+    return (
         <Router basename={`${config.publicPath}`} history={history}>
-            <Route render={(props)=> <AppContainer {...props}/>} />
+            <Route render={(props) => <AppContainer {...props} />} />            
         </Router>
     );
-    
 }
 
 
