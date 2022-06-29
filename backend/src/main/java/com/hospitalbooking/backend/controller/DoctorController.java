@@ -60,7 +60,7 @@ public class DoctorController {
         Optional<Doctor> optional = doctorRepos.findById(id);
         return optional.map(model -> {
             model.setRetired(true);
-            return new ResponseEntity<>(model, HttpStatus.OK);
+            return new ResponseEntity<>(doctorRepos.save(model), HttpStatus.OK);
         }).orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 }

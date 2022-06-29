@@ -2,7 +2,9 @@ package com.hospitalbooking.backend.controller;
 
 import com.hospitalbooking.backend.models.Patient;
 import com.hospitalbooking.backend.repository.PatientRepos;
+import com.hospitalbooking.backend.specification.DBSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -25,7 +27,8 @@ public class PatientController {
 
     @GetMapping("/patients")
     public ResponseEntity<List<Patient>> all(){
-        return new ResponseEntity<>(patientRepos.findAll(), HttpStatus.OK);
+        Specification<?> spec = DBSpecification.createSpecification(Boolean.FALSE);
+        return new ResponseEntity<>(patientRepos.findAll(spec), HttpStatus.OK);
     }
 
     @PostMapping("/patients")
@@ -47,7 +50,7 @@ public class PatientController {
         Optional<Patient> optional = patientRepos.findById(id);
         return optional.map(model -> {
             model.setRetired(true);
-            return new ResponseEntity<>(model, HttpStatus.OK);
+            return new ResponseEntity<>(patientRepos.save(model), HttpStatus.OK);
         }).orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 }

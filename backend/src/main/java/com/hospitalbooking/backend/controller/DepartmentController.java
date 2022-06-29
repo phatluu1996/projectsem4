@@ -2,7 +2,9 @@ package com.hospitalbooking.backend.controller;
 
 import com.hospitalbooking.backend.models.Department;
 import com.hospitalbooking.backend.repository.DepartmentRepos;
+import com.hospitalbooking.backend.specification.DBSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,7 +28,8 @@ public class DepartmentController {
 
     @GetMapping("/departments")
     public ResponseEntity<List<Department>> all(){
-        return new ResponseEntity<>(departmentRepos.findAll(), HttpStatus.OK);
+        Specification<?> spec = DBSpecification.createSpecification(Boolean.FALSE);
+        return new ResponseEntity<>(departmentRepos.findAll(spec), HttpStatus.OK);
     }
 
     @PostMapping("/departments")
@@ -48,7 +51,7 @@ public class DepartmentController {
         Optional<Department> optional = departmentRepos.findById(id);
         return optional.map(model -> {
             model.setRetired(true);
-            return new ResponseEntity<>(model, HttpStatus.OK);
+            return new ResponseEntity<>(departmentRepos.save(model), HttpStatus.OK);
         }).orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 }

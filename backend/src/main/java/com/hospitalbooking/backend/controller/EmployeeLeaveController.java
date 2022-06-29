@@ -48,7 +48,7 @@ public class EmployeeLeaveController {
         Optional<EmployeeLeave> optional = employeeLeaveRepos.findById(id);
         return optional.map(model -> {
             model.setRetired(true);
-            return new ResponseEntity<>(model, HttpStatus.OK);
+            return new ResponseEntity<>(employeeLeaveRepos.save(model), HttpStatus.OK);
         }).orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 }

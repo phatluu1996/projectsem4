@@ -49,7 +49,7 @@ public class UserController {
         Optional<User> optional = userRepos.findById(id);
         return optional.map(model -> {
             model.setRetired(true);
-            return new ResponseEntity<>(model, HttpStatus.OK);
+            return new ResponseEntity<>(userRepos.save(model), HttpStatus.OK);
         }).orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 }

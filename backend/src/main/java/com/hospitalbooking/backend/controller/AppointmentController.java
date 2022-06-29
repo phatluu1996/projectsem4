@@ -48,7 +48,12 @@ public class AppointmentController {
         Optional<Appointment> optional = appointmentRepos.findById(id);
         return optional.map(model -> {
             appointment.setId(model.getId());
-//            patientRepos.save(appointment.getPatient());
+            Patient patient = appointment.getPatient();
+            patientRepos.findById(patient.getId()).map(pat -> {
+                pat.setEmail(patient.getEmail());
+                pat.setPhoneNumber(patient.getPhoneNumber());
+                return patientRepos.save(pat);
+            });
             return new ResponseEntity<>(appointmentRepos.save(appointment), HttpStatus.OK);
         }).orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
@@ -60,13 +65,5 @@ public class AppointmentController {
             model.setRetired(true);
             return new ResponseEntity<>(appointmentRepos.save(model), HttpStatus.OK);
         }).orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
-    }
-
-    @GetMapping("/appointments/model")
-    public ResponseEntity<Appointment> model(){
-        Appointment model = new Appointment();
-        model.setDoctor(new Doctor());
-        model.setPatient(new Patient());
-        return new ResponseEntity<>(model, HttpStatus.OK);
     }
 }
