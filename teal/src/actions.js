@@ -46,9 +46,6 @@ export const axiosAction = (url, method, callback, data = {}) => {
     }
 }
 
-// {
-//     url: "", method : "", callback : null, data : { }
-// }
 
 export const axiosActions = (params = [{
     url: "",
@@ -86,9 +83,6 @@ export const axiosActions = (params = [{
             callbacks[idx](res);
         })
     }).catch(errArr => {
-        // errArr.map(err => {
-        //     console.log(err);
-        // })
         console.log(errArr);
     });
 }

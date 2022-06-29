@@ -8,9 +8,8 @@ import OpenChat from "../sidebar/openchatheader";
 import { axiosAction, axiosActions } from '../../../actions';
 import "../../../constants";
 import { DELETE, GET } from "../../../constants";
-import moment from 'moment';
 import { toMoment } from "../../../utils";
-
+import moment from 'moment';
 
 class Appointments extends Component {
   constructor(props) {
@@ -20,13 +19,16 @@ class Appointments extends Component {
       data: [],
       selectdId: 0
     };
-
     this.toMoment = this.toMoment.bind(this);
     this.fetchData = this.fetchData.bind(this);
     this.deleteData = this.deleteData.bind(this);
+
   }
 
+  
+
   fetchData() {
+    console.log("fetch now ")
     axiosAction("/appointments", GET, res => {
       this.setState({
         data: res.data,
@@ -41,6 +43,7 @@ class Appointments extends Component {
       url: "/appointments/" + this.state.selectdId,
       method: DELETE,
       callback: (res) => {
+        
       },
       data: {}
     }
@@ -54,10 +57,12 @@ class Appointments extends Component {
           loading: false,
           selectdId: 0
         });
+        
       },
       data: {}
     }
     axiosActions([deleteReq]);
+    this.props.history.push("/admin/appointments");
   }
 
   componentDidMount() {
