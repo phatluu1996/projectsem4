@@ -81,6 +81,14 @@ class AddAppointment extends Component {
 
   onSubmit(e) {
     e.preventDefault();
+    let idx = 0;
+    const invalidFields = e.target.getElementsByClassName("form-control")
+    for (idx = 0; idx < invalidFields.length; ++idx) {
+      if (invalidFields[idx].className.includes("is-invalid")) {
+        notify('warning', "Fail !", "Please input require fields", 3000);
+        return;
+      }
+    }
     axiosAction("/appointments", ADD, (res) => {
       notify('success', "Success")
       this.props.history.push("/admin/appointments");
@@ -145,28 +153,28 @@ class AddAppointment extends Component {
           </div>
           <div className="row">
             <div className="col-md-8 offset-md-2">
-              <form onSubmit={this.onSubmit} class="needs-validation" novalidate>
+              <form onSubmit={this.onSubmit} className="needs-validation" noValidate>
                 <div className="row">
                   <div className="col-md-6">
                     <div className="form-group">
                       <label>Patient Name</label>
-                      <Select bordered={false} size={"small"} style={{ width: '100%' }} name='patient' className={"form-control"+ this.state.data.department ? "" : " is-invalid"} onSelect={this.onChangePatient}>
+                      <Select bordered={false} size={"small"} style={{ width: '100%' }} name='patient' className={this.state.data.patient != null ? "form-control is-valid" : "form-control is-invalid"} onSelect={this.onChangePatient}>
                         {this.state.patients?.map(patient => {
                           return (<Option key={patient.id} value={patient.id}>{patient.firstName + " " + patient.lastName}</Option>)
                         })}
-                      </Select>              
-                      <div className="invalid-feedback">This field cannot be empty</div>        
+                      </Select>
+                      <div className="invalid-feedback">Patient cannot be empty</div>
                     </div>
                   </div>
                   <div className="col-md-6">
                     <div className="form-group">
                       <label>Department</label>
-                      <Select bordered={false} size={"small"} style={{ width: '100%' }} name='department' className="form-control" onSelect={this.onChangeDepartment}>
+                      <Select bordered={false} size={"small"} style={{ width: '100%' }} name='department' className={this.state.data.department != null ? "form-control is-valid" : "form-control is-invalid"} onSelect={this.onChangeDepartment}>
                         {this.state.departments?.map(department => {
                           return (<Option key={department.id} value={department.id}>{department.name}</Option>)
                         })}
-                      </Select>    
-                      <div hidden={this.state.data.department == null} className="invalid-feedback">This field cannot be empty</div>                   
+                      </Select>
+                      <div className="invalid-feedback">Department cannot be empty</div>
                     </div>
                   </div>
                 </div>
@@ -174,20 +182,21 @@ class AddAppointment extends Component {
                   <div className="col-md-6">
                     <div className="form-group">
                       <label>Doctor</label>
-                      <Select bordered={false} size={"small"} style={{ width: '100%' }} name='doctor' className="form-control" onSelect={this.onChangeDoctor}>
+                      <Select bordered={false} size={"small"} style={{ width: '100%' }} name='doctor' className={this.state.data.doctor != null ? "form-control is-valid" : "form-control is-invalid"} onSelect={this.onChangeDoctor}>
                         {this.state.doctors?.map(doctor => {
                           return (<Option key={doctor.id} value={doctor.id}>{doctor.firstName + " " + doctor.lastName}</Option>)
                         })}
                       </Select>
-                      <div hidden={this.state.data.doctor == null} className="invalid-feedback">This field cannot be empty</div> 
+                      <div className="invalid-feedback">Doctor cannot be empty</div>
                     </div>
                   </div>
                   <div className="col-md-6">
                     <div className="form-group">
                       <label>Date</label>
-                      <DatePicker name='date' className="form-control" aria-required
+                      <DatePicker name='date' className={this.state.data.date != null ? "form-control is-valid" : "form-control is-invalid"}
                         showTime={true} minuteStep={15} showSecond={false} format="YYYY-MM-DD HH:mm" clearIcon={true}
                         allowClear={true} onChange={this.onChangeDate} onSelect={this.onChangeDate}></DatePicker>
+                      <div className="invalid-feedback">Date cannot be empty</div>
                     </div>
                   </div>
                 </div>
@@ -195,13 +204,15 @@ class AddAppointment extends Component {
                   <div className="col-md-6">
                     <div className="form-group">
                       <label>Patient Email</label>
-                      <input required name='email' className="form-control" type="email" value={this.state.data.patient?.email} onChange={this.onChange} />
+                      <input name='email' className={this.state.data.patient?.email != null ? "form-control is-valid" : "form-control is-invalid"} type="email" value={this.state.data.patient?.email} onChange={this.onChange} />
+                      <div className="invalid-feedback">Patient email cannot be empty</div>
                     </div>
                   </div>
                   <div className="col-md-6">
                     <div className="form-group">
                       <label>Patient Phone Number</label>
-                      <input required name='phone' className="form-control" type="tel" value={this.state.data.patient?.phoneNumber} onChange={this.onChange} />
+                      <input name='phone' className={this.state.data.patient?.phoneNumber != null ? "form-control is-valid" : "form-control is-invalid"} type="tel" value={this.state.data.patient?.phoneNumber} onChange={this.onChange} />
+                      <div className="invalid-feedback">Patient phone cannot be empty</div>
                     </div>
                   </div>
                 </div>

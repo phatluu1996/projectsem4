@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "73e40902-a2e8-4830-bcff-bbc1f62ce058",
+		"_postman_id": "6d6c26ad-ea35-45ca-8047-50a16fe7c42f",
 		"name": "MediAp Hospital booking & Management",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -56,7 +56,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"id\": null,\r\n    \"firstName\": \"Phat\",\r\n    \"lastName\": \"Luu\",\r\n    \"gender\": \"Male\",\r\n    \"birthDay\": \"1996-05-30T00:00:00.000+00:00\",\r\n    \"email\": \"phatltuit@gmail.com\",\r\n    \"phoneNumber\": \"0582563328\",\r\n    \"shortBiography\": \"\",\r\n    \"status\": false,\r\n    \"user\": null,\r\n    \"employee\": null,\r\n    \"address\": null,\r\n    \"doctorSchedules\": [],\r\n    \"appointments\": [],\r\n    \"educationDetails\": [],\r\n    \"experienceDetails\": [],\r\n    \"retired\": false\r\n}",
+							"raw": "{\r\n    \"id\": null,\r\n    \"firstName\": \"Hoang Hoa\",\r\n    \"lastName\": \"Nguyen Vu\",\r\n    \"gender\": \"Male\",\r\n    \"birthDay\": \"1996-05-30T00:00:00.000+00:00\",\r\n    \"email\": \"phatltuit@gmail.com\",\r\n    \"phoneNumber\": \"0582563328\",\r\n    \"shortBiography\": \"\",\r\n    \"status\": false,\r\n    \"user\": null,\r\n    \"employee\": null,\r\n    \"address\": null,\r\n    \"doctorSchedules\": [],\r\n    \"appointments\": [],\r\n    \"educationDetails\": [],\r\n    \"experienceDetails\": [],\r\n    \"retired\": false\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -238,6 +238,313 @@
 					"response": []
 				}
 			]
+		},
+		{
+			"name": "Patient",
+			"item": [
+				{
+					"name": "Add",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"firstName\": \"B\",\r\n    \"lastName\": \"Patient\",\r\n    \"gender\": \"Male\",\r\n    \"dateOfBirth\": \"1991-08-12\",\r\n    \"email\": \"patient.b@gmail.com\",\r\n    \"phoneNumber\": \"56784565463\",\r\n    \"cId\": \"123545465\",\r\n    \"address\": null,\r\n    \"appointments\": null,\r\n    \"retired\": false\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/patients",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"patients"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"firstName\": \"B\",\r\n    \"lastName\": \"Patient\",\r\n    \"gender\": \"Male\",\r\n    \"dateOfBirth\": \"1991-08-12\",\r\n    \"email\": \"patient.b@gmail.com\",\r\n    \"phoneNumber\": \"56784565463\",\r\n    \"cId\": \"123545465\",\r\n    \"address\": null,\r\n    \"appointments\": null,\r\n    \"retired\": false\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/patients",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"patients"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "All",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/patients",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"patients"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Appointment",
+			"item": [
+				{
+					"name": "Add",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"department\": {\"id\":\"4\"},\r\n    \"patient\":  {\"id\":\"2\"},\r\n    \"doctor\":  {\"id\":\"1\"},\r\n    \"date\": \"2022-06-28T12:30\",\r\n    \"status\": true,\r\n    \"message\": \"nothing\",\r\n    \"retired\": false\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/appointments",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"appointments"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "All",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/appointments",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"appointments"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"department\": {\"id\":\"4\"},\r\n    \"patient\":  {\"id\":\"1\"},\r\n    \"doctor\":  {\"id\":\"1\"},\r\n    \"date\": \"2022-06-28T12:30\",\r\n    \"status\": true,\r\n    \"message\": \"nothing\",\r\n    \"retired\": false\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/appointments/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"appointments",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/appointments/4",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"appointments",
+								"4"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Department",
+			"item": [
+				{
+					"name": "Add",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"ENT Department\",\r\n    \"description\": \"ENT Department\",\r\n    \"status\": true,\r\n    \"retired\": false\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/departments",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"departments"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "One",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/departments/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"departments",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "New Request",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": 1,\r\n    \"name\": \"Dentists\",\r\n    \"description\": null,\r\n    \"status\": false,\r\n    \"retired\": false\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/departments/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"departments",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "ModelViewer",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/modelviewer/model?type=appointment",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"modelviewer",
+						"model"
+					],
+					"query": [
+						{
+							"key": "type",
+							"value": "appointment"
+						}
+					]
+				}
+			},
+			"response": []
 		}
 	]
 }

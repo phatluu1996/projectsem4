@@ -22,13 +22,9 @@ class Appointments extends Component {
     this.toMoment = this.toMoment.bind(this);
     this.fetchData = this.fetchData.bind(this);
     this.deleteData = this.deleteData.bind(this);
-
-  }
-
-  
+  }  
 
   fetchData() {
-    console.log("fetch now ")
     axiosAction("/appointments", GET, res => {
       this.setState({
         data: res.data,
@@ -170,6 +166,7 @@ class Appointments extends Component {
             <div className="col-md-12">
               <Table
                 loading={this.state.loading}
+
                 className="table-striped"
                 style={{ overflowX: "scroll" }}
                 columns={columns}
