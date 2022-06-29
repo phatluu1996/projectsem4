@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import OpenChat from "../../sidebar/openchatheader";
-import { axiosAction } from '../../../../actions';
-import { GET,UPDATE } from "../../../../constants";
+import { axiosAction,notify} from '../../../../actions';
+import { GET,UPDATE} from "../../../../constants";
 import { Redirect } from 'react-router-dom';
 
 class EditDepartment extends Component{
@@ -14,7 +14,7 @@ class EditDepartment extends Component{
       goBack: false,
       name:"",
       description:"",
-      status:true
+      status:""
     };
     this.onChange = this.onChange.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
@@ -25,11 +25,12 @@ class EditDepartment extends Component{
     this.isComponentWillUnMount = true;
     axiosAction("/departments/"+this.id,GET, res => {
       this.setState({
+          loading:false,
           name:res.data.name,
           description:res.data.description,
           status:res.data.status
       });
-    });
+    },(err) => notify('error', "Error"));
   }
 
   componentWillUnmount() {
@@ -39,7 +40,7 @@ class EditDepartment extends Component{
   onChange = (e) => {
     if(e.target.type == "radio"){
       this.setState({
-        status:e.target.value == "option2"?false:true
+        status:e.target.value
       })
     }else{
       this.setState({[e.target.name]: e.target.value});
@@ -48,14 +49,17 @@ class EditDepartment extends Component{
 
   onSubmit = (e) => {
     e.preventDefault();
+
     const newData = {
       name:this.state.name,
       description:this.state.description,
       status:this.state.status
     }
+    
     axiosAction("/departments/"+this.id,UPDATE,res => {
-      if(res.data.status = 200) this.setState({goBack:true});
-    },newData);
+      notify('success', "Success")
+      this.setState({goBack:true});
+    },(err) => {notify('error', "Error")},newData);
   }
 
 
@@ -63,7 +67,7 @@ class EditDepartment extends Component{
       if (this.state.goBack) {
         return <Redirect to='/admin/departments' />
       }
-        return(
+        return(!this.state.loading && 
             <div className="page-wrapper">
         <div className="content">
           <div className="row">
@@ -85,13 +89,13 @@ class EditDepartment extends Component{
                 <div className="form-group">
                   <label className="display-block">Department Status</label>
                   <div className="form-check form-check-inline">
-                    <input className="form-check-input" type="radio" name="status" defaultValue="option1" defaultChecked={this.state.status?false:true} onChange={(e) => this.onChange(e)} />
+                    <input className="form-check-input" type="radio" name="status" value={true} defaultChecked={this.state.status} onChange={(e) => this.onChange(e)} />
                     <label className="form-check-label" htmlFor="product_active">
                       Active
                     </label>
                   </div>
                   <div className="form-check form-check-inline">
-                    <input className="form-check-input" type="radio" name="status" defaultValue="option2" defaultChecked={this.state.status?true:false}  onChange={(e) => this.onChange(e)} />
+                    <input className="form-check-input" type="radio" name="status" value={false}   defaultChecked={!this.state.status}  onChange={(e) => this.onChange(e)} />
                     <label className="form-check-label" htmlFor="product_inactive">
                       Inactive
                     </label>
