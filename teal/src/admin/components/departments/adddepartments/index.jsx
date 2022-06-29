@@ -5,7 +5,7 @@ import { ADD } from "../../../../constants";
 import {Redirect} from 'react-router-dom';
 
 class AddDepartment extends Component{
-
+  
   constructor(props) {
     super(props);
     super();
@@ -16,8 +16,8 @@ class AddDepartment extends Component{
       description:"",
       status:true
     };
-    this.handelChange = this.handelChange.bind(this);
-    this.addNewDepartment = this.addNewDepartment.bind(this);
+    this.onChange = this.onChange.bind(this);
+    this.onSubmit = this.onSubmit.bind(this);
   }
 
   componentDidMount() {
@@ -29,7 +29,7 @@ class AddDepartment extends Component{
   }
 
 
-  handelChange = (evt,field) => {
+  onChange = (evt,field) => {
     if(evt.target.type == "radio"){
       this.setState({
         status:evt.target.value = "option2"?false:true
@@ -39,7 +39,7 @@ class AddDepartment extends Component{
     }
   }
 
-   addNewDepartment = (e) => {
+   onSubmit = (e) => {
     e.preventDefault();
     const department = {
           name:this.state.name,
@@ -66,25 +66,25 @@ class AddDepartment extends Component{
               </div>
               <div className="row">
                 <div className="col-md-8 offset-md-2">
-                  <form onSubmit={(e) => {this.addNewDepartment(e)}}>
+                  <form onSubmit={(e) => {this.onSubmit(e)}}>
                     <div className="form-group">
                       <label>Department Name</label>
-                      <input className="form-control" id='name'  type="text" onChange={(event)=>this.handelChange(event,"name")}  />
+                      <input className="form-control" id='name'  type="text" onChange={(event)=>this.onChange(event,"name")}  />
                     </div>
                     <div className="form-group">
                       <label>Description</label>
-                      <textarea cols={30} rows={4} className="form-control" id='description'  onChange={(event)=>this.handelChange(event,"description")} />
+                      <textarea cols={30} rows={4} className="form-control" id='description'  onChange={(event)=>this.onChange(event,"description")} />
                     </div>
                     <div className="form-group">
                       <label className="display-block">Department Status</label>
                       <div className="form-check form-check-inline">
-                        <input className="form-check-input" type="radio" name="status" id="product_active" defaultValue="option1" onChange={(event)=>this.handelChange(event,"option1")} defaultChecked  />
+                        <input className="form-check-input" type="radio" name="status" id="product_active" defaultValue="option1" onChange={(event)=>this.onChange(event,"option1")} defaultChecked  />
                         <label className="form-check-label" htmlFor="product_active">
                           Active
                         </label>
                       </div>
                       <div className="form-check form-check-inline">
-                        <input className="form-check-input" type="radio" name="status" id="product_inactive" defaultValue="option2" onChange={(event)=>this.handelChange(event,"option2")} />
+                        <input className="form-check-input" type="radio" name="status" id="product_inactive" defaultValue="option2" onChange={(event)=>this.onChange(event,"option2")} />
                         <label className="form-check-label" htmlFor="product_inactive">
                           Inactive
                         </label>
