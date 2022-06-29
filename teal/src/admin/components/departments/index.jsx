@@ -17,7 +17,9 @@ class Departments extends Component {
       loading: true,
       data: [],
     };
+    this.onChangeDlt = this.onChangeDlt.bind(this)
   }
+   
 
   componentDidMount() {
     this.isComponentWillUnMount = true;
@@ -45,6 +47,16 @@ class Departments extends Component {
       loading: id,
     });
   };
+
+  onChangeDlt = (id) => {
+    // axiosAction("/departments",GET, res => {
+    //   this.setState({
+    //     data: res.data,
+    //     loading: false,
+    //   });
+    // });
+  }
+
   render() {
     const { data } = this.state;
 
@@ -58,7 +70,7 @@ class Departments extends Component {
         dataIndex: "name",
         render: (text, record) => <div>{text}</div>,
         sorter: (a, b) => a.Department.length - b.Department.length,
-
+        
       },
       {
         title: "Status",
@@ -78,8 +90,8 @@ class Departments extends Component {
           <div className="dropdown dropdown-action">
             <a href="#" className="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i className="fas fa-ellipsis-v" /></a>
             <div className="dropdown-menu dropdown-menu-right">
-              <Link className="dropdown-item" to="/edit-department"><i className="fas fa-pencil-alt m-r-5" /> Edit</Link>
-              <a className="dropdown-item" href="#" data-toggle="modal" data-target="#delete_department"><i className="fas fa-trash m-r-5" /> Delete</a>
+              <Link className="dropdown-item" to={"/admin/departments/update/"+record.id}><i className="fas fa-pencil-alt m-r-5" /> Edit</Link>
+              <a className="dropdown-item" href="#" onChange={this.onChangeDlt(record.id)} data-toggle="modal" data-target="#delete_department"><i className="fas fa-trash m-r-5" /> Delete</a>
             </div>
           </div>
         ),
@@ -115,6 +127,7 @@ class Departments extends Component {
                   dataSource={data}
                   rowKey={(record) => record.id}
                   showSizeChanger={true}
+                  onChange={(e)=>handleProceed(e)}
                   pagination={{
                     total: data.length,
                     showTotal: (total, range) =>
