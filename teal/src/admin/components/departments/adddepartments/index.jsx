@@ -48,7 +48,7 @@ class AddDepartment extends Component{
     };
     
    axiosAction("/departments",ADD, res => {
-    notify('success', "Success")
+    notify('success', '','Success')
     this.setState({goBack:true})
   },(err) => notify('error', "Error"),department);
    

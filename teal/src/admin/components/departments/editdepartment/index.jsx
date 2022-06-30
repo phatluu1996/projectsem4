@@ -57,7 +57,7 @@ class EditDepartment extends Component{
     }
     
     axiosAction("/departments/"+this.id,UPDATE,res => {
-      notify('success', "Success")
+      notify('success', '','Success')
       this.setState({goBack:true});
     },(err) => {notify('error', "Error")},newData);
   }

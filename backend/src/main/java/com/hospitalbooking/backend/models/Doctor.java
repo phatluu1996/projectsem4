@@ -22,13 +22,18 @@ public class Doctor {
     private String gender;
     @Column(name = "birth_day", length = 20)
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private Date birthDay;
+    private Date dateOfBirth;
     @Column(name = "email", length = 255)
     private String email;
     @Column(name = "phone_number", length = 15)
     private String phoneNumber;
     @Column(name = "short_biography", columnDefinition = "text")
     private String shortBiography;
+
+    @ManyToOne
+    @JoinColumn(name = "department_id", referencedColumnName = "id")
+    private Department department;
+
     @Column(name = "status")
     private boolean status;
 
@@ -63,12 +68,12 @@ public class Doctor {
     public Doctor() {
     }
 
-    public Doctor(Long id, String firstName, String lastName, String gender, Date birthDay, String email, String phoneNumber, String shortBiography, boolean status, Employee employee, User user, Address address, List<DoctorSchedule> doctorSchedules, List<Appointment> appointments, List<DoctorEducationDetail> educationDetails, List<DoctorExperienceDetail> experienceDetails, boolean retired) {
+    public Doctor(Long id, String firstName, String lastName, String gender, Date dateOfBirth, String email, String phoneNumber, String shortBiography, boolean status, Employee employee, User user, Address address, List<DoctorSchedule> doctorSchedules, List<Appointment> appointments, List<DoctorEducationDetail> educationDetails, List<DoctorExperienceDetail> experienceDetails, boolean retired) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.gender = gender;
-        this.birthDay = birthDay;
+        this.dateOfBirth = dateOfBirth;
         this.email = email;
         this.phoneNumber = phoneNumber;
         this.shortBiography = shortBiography;
@@ -88,7 +93,7 @@ public class Doctor {
         this.firstName = firstName;
         this.lastName = lastName;
         this.gender = gender;
-        this.birthDay = birthDay;
+        this.dateOfBirth = dateOfBirth;
         this.email = email;
         this.phoneNumber = phoneNumber;
         this.shortBiography = shortBiography;
@@ -133,12 +138,12 @@ public class Doctor {
         this.gender = gender;
     }
 
-    public Date getBirthDay() {
-        return birthDay;
+    public Date getDateOfBirth() {
+        return dateOfBirth;
     }
 
-    public void setBirthDay(Date birthDay) {
-        this.birthDay = birthDay;
+    public void setDateOfBirth(Date dateOfBirth) {
+        this.dateOfBirth = dateOfBirth;
     }
 
     public String getEmail() {
@@ -241,5 +246,11 @@ public class Doctor {
         return firstName + " " + lastName;
     }
 
+    public Department getDepartment() {
+        return department;
+    }
 
+    public void setDepartment(Department department) {
+        this.department = department;
+    }
 }

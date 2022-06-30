@@ -21,9 +21,9 @@ public class DoctorSchedule {
     private String start;
     @Column(name = "end_time")
     private String end;
-    @Column(name = "availableDays", length = 7, columnDefinition = "nvarchar(7)")
+    @Column(name = "availableDays", length = 13, columnDefinition = "nvarchar(13)")
     private String availableDays;
-    @Column(name = "message", length = 7, columnDefinition = "text")
+    @Column(name = "message", columnDefinition = "text")
     private String message;
     @Column(name = "retired")
     private boolean retired;

@@ -62,7 +62,7 @@ class Departments extends Component {
 
   onClickDlt = () => {
     axiosAction("/departments/"+this.state.idDtl,DELETE, res => {
-      notify('success', "Success")
+      notify('success', '','Success')
       this.fetchData();
     },(err) => notify('error', "Error"));
   }

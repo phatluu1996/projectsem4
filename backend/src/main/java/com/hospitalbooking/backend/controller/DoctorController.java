@@ -4,9 +4,11 @@ import com.hospitalbooking.backend.models.Doctor;
 import com.hospitalbooking.backend.repository.DoctorRepos;
 import com.hospitalbooking.backend.repository.EmployeeRepos;
 import com.hospitalbooking.backend.repository.UserRepos;
+import com.hospitalbooking.backend.specification.DBSpecification;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -31,14 +33,14 @@ public class DoctorController {
 
     @GetMapping("/doctors/{id}")
     public ResponseEntity<Doctor> one(@PathVariable Long id){
-//        return new ResponseEntity<Doctor>(new Doctor(), HttpStatus.OK);
         return doctorRepos.findById(id).map(doctor -> new ResponseEntity<>(doctor, HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     @GetMapping("/doctors")
     public ResponseEntity<List<Doctor>> all(){
-        return new ResponseEntity<>(doctorRepos.findAll(), HttpStatus.OK);
+        Specification<?> spec = DBSpecification.createSpecification(Boolean.FALSE);
+        return new ResponseEntity<>(doctorRepos.findAll(spec), HttpStatus.OK);
     }
 
     @PostMapping("/doctors")

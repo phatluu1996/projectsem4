@@ -19,7 +19,6 @@ class Appointments extends Component {
       data: [],
       selectdId: 0
     };
-    this.toMoment = this.toMoment.bind(this);
     this.fetchData = this.fetchData.bind(this);
     this.deleteData = this.deleteData.bind(this);
   }  
@@ -48,7 +47,7 @@ class Appointments extends Component {
       url: "/appointments",
       method: GET,
       callback: (res) => {
-        notify('success', "Success");
+        notify('success', '','Success');
         this.setState({
           data: res.data,
           loading: false,
@@ -57,16 +56,11 @@ class Appointments extends Component {
       },
       data: {}
     }
-    axiosActions([deleteReq]);
-    // this.props.history.push("/admin/appointments");
+    axiosActions([deleteReq]);    
   }
 
   componentDidMount() {
     this.fetchData();
-  }
-
-  toMoment(date) {
-    return toMoment(date);
   }
 
   render() {
@@ -194,8 +188,7 @@ class Appointments extends Component {
                 <img src={Sent_img} alt="" width={50} height={46} />
                 <h3>Are you sure want to delete this Appointment?</h3>
                 <div className="m-t-20">
-                  <a href="#" className="btn btn-white mr-0" data-dismiss="modal">Close</a>
-                  {/* <button type="submit" className="btn btn-danger" >Delete</button> */}
+                  <a href="#" className="btn btn-white mr-0" data-dismiss="modal">Close</a>                  
                   <a href="#" className="btn btn-danger" data-dismiss="modal" onClick={this.deleteData}>Delete</a>
                 </div>
               </div>

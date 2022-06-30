@@ -113,3 +113,15 @@ export const notify = (type, message, title = '', timeOut = 2000, callback = () 
         }
 };
 
+export const isFormValid = (e) => {
+    let idx = 0;
+    const invalidFields = e.target.getElementsByClassName("form-control")
+    for (idx = 0; idx < invalidFields.length; ++idx) {
+      if (invalidFields[idx].className.includes("is-invalid")) {
+        notify('warning', "Please input require fields", "Fail !", 3000);
+        return false;
+      }
+    }
+    return true;
+}
+

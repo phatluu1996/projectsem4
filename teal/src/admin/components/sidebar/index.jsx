@@ -52,11 +52,13 @@ class SidebarNav extends Component {
             <ul>
               <li className="menu-title">Main</li>
               <MenuItem to="/admin" icon="fas fa-tachometer-alt" title="Dashboard" />
-              <MenuItem to="/admin/patients" icon="fas fa-wheelchair" title="Patients" />
-              <MenuItem to="/admin/doctors" icon="fas fa-user-md" title="Doctors" />
-              <MenuItem to="/admin/appointments" icon="far fa-calendar-alt" title="Appointments" />
+              <MenuItem to="/admin/patients" icon="fas fa-wheelchair" title="Patients List" />
+              <MenuItem to="/admin/doctors" icon="fas fa-user-md" title="Doctors List" />
+              <MenuItem to="/admin/schedules" icon="far fa-calendar-check" title="Doctor Schedules List" />
+              <MenuItem to="/admin/appointments" icon="far fa-calendar-alt" title="Appointments" />              
               <MenuItem to="/admin/departments" icon="far fa-hospital" title="Departments List" />
-              
+              <MenuItem to="/admin/employees" icon="fas fa-user" title="Employees List" />
+              <MenuItem to="/admin/assets" icon="fas fa-cube" title="Assets List" />
 
               {/* <li className={`${url === "patients" || url === "add-patients" || url === "edit-patient" ? "active" : ""}`}>
                 <Link to="/admin/patients"><i className="fas fa-wheelchair" /> Patients</Link>

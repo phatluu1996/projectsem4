@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import OpenChat from "../../sidebar/openchatheader"
 import { DatePicker, Select } from 'antd';
 import { ADD, GET, UPDATE } from '../../../../constants';
-import { axiosAction, axiosActions, notify } from '../../../../actions';
+import { axiosAction, axiosActions, isFormValid, notify } from '../../../../actions';
 import moment from 'moment';
 import { toMoment } from '../../../../utils';
 import $ from 'jquery';
@@ -81,18 +81,11 @@ class AddAppointment extends Component {
 
   onSubmit(e) {
     e.preventDefault();
-    let idx = 0;
-    const invalidFields = e.target.getElementsByClassName("form-control")
-    for (idx = 0; idx < invalidFields.length; ++idx) {
-      if (invalidFields[idx].className.includes("is-invalid")) {
-        notify('warning', "Fail !", "Please input require fields", 3000);
-        return;
-      }
-    }
+    if(!isFormValid(e)) return;
     axiosAction("/appointments", ADD, (res) => {
-      notify('success', "Success")
+      notify('success', '','Success')
       this.props.history.push("/admin/appointments");
-    }, (err) => notify('error', 'Error'), this.state.data);
+    }, (err) => notify('error', '', 'Error'), this.state.data);
   }
 
   onChangePatient(value) {
@@ -104,6 +97,9 @@ class AddAppointment extends Component {
   onChangeDepartment(value) {
     const tmp = { ...this.state.data };
     tmp.department = this.state.departments.filter(elt => elt.id === value)[0];
+    if(tmp.doctor && tmp.doctor.department && tmp.doctor.department.id != tmp.department.id){
+      tmp.doctor = null;      
+    }
     this.setState({ data: tmp });
   }
 
@@ -158,7 +154,7 @@ class AddAppointment extends Component {
                   <div className="col-md-6">
                     <div className="form-group">
                       <label>Patient Name</label>
-                      <Select bordered={false} size={"small"} style={{ width: '100%' }} name='patient' className={this.state.data.patient != null ? "form-control is-valid" : "form-control is-invalid"} onSelect={this.onChangePatient}>
+                      <Select bordered={false} size={"small"} style={{ width: '100%' }} name='patient' className={this.state.data.patient != null ? "form-control is-valid" : "form-control is-invalid"} onChange={this.onChangePatient}>
                         {this.state.patients?.map(patient => {
                           return (<Option key={patient.id} value={patient.id}>{patient.firstName + " " + patient.lastName}</Option>)
                         })}
@@ -169,7 +165,7 @@ class AddAppointment extends Component {
                   <div className="col-md-6">
                     <div className="form-group">
                       <label>Department</label>
-                      <Select bordered={false} size={"small"} style={{ width: '100%' }} name='department' className={this.state.data.department != null ? "form-control is-valid" : "form-control is-invalid"} onSelect={this.onChangeDepartment}>
+                      <Select bordered={false} size={"small"} style={{ width: '100%' }} name='department' className={this.state.data.department != null ? "form-control is-valid" : "form-control is-invalid"} onChange={this.onChangeDepartment}>
                         {this.state.departments?.map(department => {
                           return (<Option key={department.id} value={department.id}>{department.name}</Option>)
                         })}
@@ -182,8 +178,8 @@ class AddAppointment extends Component {
                   <div className="col-md-6">
                     <div className="form-group">
                       <label>Doctor</label>
-                      <Select bordered={false} size={"small"} style={{ width: '100%' }} name='doctor' className={this.state.data.doctor != null ? "form-control is-valid" : "form-control is-invalid"} onSelect={this.onChangeDoctor}>
-                        {this.state.doctors?.map(doctor => {
+                      <Select bordered={false} size={"small"} style={{ width: '100%' }} name='doctor' className={this.state.data.doctor != null ? "form-control is-valid" : "form-control is-invalid"} onChange={this.onChangeDoctor} value={this.state.data.doctor ? this.state.data.doctor.id : "" }>
+                        {this.state.doctors?.filter(doc => doc.department?.id == this.state.data.department?.id) ?.map(doctor => {
                           return (<Option key={doctor.id} value={doctor.id}>{doctor.firstName + " " + doctor.lastName}</Option>)
                         })}
                       </Select>
@@ -195,7 +191,7 @@ class AddAppointment extends Component {
                       <label>Date</label>
                       <DatePicker name='date' className={this.state.data.date != null ? "form-control is-valid" : "form-control is-invalid"}
                         showTime={true} minuteStep={15} showSecond={false} format="YYYY-MM-DD HH:mm" clearIcon={true}
-                        allowClear={true} onChange={this.onChangeDate} onSelect={this.onChangeDate}></DatePicker>
+                        allowClear={true} onChange={this.onChangeDate} onSelect={this.onChangeDate} inputReadOnly={true}></DatePicker>
                       <div className="invalid-feedback">Date cannot be empty</div>
                     </div>
                   </div>
@@ -221,14 +217,14 @@ class AddAppointment extends Component {
                   <textarea name='message' cols={30} rows={4} className="form-control" onChange={this.onChange} />
                 </div>
                 <div className="m-t-20 text-center">
-                  <button className="btn btn-primary submit-btn" type='submit'>Save</button>
+                  <button className="btn btn-primary submit-btn" type='submit'>Create Appointment</button>
                   <button className="btn btn-danger submit-btn" onClick={() => this.props.history.push("/admin/appointments")}>Back</button>
                 </div>
               </form>
             </div>
           </div>
         </div>
-        <OpenChat />
+        <OpenChat/>
       </div>
     );
   }

@@ -2,7 +2,9 @@ package com.hospitalbooking.backend.controller;
 
 import com.hospitalbooking.backend.models.DoctorSchedule;
 import com.hospitalbooking.backend.repository.DoctorScheduleRepos;
+import com.hospitalbooking.backend.specification.DBSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -25,7 +27,8 @@ public class DoctorScheduleController {
 
     @GetMapping("/schedules")
     public ResponseEntity<List<DoctorSchedule>> all(){
-        return new ResponseEntity<>(doctorScheduleRepos.findAll(), HttpStatus.OK);
+        Specification<?> spec = DBSpecification.createSpecification(Boolean.FALSE);
+        return new ResponseEntity<>(doctorScheduleRepos.findAll(spec), HttpStatus.OK);
     }
 
     @PostMapping("/schedules")

@@ -55,7 +55,7 @@ import AdminAppointments from './admin/components/appointments';
 import AdminAddAppointment from './admin/components/appointments/addappointment';
 import AdminEditAppointment from './admin/components/appointments/editappointment';
 //Schedule
-import AdminSchedule from './admin/components/schedule';
+import AdminSchedules from './admin/components/schedule';
 import AdminAddSchedule from './admin/components/schedule/addschedule';
 import AdminEditSchedule from './admin/components/schedule/editshedule';
 //Departments
@@ -63,7 +63,7 @@ import AdminDepartments from './admin/components/departments';
 import AdminAddDepartment from './admin/components/departments/adddepartments';
 import AdminEditDepartment from './admin/components/departments/editdepartment';
 //Employees
-import AdminEmployeeList from './admin/components/employees/employeelist';
+import AdminEmployees from './admin/components/employees/employeelist';
 import AdminAddEmployee from './admin/components/employees/employeelist/add-employee';
 import AdminEditEmployee from './admin/components/employees/employeelist/edit-employee';
 import AdminLeave from './admin/components/employees/leave/index';
@@ -108,8 +108,8 @@ import AdminAddBlog from './admin/components/blog/blog-add';
 import AdminBlogEdit from './admin/components/blog/blog-edit';
 //Assets
 import AdminAssets from './admin/components/assets';
-import AdminEditAssets from './admin/components/assets/assets-edit';
-import AdminAssetsAdd from './admin/components/assets/assets-add';
+import AdminEditAsset from './admin/components/assets/assets-edit';
+import AdminAddAsset from './admin/components/assets/assets-add';
 //Activities
 import AdminActivities from './admin/components/activities';
 //Report
@@ -231,11 +231,14 @@ class AppUniversal extends Component {
             <PublicRoute restricted={true} component={ForgotPassword} path="/forgot-password" exact /> */}
 
             {/* <PrivateRoute component={AdminDashboard} path="/admin/dashboard" exact /> */}
-            <BusinessRoute component={Home} path="/" exact />
+            <BusinessRoute component={Home} path="/" exact/>
             <AdminRoute component={AdminDashboard} path="/admin" exact />
             <AdminRoute component={AdminDoctors} path="/admin/doctors" exact />
             <AdminRoute component={AdminAddDoctor} path="/admin/doctors/add" exact />
             <AdminRoute component={AdminEditDoctor} path="/admin/doctors/update/:id" exact />
+            <AdminRoute component={AdminSchedules} path="/admin/schedules" exact />
+            <AdminRoute component={AdminAddSchedule} path="/admin/schedules/add" exact />
+            <AdminRoute component={AdminEditSchedule} path="/admin/schedules/update/:id" exact />
             <AdminRoute component={AdminPatients} path="/admin/patients" exact />
             <AdminRoute component={AdminAddPatient} path="/admin/patients/add" exact />
             <AdminRoute component={AdminEditPatient} path="/admin/patients/update/:id" exact />
@@ -245,6 +248,13 @@ class AppUniversal extends Component {
             <AdminRoute component={AdminAppointments} path="/admin/appointments" exact />
             <AdminRoute component={AdminAddAppointment} path="/admin/appointments/add" exact />
             <AdminRoute component={AdminEditAppointment} path="/admin/appointments/update/:id" exact />
+            <AdminRoute component={AdminAssets} path="/admin/assets" exact />
+            <AdminRoute component={AdminAddAsset} path="/admin/assets/add" exact />
+            <AdminRoute component={AdminEditAsset} path="/admin/assets/update/:id" exact />
+            <AdminRoute component={AdminEmployees} path="/admin/employees" exact />
+            <AdminRoute component={AdminAddEmployee} path="/admin/employees/add" exact />
+            <AdminRoute component={AdminEditEmployee} path="/admin/employees/update/:id" exact />
+
           </Switch>
           <NotificationContainer/>
         </div>
