@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { api, ADD, DELETE, UPDATE, GET } from './constants';
+import { api, GET_LOCATION, ADD, DELETE, UPDATE, GET} from './constants';
 import {NotificationContainer, NotificationManager} from 'react-notifications';
 
 export const axiosAction = (url, method, successCallback, errorCallback, data = {}) => {
@@ -40,7 +40,15 @@ export const axiosAction = (url, method, successCallback, errorCallback, data = 
                 errorCallback(err);
             });
             break;
-
+        case GET_LOCATION:
+            const url = "https://countriesnow.space/api/v0.1/countries/states";
+            axios.get(url).then(res => {
+                successCallback(res);
+            }).catch(err => {
+                console.log(err);
+                errorCallback(err);
+            });
+            break;
         default:
             api.get(url).then(res => {
                 successCallback(res);

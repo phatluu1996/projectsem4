@@ -35,6 +35,7 @@ class Departments extends Component {
 
   fetchData = () =>{
     axiosAction("/departments",GET, res => {
+      console.log(res);
       this.setState({
         data: res.data,
         loading: false,

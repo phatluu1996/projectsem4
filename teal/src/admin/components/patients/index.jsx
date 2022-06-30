@@ -2,119 +2,46 @@ import React, { Component } from "react";
 import { Table } from "antd";
 import { Link } from "react-router-dom";
 import OpenChat from "../sidebar/openchatheader"
-
+import { axiosAction,notify } from '../../../actions';
+import { GET } from "../../../constants";
 import { itemRender, onShowSizeChange, } from "../../components/paginationfunction";
-import { User_img,Sent_img } from "../imagepath"
+import { User_img,Sent_img } from "../imagepath";
 
+import moment from "moment";
 class Patients extends Component {
+
+
   constructor(props) {
     super(props);
     this.state = {
       show: null,
-      data: [
-        {
-          id: 1,
-          image: User_img,
-          Name: "Dr. Ruby",
-          Age: "32",
-          Address: "3169 Birch Street, El Paso, TX, 79915",
-          Phone: "(380) 141 1885",
-          Email: "charlesortega@example.com",
-        },
-        {
-          id: 2,
-          image: User_img,
-          Name: "Denise",
-          Age: "30",
-          Address: "1603 Old York Rd, Abington, PA, 19001",
-          Phone: "(836) 257 1379",
-          Email: "denisestevens@example.com",
-        },
-        {
-          id: 3,
-          image: User_img,
-          Name: "Dennis",
-          Age: "25",
-          Address: "891 Juniper Drive, Saginaw, MI, 48603",
-          Phone: "(933) 137 6201",
-          Email: "dennissalazar@example.com",
-        },
-        {
-          id: 4,
-          image: User_img,
-          Name: "Jennifer",
-          Age: "35",
-          Address: "1545 Dorsey Ln NE, Leland, NC, 28451",
-          Phone: "(207) 808 8863",
-          Email: "jenniferrobinson@example.com"	
-          ,
-        },
-        {
-          id: 5,
-          image: User_img,
-          Name: "Joshua",
-          Age: "32",
-          Address: "4712 Spring Creek Dr, Bonita Springs, FL, 34134",
-          Phone: "(407) 554 4146",
-          Email: "joshuaguzman@example.com",
-        },
-        {
-          id: 6,
-          image: User_img,
-          Name: "Judy Clark",
-          Age: "22",
-          Address: "4093 Woodside Circle, Pensacola, FL, 32514",
-          Phone: "(359) 969 3594",
-          Email: "judy.clark@example.com",
-        },
-        {
-          id: 7,
-          image: User_img,
-          Name: "Julia Sims",
-          Age: "27",
-          Address: "517 Walker Dr, Houma, LA, 70364, United States",
-          Phone: "(680) 432 2662",
-          Email: "juliasims@example.com",
-        },
-        {
-          id: 8,
-          image: User_img,
-          Name: "Kyle Bowman",
-          Age: "32",
-          Address: "5060 Fairways Cir #APT 207, Vero Beach, FL, 32967",
-          Phone: "(981) 756 6128",
-          Email: "kylebowman@example.com",
-        },
-        {
-          id: 9,
-          image: User_img,
-          Name: "Linda",
-          Age: "32",
-          Address: "3169 Birch Street, El Paso, TX, 79915",
-          Phone: "(380) 141 1885",
-          Email: "charlesortega@example.com",
-        },
-        {
-          id: 10,
-          image: User_img,
-          Name: "Marie Howard",
-          Age: "32",
-          Address: "3169 Birch Street, El Paso, TX, 79915",
-          Phone: "(380) 141 1885",
-          Email: "charlesortega@example.com",
-        },
-        {
-          id: 11,
-          image: User_img,
-          Name: "Marie Howard",
-          Age: "32",
-          Address: "3169 Birch Street, El Paso, TX, 79915",
-          Phone: "(380) 141 1885",
-          Email: "charlesortega@example.com",
-        },
-      ],
+      loading:false,
+      data: []
     };
+    this.fetchData = this.fetchData.bind(this);
   }
+
+
+
+  componentDidMount() {
+    this.isComponentWillUnMount = true;
+    this.fetchData();
+  }
+
+  componentWillUnmount() {
+    this.isComponentWillUnMount = false
+  }
+
+  fetchData = () =>{
+    axiosAction("/patients",GET, res => {
+      console.log(res);
+      this.setState({
+        data: res.data,
+        loading: false,
+      });
+    },(err) => notify('error', "Error"));
+  }
+
   handleClose = () => {
     this.setState({
       show: false,
@@ -126,42 +53,51 @@ class Patients extends Component {
       show: id,
     });
   };
+  
+  countAge = (text) =>{
+  const age = moment(text).fromNow().split(" ");
+   return age[0];
+  }
+
   render() {
     const { data } = this.state;
 
     const columns = [
       {
-        title: "Name",
-        dataIndex: "Name",
+        title: "First Name",
+        dataIndex: "firstName",
         render: (text, record) => (
-          <div className="table-avatar">
-            <a href="#0" className="avatar avatar-sm mr-2">
-              <img alt="" src={record.image} />
-            </a>
-            {text}
-          </div>
+          <div className="text-center">{text}</div>
+        ),
+        sorter: (a, b) => a.Name.length - b.Name.length,
+      },
+      {
+        title: "Last Name",
+        dataIndex: "lastName",
+        render: (text, record) => (
+          <div className="text-center">{text}</div>
         ),
         sorter: (a, b) => a.Name.length - b.Name.length,
       },
       {
         title: "Age",
-        dataIndex: "Age",
-        render: (text, record) => <div className="text-center">{text}</div>,
+        dataIndex: "dateOfBirth",
+        render: (text, record) => <div className="text-center">{this.countAge(text)}</div>,
         sorter: (a, b) => a.Age.length - b.Age.length,
       },
       {
         title: "Address",
-        dataIndex: "Address",
+        dataIndex: "address",
         sorter: (a, b) => a.Address.length - b.Address.length,
       },
       {
         title: "Phone",
-        dataIndex: "Phone",
+        dataIndex: "phoneNumber",
         sorter: (a, b) => a.Phone.length - b.Phone.length,
       },
       {
         title: "Email",
-        dataIndex: "Email",
+        dataIndex: "email",
         sorter: (a, b) => a.Email.length - b.Email.length,
       },
 
@@ -183,7 +119,7 @@ class Patients extends Component {
       },
     ];
 
-    return (
+    return (!this.state.loading && 
       <div className="page-wrapper">
         <div className="content">
           <div className="row">
@@ -191,7 +127,7 @@ class Patients extends Component {
               <h4 className="page-title">Patients</h4>
             </div>
             <div className="col-sm-8 col-9 text-right m-b-20">
-              <Link to="/add-patients" className="btn btn btn-primary btn-rounded float-right" >
+              <Link to="/admin/patients/add" className="btn btn btn-primary btn-rounded float-right" >
                 <i className="fa fa-plus"></i> Add Patient
               </Link>
             </div>
@@ -200,6 +136,7 @@ class Patients extends Component {
             <div className="col-md-12">
               <div className="table-responsive">
                 <Table
+                  loading = {this.state.loading}
                   className="table-striped"
                   style={{ overflowX: "scroll" }}
                   columns={columns}
