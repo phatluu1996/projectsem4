@@ -220,18 +220,22 @@ class AppUniversal extends Component {
             <PublicRoute restricted={false} path="/about-us" exact component={AboutUs} />
             <PublicRoute restricted={false} path="/contact-us" exact component={ContactUs} />
             <PublicRoute restricted={false} path="/appointment" exact component={Appointment} />
-            <PublicRoute restricted={false} path="/login" exact component={Login} />
+            
             <PublicRoute restricted={false} path="/register" exact component={Register} />
             <PublicRoute restricted={false} path="/forgot-password" exact component={ForgotPassword} />
             <PublicRoute restricted={false} path="/404" exact component={Error404} /> */}
 
             {/* <PublicRoute restricted={false} component={Home} path="/" exact />
             <PublicRoute restricted={true} component={Login} path="/login" exact />
-            <PublicRoute restricted={true} component={Register} path="/register" exact />
+            
             <PublicRoute restricted={true} component={ForgotPassword} path="/forgot-password" exact /> */}
 
             {/* <PrivateRoute component={AdminDashboard} path="/admin/dashboard" exact /> */}
             <BusinessRoute component={Home} path="/" exact/>
+            
+            <BusinessRoute restricted={false} path="/login" exact component={Login} />
+            <BusinessRoute restricted={true} component={Register} path="/register" exact />
+
             <AdminRoute component={AdminDashboard} path="/admin" exact />
             <AdminRoute component={AdminDoctors} path="/admin/doctors" exact />
             <AdminRoute component={AdminAddDoctor} path="/admin/doctors/add" exact />
