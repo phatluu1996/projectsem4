@@ -1,5 +1,7 @@
 package com.hospitalbooking.backend.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import javax.persistence.*;
 
 @Entity
@@ -18,12 +20,8 @@ public class User {
     @Column(name = "reset_password", length = 255)
     private String resetPassword;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinTable(name = "user_doctor",
-            joinColumns =
-                    { @JoinColumn(name = "user_id", referencedColumnName = "id") },
-            inverseJoinColumns =
-                    { @JoinColumn(name = "doctor_id", referencedColumnName = "id") })
+    @ManyToOne
+    @JoinColumn(name = "doctor_id", referencedColumnName = "id")
     private Doctor doctor;
 
     @Column(name = "retired")

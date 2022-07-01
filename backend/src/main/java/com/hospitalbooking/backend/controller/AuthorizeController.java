@@ -59,7 +59,7 @@ public class AuthorizeController {
             if(roles.get(0).equals("ROLE_ADMIN")){
                 headerName = "Admin";
             }else if(roles.get(0).equals("ROLE_DOCTOR")){
-                headerName = user.getDoctor().DisplayName();
+                headerName = user.getDoctor().getEmployee().getFirstName();
             }else {
                 return ResponseEntity.ok(new MessageResponse("Error authorize !", false));
             }

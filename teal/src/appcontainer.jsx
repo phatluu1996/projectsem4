@@ -258,7 +258,6 @@ class AppUniversal extends Component {
             <AdminRoute component={AdminEmployees} path="/admin/employees" exact />
             <AdminRoute component={AdminAddEmployee} path="/admin/employees/add" exact />
             <AdminRoute component={AdminEditEmployee} path="/admin/employees/update/:id" exact />
-
           </Switch>
           <NotificationContainer/>
         </div>

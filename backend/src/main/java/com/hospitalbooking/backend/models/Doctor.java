@@ -14,19 +14,6 @@ public class Doctor {
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name = "first_name", length = 250, columnDefinition = "nvarchar(250)")
-    private String firstName;
-    @Column(name = "last_name", length = 250, columnDefinition = "nvarchar(250)")
-    private String lastName;
-    @Column(name = "gender", length = 20)
-    private String gender;
-    @Column(name = "birth_day", length = 20)
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private Date dateOfBirth;
-    @Column(name = "email", length = 255)
-    private String email;
-    @Column(name = "phone_number", length = 15)
-    private String phoneNumber;
     @Column(name = "short_biography", columnDefinition = "text")
     private String shortBiography;
 
@@ -34,18 +21,10 @@ public class Doctor {
     @JoinColumn(name = "department_id", referencedColumnName = "id")
     private Department department;
 
-    @Column(name = "status")
-    private boolean status;
-
-    @OneToOne(mappedBy = "doctor")
-    private User user;
-
-    @OneToOne(mappedBy = "doctor")
+    @ManyToOne
+    @JoinColumn(name = "employee_id", referencedColumnName = "id")
     private Employee employee;
 
-    @ManyToOne
-    @JoinColumn(name = "address_id", referencedColumnName = "id")
-    private Address address;
     @OneToMany
     @JoinColumn(name = "doctor_id", referencedColumnName = "id")
     @JsonIgnoreProperties("doctor")
@@ -68,39 +47,13 @@ public class Doctor {
     public Doctor() {
     }
 
-    public Doctor(Long id, String firstName, String lastName, String gender, Date dateOfBirth, String email, String phoneNumber, String shortBiography, boolean status, Employee employee, User user, Address address, List<DoctorSchedule> doctorSchedules, List<Appointment> appointments, List<DoctorEducationDetail> educationDetails, List<DoctorExperienceDetail> experienceDetails, boolean retired) {
+    public Doctor(Long id, String shortBiography, Department department, Employee employee, List<DoctorSchedule> doctorSchedules, List<Appointment> appointments, List<DoctorEducationDetail> educationDetails, List<DoctorExperienceDetail> experienceDetails, boolean retired) {
         this.id = id;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.gender = gender;
-        this.dateOfBirth = dateOfBirth;
-        this.email = email;
-        this.phoneNumber = phoneNumber;
         this.shortBiography = shortBiography;
-        this.status = status;
+        this.department = department;
         this.employee = employee;
-        this.user = user;
-        this.address = address;
         this.doctorSchedules = doctorSchedules;
         this.appointments = appointments;
-        this.educationDetails = educationDetails;
-        this.experienceDetails = experienceDetails;
-        this.retired = retired;
-    }
-
-    public Doctor(Long id, String firstName, String lastName, String gender, Date birthDay, String email, String phoneNumber, String shortBiography, boolean status, Employee employee, User user, Address address, List<DoctorEducationDetail> educationDetails, List<DoctorExperienceDetail> experienceDetails, boolean retired) {
-        this.id = id;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.gender = gender;
-        this.dateOfBirth = dateOfBirth;
-        this.email = email;
-        this.phoneNumber = phoneNumber;
-        this.shortBiography = shortBiography;
-        this.status = status;
-        this.employee = employee;
-        this.user = user;
-        this.address = address;
         this.educationDetails = educationDetails;
         this.experienceDetails = experienceDetails;
         this.retired = retired;
@@ -114,54 +67,6 @@ public class Doctor {
         this.id = id;
     }
 
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public String getGender() {
-        return gender;
-    }
-
-    public void setGender(String gender) {
-        this.gender = gender;
-    }
-
-    public Date getDateOfBirth() {
-        return dateOfBirth;
-    }
-
-    public void setDateOfBirth(Date dateOfBirth) {
-        this.dateOfBirth = dateOfBirth;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
-
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
-
     public String getShortBiography() {
         return shortBiography;
     }
@@ -170,12 +75,12 @@ public class Doctor {
         this.shortBiography = shortBiography;
     }
 
-    public boolean isStatus() {
-        return status;
+    public Department getDepartment() {
+        return department;
     }
 
-    public void setStatus(boolean status) {
-        this.status = status;
+    public void setDepartment(Department department) {
+        this.department = department;
     }
 
     public Employee getEmployee() {
@@ -184,22 +89,6 @@ public class Doctor {
 
     public void setEmployee(Employee employee) {
         this.employee = employee;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public Address getAddress() {
-        return address;
-    }
-
-    public void setAddress(Address address) {
-        this.address = address;
     }
 
     public List<DoctorSchedule> getDoctorSchedules() {
@@ -240,17 +129,5 @@ public class Doctor {
 
     public void setRetired(boolean retired) {
         this.retired = retired;
-    }
-
-    public String DisplayName(){
-        return firstName + " " + lastName;
-    }
-
-    public Department getDepartment() {
-        return department;
-    }
-
-    public void setDepartment(Department department) {
-        this.department = department;
     }
 }

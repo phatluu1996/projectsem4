@@ -79,7 +79,7 @@ class Doctors extends Component {
             <a href="#0" className="avatar avatar-sm mr-2">
               {/* <img alt="" src={record.image} /> */}
             </a>
-            {record.lastName + " " + record.firstName}
+            {record.employee.lastName + " " + record.employee.firstName}
           </div>
         ),
 
@@ -88,7 +88,7 @@ class Doctors extends Component {
         title: "Gender",
         render: (text, record) => (
           <div>
-            {record.gender}
+            {record.employee.gender}
           </div>
         ),
       },
@@ -96,7 +96,7 @@ class Doctors extends Component {
         title: "BirthDay",
         render: (text, record) => (
           <div>
-            {toMoment(record.dateOfBirth).format("DD-MM-YYYY")}
+            {toMoment(record.employee.dateOfBirth).format("DD-MM-YYYY")}
           </div>
         ),
       },
@@ -104,7 +104,7 @@ class Doctors extends Component {
         title: "Email",
         render: (text, record) => (
           <div>
-            {record.email}
+            {record.employee.email}
           </div>
         ),
       },
@@ -112,7 +112,7 @@ class Doctors extends Component {
         title: "Phone",
         render: (text, record) => (
           <div>
-            {record.phoneNumber}
+            {record.employee.phoneNumber}
           </div>
         ),
       },
@@ -128,8 +128,8 @@ class Doctors extends Component {
         title: "Status",
         render: (text, record) => (
           <span>
-            <Tag color={record.status ? "green" : "red"} className="custom-badge">
-              {record.status ? "Active" : "Inactive"}
+            <Tag color={record.employee.status ? "green" : "red"} className="custom-badge">
+              {record.employee.status ? "Active" : "Inactive"}
             </Tag>
           </span>
         ),

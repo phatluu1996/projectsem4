@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import OpenChat from "../../sidebar/openchatheader"
 import { DatePicker, Select } from 'antd';
 import { ADD, GET, UPDATE } from '../../../../constants';
-import { axiosAction, axiosActions, isFormValid, notify } from '../../../../actions';
+import { axiosAction, axiosActions, isFormValid, isValid, notify } from '../../../../actions';
 import moment from 'moment';
 import { toMoment } from '../../../../utils';
 import $ from 'jquery';
@@ -154,7 +154,7 @@ class AddAppointment extends Component {
                   <div className="col-md-6">
                     <div className="form-group">
                       <label>Patient Name</label>
-                      <Select bordered={false} size={"small"} style={{ width: '100%' }} name='patient' className={this.state.data.patient != null ? "form-control is-valid" : "form-control is-invalid"} onChange={this.onChangePatient}>
+                      <Select bordered={false} size={"small"} style={{ width: '100%' }} name='patient' className={isValid(this.state.data.patient != null)} onChange={this.onChangePatient}>
                         {this.state.patients?.map(patient => {
                           return (<Option key={patient.id} value={patient.id}>{patient.firstName + " " + patient.lastName}</Option>)
                         })}
@@ -165,7 +165,7 @@ class AddAppointment extends Component {
                   <div className="col-md-6">
                     <div className="form-group">
                       <label>Department</label>
-                      <Select bordered={false} size={"small"} style={{ width: '100%' }} name='department' className={this.state.data.department != null ? "form-control is-valid" : "form-control is-invalid"} onChange={this.onChangeDepartment}>
+                      <Select bordered={false} size={"small"} style={{ width: '100%' }} name='department' className={isValid(this.state.data.department != null)} onChange={this.onChangeDepartment}>
                         {this.state.departments?.map(department => {
                           return (<Option key={department.id} value={department.id}>{department.name}</Option>)
                         })}
@@ -178,9 +178,9 @@ class AddAppointment extends Component {
                   <div className="col-md-6">
                     <div className="form-group">
                       <label>Doctor</label>
-                      <Select bordered={false} size={"small"} style={{ width: '100%' }} name='doctor' className={this.state.data.doctor != null ? "form-control is-valid" : "form-control is-invalid"} onChange={this.onChangeDoctor} value={this.state.data.doctor ? this.state.data.doctor.id : "" }>
+                      <Select bordered={false} size={"small"} style={{ width: '100%' }} name='doctor' className={isValid(this.state.data.doctor != null)} onChange={this.onChangeDoctor} value={this.state.data.doctor ? this.state.data.doctor.id : "" }>
                         {this.state.doctors?.filter(doc => doc.department?.id == this.state.data.department?.id) ?.map(doctor => {
-                          return (<Option key={doctor.id} value={doctor.id}>{doctor.firstName + " " + doctor.lastName}</Option>)
+                          return (<Option key={doctor.id} value={doctor.id}>{doctor.employee.firstName + " " + doctor.employee.lastName}</Option>)
                         })}
                       </Select>
                       <div className="invalid-feedback">Doctor cannot be empty</div>
@@ -189,7 +189,7 @@ class AddAppointment extends Component {
                   <div className="col-md-6">
                     <div className="form-group">
                       <label>Date</label>
-                      <DatePicker name='date' className={this.state.data.date != null ? "form-control is-valid" : "form-control is-invalid"}
+                      <DatePicker name='date' className={isValid(this.state.data.date != null)}
                         showTime={true} minuteStep={15} showSecond={false} format="YYYY-MM-DD HH:mm" clearIcon={true}
                         allowClear={true} onChange={this.onChangeDate} onSelect={this.onChangeDate} inputReadOnly={true}></DatePicker>
                       <div className="invalid-feedback">Date cannot be empty</div>
@@ -200,14 +200,14 @@ class AddAppointment extends Component {
                   <div className="col-md-6">
                     <div className="form-group">
                       <label>Patient Email</label>
-                      <input name='email' className={this.state.data.patient?.email != null ? "form-control is-valid" : "form-control is-invalid"} type="email" value={this.state.data.patient?.email} onChange={this.onChange} />
+                      <input name='email' className={isValid(this.state.data.patient?.email != null)} type="email" value={this.state.data.patient?.email} onChange={this.onChange} />
                       <div className="invalid-feedback">Patient email cannot be empty</div>
                     </div>
                   </div>
                   <div className="col-md-6">
                     <div className="form-group">
                       <label>Patient Phone Number</label>
-                      <input name='phone' className={this.state.data.patient?.phoneNumber != null ? "form-control is-valid" : "form-control is-invalid"} type="tel" value={this.state.data.patient?.phoneNumber} onChange={this.onChange} />
+                      <input name='phone' className={isValid(this.state.data.patient?.phoneNumber != null)} type="tel" value={this.state.data.patient?.phoneNumber} onChange={this.onChange} />
                       <div className="invalid-feedback">Patient phone cannot be empty</div>
                     </div>
                   </div>

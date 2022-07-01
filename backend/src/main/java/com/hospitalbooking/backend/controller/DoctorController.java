@@ -1,6 +1,7 @@
 package com.hospitalbooking.backend.controller;
 
 import com.hospitalbooking.backend.models.Doctor;
+import com.hospitalbooking.backend.repository.AddressRepos;
 import com.hospitalbooking.backend.repository.DoctorRepos;
 import com.hospitalbooking.backend.repository.EmployeeRepos;
 import com.hospitalbooking.backend.repository.UserRepos;
@@ -31,6 +32,9 @@ public class DoctorController {
     @Autowired
     private EmployeeRepos employeeRepos;
 
+    @Autowired
+    private AddressRepos addressRepos;
+
     @GetMapping("/doctors/{id}")
     public ResponseEntity<Doctor> one(@PathVariable Long id){
         return doctorRepos.findById(id).map(doctor -> new ResponseEntity<>(doctor, HttpStatus.OK))
@@ -45,6 +49,9 @@ public class DoctorController {
 
     @PostMapping("/doctors")
     public ResponseEntity<Doctor> add(@RequestBody Doctor doctor){
+        addressRepos.save(doctor.getEmployee().getAddress());
+        employeeRepos.save(doctor.getEmployee());
+        doctorRepos.save(doctor);
         return new ResponseEntity<>(doctorRepos.save(doctor), HttpStatus.OK);
     }
 

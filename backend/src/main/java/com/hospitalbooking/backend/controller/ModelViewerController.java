@@ -29,6 +29,12 @@ public class ModelViewerController {
             case "doctor-schedule":
                 return new ResponseEntity<>(new DoctorSchedule(), HttpStatus.OK);
 
+            case "doctor-education":
+                return new ResponseEntity<>(new DoctorEducationDetail(), HttpStatus.OK);
+
+            case "doctor-experience":
+                return new ResponseEntity<>(new DoctorExperienceDetail(), HttpStatus.OK);
+
             case "employee":
                 return new ResponseEntity<>(new Employee(), HttpStatus.OK);
 
@@ -40,6 +46,9 @@ public class ModelViewerController {
 
             case "user":
                 return new ResponseEntity<>(new User(), HttpStatus.OK);
+
+            case "address":
+                return new ResponseEntity<>(new Address(), HttpStatus.OK);
 
             default:
                 return new ResponseEntity<>(new Doctor(), HttpStatus.OK);
