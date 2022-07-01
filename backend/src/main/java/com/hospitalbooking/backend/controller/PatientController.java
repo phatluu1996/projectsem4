@@ -1,6 +1,7 @@
 package com.hospitalbooking.backend.controller;
 
 import com.hospitalbooking.backend.models.Patient;
+import com.hospitalbooking.backend.repository.AddressRepos;
 import com.hospitalbooking.backend.repository.PatientRepos;
 import com.hospitalbooking.backend.specification.DBSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,8 @@ import java.util.Optional;
 public class PatientController {
     @Autowired
     private PatientRepos patientRepos;
+    @Autowired
+    private AddressRepos addressRepos;
 
     @GetMapping("/patients/{id}")
     public ResponseEntity<Patient> one(@PathVariable Long id){
@@ -33,6 +36,7 @@ public class PatientController {
 
     @PostMapping("/patients")
     public ResponseEntity<Patient> add(@RequestBody Patient patient){
+        addressRepos.save(patient.getAddress());
         return new ResponseEntity<>(patientRepos.save(patient), HttpStatus.OK);
     }
 

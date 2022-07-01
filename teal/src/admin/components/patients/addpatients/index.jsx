@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import OpenChat from "../../sidebar/openchatheader";
 import { User_img } from "../../imagepath";
 import { axiosAction , isFormValid, isValid, notify } from '../../../../actions';
-import { GET, GET_LOCATION } from "../../../../constants";
+import { GET, ADD } from "../../../../constants";
 import { DatePicker, Select } from 'antd';
 import { countries } from '../../../../address/index';
 
@@ -70,7 +70,11 @@ class AddPatient extends Component {
   onSubmit = (e) => {
     e.preventDefault();
     const tmp = { ...this.state.data }
-    console.log(tmp);
+    if (!isFormValid(e)) return;
+    axiosAction("/patients",ADD, res => {
+      notify('success', '','Success')
+      this.props.history.push("/admin/patients");
+    },(err) => notify('error', "Error"),tmp);
   }
 
   onChange = (e) => {
@@ -139,29 +143,30 @@ class AddPatient extends Component {
                   </div>
                   <div className="col-sm-6">
                     <div className="form-group">
-                      <label>Last Name</label>
+                      <label>Last Name <span className="text-danger">*</span></label>
                       <input className={isValid(this.state.data.lastName)} name='lastName' type="text" onChange={(e) => this.onChange(e)} />
-                      <div className="invalid-feedback">First name cannot be empty</div>
+                      <div className="invalid-feedback">Last name cannot be empty</div>
                     </div>
                   </div>
                   <div className="col-sm-6">
                     <div className="form-group">
                       <label>Email <span className="text-danger">*</span></label>
                       <input className={isValid(this.state.data.email)} name='email' type="email" onChange={(e) => this.onChange(e)} />
-                      <div className="invalid-feedback">First name cannot be empty</div>
+                      <div className="invalid-feedback">Email cannot be empty</div>
                     </div>
                   </div>
                   <div className="col-sm-6">
                     <div className="form-group">
-                      <label>Date of Birth</label>
-                      <DatePicker name='dateOfBirth' className={isValid(this.state.data.firstName)} aria-required
+                      <label>Date of Birth<span className="text-danger">*</span></label>
+                      <DatePicker name='dateOfBirth' className={isValid(this.state.data.dateOfBirth)} aria-required
                         showTime={true} format="YYYY-MM-DD" clearIcon={true}
                         allowClear={true} onChange={this.onChangeDate} onSelect={this.onChangeDate}></DatePicker>
+                        <div className="invalid-feedback">Date of birth cannot be empty</div>
                     </div>
                   </div>
                   <div className="col-sm-6">
                     <div className="form-group gender-select">
-                      <label className="gen-label">Gender:</label>
+                      <label className="gen-label">Gender</label>
                       <div className="form-check-inline">
                         <label className="form-check-label">
                           <input type="radio" name="gender" value={true} className="form-check-input" onChange={(e) => this.onChange(e)} />Male
@@ -176,69 +181,76 @@ class AddPatient extends Component {
                   </div>
                   <div className="col-sm-6">
                     <div className="form-group">
-                      <label>CID Number</label>
-                      <input className="form-control" name='cId' type="text" onChange={(e) => this.onChange(e)} />
+                      <label>CID Number<span className="text-danger">*</span></label>
+                      <input className={isValid(this.state.data.cId)} name='cId' type="text" onChange={(e) => this.onChange(e)} />
+                      <div className="invalid-feedback">CID cannot be empty</div>
                     </div>
                   </div>
                   <div className="col-sm-12">
                     <div className="row">
                       <div className="col-sm-12">
                         <div className="form-group">
-                          <label>Address</label>
-                          <input type="text" className="form-control" name='line' onChange={(e) => this.onChange(e)} />
+                          <label>Address<span className="text-danger">*</span></label>
+                          <input type="text" className={isValid(this.state.data.address.line)} name='line' onChange={(e) => this.onChange(e)} />
+                          <div className="invalid-feedback">Address cannot be empty</div>
                         </div>
                       </div>
                       <div className="col-sm-6 col-md-6 col-lg-3">
                         <div className="form-group">
-                          <label>Country</label>
+                          <label>Country<span className="text-danger">*</span></label>
                           <Select
                             defaultValue={""}
                             bordered={false}
                             style={{ width: '100%' }}
                             name='country'
-                            className="form-control"
+                            className={isValid(this.state.data.address.country != null)}
                             onChange={this.onSelectCountry}>
                             {this.state.countries?.map((country, index) => {
                               return (<Select.Option key={index}>{country.name}</Select.Option>)
                             })}
                           </Select>
+                          <div className="invalid-feedback">Please select country cannot be empty</div>
                         </div>
                       </div>
                       <div className="col-sm-6 col-md-6 col-lg-3">
                       {this.state.countrySelect?.states.length > 0 &&<div className="form-group">
-                          <label>State/Province</label>
+                          <label>State/Province<span className="text-danger">*</span></label>
                            <Select
                             defaultValue={""}                          
                             bordered={false}
                             value={this.state.data.address.province}
                             style={{ width: '100%' }}
                             name='state'
-                            className="form-control"
+                            className={isValid(this.state.data.address.province != null)}
                             onChange={this.onSelectState}>
                             {this.state.countrySelect?.states?.map((state, index) => {
                               return (<Select.Option key={index}>{state.name}</Select.Option>)
                             })}
                           </Select>
                         </div>}
+                        <div className="invalid-feedback">Please select state cannot be empty</div>
                       </div>
                       <div className="col-sm-6 col-md-6 col-lg-3">
                         <div className="form-group">
-                          <label>City</label>
-                          <input type="text" name='city' className="form-control" onChange={(e) => this.onChange(e)} />
+                          <label>City<span className="text-danger">*</span></label>
+                          <input type="text" name='city' className={isValid(this.state.data.address.city)}  onChange={(e) => this.onChange(e)} />
+                          <div className="invalid-feedback">Please select city cannot be empty</div>
                         </div>
                       </div>
                       <div className="col-sm-6 col-md-6 col-lg-3">
                         <div className="form-group">
-                          <label>Postal Code</label>
-                          <input type="text" className="form-control" name='postalCode' onChange={(e) => this.onChange(e)} />
+                          <label>Postal Code<span className="text-danger">*</span></label>
+                          <input type="text" className={isValid(this.state.data.address.postalCode)}  name='postalCode' onChange={(e) => this.onChange(e)} />
+                          <div className="invalid-feedback">Postal code cannot be empty</div>
                         </div>
                       </div>
                     </div>
                   </div>
                   <div className="col-sm-6">
                     <div className="form-group">
-                      <label>Phone </label>
-                      <input className="form-control" name='phoneNumber' type="text" onChange={(e) => this.onChange(e)} />
+                      <label>Phone <span className="text-danger">*</span></label>
+                      <input className={isValid(this.state.data.phoneNumber)}  name='phoneNumber' type="text" onChange={(e) => this.onChange(e)} />
+                      <div className="invalid-feedback">Phone number code cannot be empty</div>
                     </div>
                   </div>
                   <div className="col-sm-6">
