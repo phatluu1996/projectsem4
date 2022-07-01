@@ -2,6 +2,8 @@ import axios from 'axios';
 import { api, ADD, DELETE, UPDATE, GET } from './constants';
 import { NotificationContainer, NotificationManager } from 'react-notifications';
 import moment from "moment";
+import { notification } from 'antd';
+
 export const axiosAction = (url, method, successCallback, errorCallback, data = {}) => {
     const response = undefined;
     switch (method) {
@@ -96,21 +98,12 @@ export const axiosActions = (params = [{
 }
 
 export const notify = (type, message, title = '', timeOut = 2000, callback = () => { }) => {
-
-    switch (type) {
-        case 'info':
-            NotificationManager.info(message, title, timeOut);
-            break;
-        case 'success':
-            NotificationManager.success(message, title, timeOut);
-            break;
-        case 'warning':
-            NotificationManager.warning(message, title, timeOut);
-            break;
-        case 'error':
-            NotificationManager.error(message, title, timeOut);
-            break;
-    }
+    notification[type]({
+        message: title,
+        description:message,
+        duration:timeOut/1000,
+        placement:"bottomRight"
+      });      
 };
 
 export const isFormValid = (e) => {
