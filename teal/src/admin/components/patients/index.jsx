@@ -2,11 +2,10 @@ import React, { Component } from "react";
 import { Table } from "antd";
 import { Link } from "react-router-dom";
 import OpenChat from "../sidebar/openchatheader"
-import { axiosAction,notify } from '../../../actions';
+import { axiosAction,notify,countAge } from '../../../actions';
 import { GET } from "../../../constants";
 import { itemRender, onShowSizeChange, } from "../../components/paginationfunction";
 import { User_img,Sent_img } from "../imagepath";
-
 import moment from "moment";
 class Patients extends Component {
 
@@ -54,41 +53,36 @@ class Patients extends Component {
     });
   };
   
-  countAge = (text) =>{
-  const age = moment(text).fromNow().split(" ");
-   return age[0];
-  }
 
   render() {
     const { data } = this.state;
 
     const columns = [
       {
-        title: "First Name",
-        dataIndex: "firstName",
+        title: "Patient Name",
         render: (text, record) => (
-          <div className="text-center">{text}</div>
+          <div className="table-avatar">
+            <a href="#0" className="avatar avatar-sm mr-2">
+              {/* <img alt="" src={record.image} /> */}
+            </a>
+            {record.lastName + " " + record.firstName}
+          </div>
         ),
-        sorter: (a, b) => a.Name.length - b.Name.length,
-      },
-      {
-        title: "Last Name",
-        dataIndex: "lastName",
-        render: (text, record) => (
-          <div className="text-center">{text}</div>
-        ),
-        sorter: (a, b) => a.Name.length - b.Name.length,
       },
       {
         title: "Age",
         dataIndex: "dateOfBirth",
-        render: (text, record) => <div className="text-center">{this.countAge(text)}</div>,
+        render: (text, record) => <div className="text-center">{countAge(text)}</div>,
         sorter: (a, b) => a.Age.length - b.Age.length,
       },
       {
         title: "Address",
         dataIndex: "address",
-        sorter: (a, b) => a.Address.length - b.Address.length,
+        render: (text, record) => (
+          <div>
+            {record.address.line + " " + record.address.city +" "+record.address.province+" "+record.address.country}
+          </div>
+        ),
       },
       {
         title: "Phone",

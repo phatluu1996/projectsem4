@@ -8,4 +8,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface AddressRepos extends JpaRepository<Address, Long>, JpaSpecificationExecutor {
+
 }

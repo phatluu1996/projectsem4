@@ -1,5 +1,7 @@
 import axios from 'axios';
 import { api, ADD, DELETE, UPDATE, GET } from './constants';
+import { NotificationContainer, NotificationManager } from 'react-notifications';
+import moment from "moment";
 import { notification } from 'antd';
 
 export const axiosAction = (url, method, successCallback, errorCallback, data = {}) => {
@@ -129,3 +131,8 @@ export const isValid = (condition) => {
     return condition ? "form-control is-valid" : "form-control is-invalid";
 }
 
+export const countAge = (text) =>{
+    if(moment(text).format('YYYY') === moment().format('YYYY')) return 0
+    const age = moment(text).fromNow().split(" ");
+    return age[0];
+  }
