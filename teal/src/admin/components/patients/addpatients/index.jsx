@@ -1,67 +1,76 @@
 import React, { Component } from 'react';
 import OpenChat from "../../sidebar/openchatheader";
 import { User_img } from "../../imagepath";
-import { axiosAction, notify } from '../../../../actions';
+import { axiosAction , isFormValid, isValid, notify } from '../../../../actions';
 import { GET, GET_LOCATION } from "../../../../constants";
 import { DatePicker, Select } from 'antd';
-import moment from "moment";
+import { countries } from '../../../../address/index';
 
 
 class AddPatient extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      isComponentWillUnMount: true,
-      show: null,
       loading: false,
-      countries: [],
-      stageChecked:true,
+      crrValue: "",
+      countries: countries,
+      countrySelect: null,
       data: {
         firstName: null,
         lastName: null,
         gender: null,
         dateOfBirth: null,
+        email: null,
         phoneNumber: null,
         cId: null,
-        address:null
+        address: {
+          postalCode: null,
+          province: null,
+          line: null,
+          country: null,
+          city: null
+        }
       },
     };
     this.onChange = this.onChange.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
-    this.onClick = this.onClick.bind(this);
-    this.fetchLocation = this.fetchLocation.bind(this);
+    this.onSelectCountry = this.onSelectCountry.bind(this);
     this.onChangeDate = this.onChangeDate.bind(this);
   }
 
   componentDidMount() {
-    this.isComponentWillUnMount = true;
-    this.fetchLocation();
+
   }
 
   componentWillUnmount() {
-    this.isComponentWillUnMount = false
   }
 
-  fetchLocation = () =>{
-    axiosAction("",GET_LOCATION, res => {
-      console.log(res.data.data);
-      this.setState({
-        countries:res.data.data,
-        loading: false,
-      })
-    },(err) => notify('error', "Error"));
+
+  onSelectCountry = (value) => {
+    const tmp = { ...this.state.data };
+    if(!this.state.countries[value].states.find(state => tmp.address.province == state.name)){
+        tmp.address.province = "";
+    }
+    tmp.address.country = this.state.countries[value].name
+    this.setState({
+      crrValue: null,
+      countrySelect: this.state.countries[value],
+      data:tmp
+    });
   }
 
-  onClick = (e) => {
-      const countries = [];
-      this.setState({stageChecked:false});
-
-
+  onSelectState = (value) => {
+    const tmp = { ...this.state.data };
+    tmp.address.province = this.state.countrySelect.states[value].name
+    this.setState({
+      data: tmp
+    })
   }
 
   onSubmit = (e) => {
     e.preventDefault();
-    console.log(this.state.data)
+    const tmp = { ...this.state.data }
+    console.log(tmp);
   }
 
   onChange = (e) => {
@@ -71,24 +80,29 @@ class AddPatient extends Component {
       case 'firstName':
         tmp.firstName = value;
         break;
-
       case 'lastName':
         tmp.lastName = value;
         break;
-
       case 'gender':
         tmp.gender = value;
         break;
-
       case 'phoneNumber':
         tmp.phoneNumber = value;
         break;
-
+      case 'email':
+        tmp.email = value;
+        break;
+      case 'postalCode':
+        tmp.address.postalCode = value;
+        break;
       case 'cId':
         tmp.cId = value;
         break;
-      case 'address':
-        tmp.address = value;
+      case 'city':
+        tmp.address.city = value;
+        break;
+      case 'line':
+        tmp.address.line = value;
         break;
     }
     this.setState({ data: tmp });
@@ -97,7 +111,9 @@ class AddPatient extends Component {
   onChangeDate(e) {
     const tmp = { ...this.state.data };
     tmp.dateOfBirth = e;
-    this.setState({ dateOfBirth: tmp });
+    this.setState({
+      data: tmp
+    });
   }
 
   render() {
@@ -117,27 +133,30 @@ class AddPatient extends Component {
                   <div className="col-sm-6">
                     <div className="form-group">
                       <label>First Name <span className="text-danger">*</span></label>
-                      <input className="form-control" name='firstName' type="text" onChange={(e) => this.onChange(e)} />
+                      <input className={isValid(this.state.data.firstName)} name='firstName' type="text" onChange={(e) => this.onChange(e)} />
+                      <div className="invalid-feedback">First name cannot be empty</div>
                     </div>
                   </div>
                   <div className="col-sm-6">
                     <div className="form-group">
                       <label>Last Name</label>
-                      <input className="form-control" name='lastName' type="text" onChange={(e) => this.onChange(e)} />
+                      <input className={isValid(this.state.data.lastName)} name='lastName' type="text" onChange={(e) => this.onChange(e)} />
+                      <div className="invalid-feedback">First name cannot be empty</div>
                     </div>
                   </div>
                   <div className="col-sm-6">
                     <div className="form-group">
                       <label>Email <span className="text-danger">*</span></label>
-                      <input className="form-control" name='email' type="email" onChange={(e) => this.onChange(e)} />
+                      <input className={isValid(this.state.data.email)} name='email' type="email" onChange={(e) => this.onChange(e)} />
+                      <div className="invalid-feedback">First name cannot be empty</div>
                     </div>
                   </div>
                   <div className="col-sm-6">
                     <div className="form-group">
                       <label>Date of Birth</label>
-                      <DatePicker name='date' className="form-control" aria-required
+                      <DatePicker name='dateOfBirth' className={isValid(this.state.data.firstName)} aria-required
                         showTime={true} format="YYYY-MM-DD" clearIcon={true}
-                        allowClear={true} onChange={(e) => this.onChangeDate(e)} onSelect={(e) => this.onChangeDate()}></DatePicker>
+                        allowClear={true} onChange={this.onChangeDate} onSelect={this.onChangeDate}></DatePicker>
                     </div>
                   </div>
                   <div className="col-sm-6">
@@ -166,40 +185,52 @@ class AddPatient extends Component {
                       <div className="col-sm-12">
                         <div className="form-group">
                           <label>Address</label>
-                          <input type="text" className="form-control " />
+                          <input type="text" className="form-control" name='line' onChange={(e) => this.onChange(e)} />
                         </div>
                       </div>
                       <div className="col-sm-6 col-md-6 col-lg-3">
                         <div className="form-group">
                           <label>Country</label>
-                          <select className="form-control select" onClick={(e) => this.onClick(e)}>
-                            {this.state.countries?this.state.countries?.map((country,index) =>
-                                  <option key={index}>{country.name}</option>
-                            )
-                            :""}
-                          </select>
+                          <Select
+                            defaultValue={""}
+                            bordered={false}
+                            style={{ width: '100%' }}
+                            name='country'
+                            className="form-control"
+                            onChange={this.onSelectCountry}>
+                            {this.state.countries?.map((country, index) => {
+                              return (<Select.Option key={index}>{country.name}</Select.Option>)
+                            })}
+                          </Select>
                         </div>
                       </div>
                       <div className="col-sm-6 col-md-6 col-lg-3">
-                        <div className="form-group">
+                      {this.state.countrySelect?.states.length > 0 &&<div className="form-group">
                           <label>State/Province</label>
-                          <select disabled={this.state.stageChecked}  className="form-control select">
-                            <option>California</option>
-                            <option>Alaska</option>
-                            <option>Alabama</option>
-                          </select>
-                        </div>
+                           <Select
+                            defaultValue={""}                          
+                            bordered={false}
+                            value={this.state.data.address.province}
+                            style={{ width: '100%' }}
+                            name='state'
+                            className="form-control"
+                            onChange={this.onSelectState}>
+                            {this.state.countrySelect?.states?.map((state, index) => {
+                              return (<Select.Option key={index}>{state.name}</Select.Option>)
+                            })}
+                          </Select>
+                        </div>}
                       </div>
                       <div className="col-sm-6 col-md-6 col-lg-3">
                         <div className="form-group">
-                          <label>Distrist</label>
-                          <input type="text" className="form-control" />
+                          <label>City</label>
+                          <input type="text" name='city' className="form-control" onChange={(e) => this.onChange(e)} />
                         </div>
                       </div>
                       <div className="col-sm-6 col-md-6 col-lg-3">
                         <div className="form-group">
                           <label>Postal Code</label>
-                          <input type="text" className="form-control" />
+                          <input type="text" className="form-control" name='postalCode' onChange={(e) => this.onChange(e)} />
                         </div>
                       </div>
                     </div>
