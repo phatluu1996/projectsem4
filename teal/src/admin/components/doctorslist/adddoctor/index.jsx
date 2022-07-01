@@ -3,8 +3,9 @@ import OpenChat from "../../sidebar/openchatheader"
 import { countries } from '../../../../address';
 import { axiosAction, axiosActions, isFormValid, isValid, notify } from '../../../../actions';
 import { ADD, GET } from '../../../../constants';
-import { DatePicker, Select, Timeline, Modal } from 'antd';
+import { DatePicker, Select, Timeline, Modal, Tabs, Button, Table } from 'antd';
 const { Option } = Select;
+const { TabPane } = Tabs;
 
 
 class AddDoctor extends Component {
@@ -178,6 +179,15 @@ class AddDoctor extends Component {
   }
 
   render() {
+    const educationsCols = [{
+      title : ""
+    },{
+
+    },{
+
+    }];
+
+
     return (!this.state.loading &&
       <div className="page-wrapper">
         <div className="content">
@@ -207,8 +217,8 @@ class AddDoctor extends Component {
                   <div className="col-md-6">
                     <div className="form-group">
                       <label>Department<span className="text-danger">*</span></label>
-                      <Select showSearch={true} bordered={false} size={"small"} style={{ width: '100%' }} name='department' className={isValid(this.state.data.department != null)} 
-                      onChange={this.onChangeDepartment}>
+                      <Select showSearch={true} bordered={false} size={"small"} style={{ width: '100%' }} name='department' className={isValid(this.state.data.department != null)}
+                        onChange={this.onChangeDepartment}>
                         {this.state.departments?.map(department => {
                           return (<Option key={department.id} value={department.id}>{department.name}</Option>)
                         })}
@@ -251,15 +261,15 @@ class AddDoctor extends Component {
                       <label className="gen-label">Gender:<span className="text-danger">*</span></label>
                       <div className="form-check-inline">
                         <label className="form-check-label">
-                          <input type="radio" name="gender" className={this.state.data.employee.gender ? "form-check-input is-valid" : "form-check-input is-invalid"} 
-                          value="Male" onChange={this.onChange} />Male
+                          <input type="radio" name="gender" className={this.state.data.employee.gender ? "form-check-input is-valid" : "form-check-input is-invalid"}
+                            value="Male" onChange={this.onChange} />Male
                           <div className="invalid-feedback">Gender must be selected </div>
                         </label>
                       </div>
                       <div className="form-check-inline">
                         <label className="form-check-label">
-                          <input type="radio" name="gender" className={this.state.data.employee.gender ? "form-check-input is-valid" : "form-check-input is-invalid"} 
-                          value="Female" onChange={this.onChange} />Female
+                          <input type="radio" name="gender" className={this.state.data.employee.gender ? "form-check-input is-valid" : "form-check-input is-invalid"}
+                            value="Female" onChange={this.onChange} />Female
                         </label>
                       </div>
 
@@ -277,8 +287,8 @@ class AddDoctor extends Component {
                       <div className="col-sm-6">
                         <div className="form-group">
                           <label>Country<span className="text-danger">*</span></label>
-                          <Select aria-autocomplete='none' showSearch={true} bordered={false} size={"small"} style={{ width: '100%' }} name='country' 
-                          className={isValid(this.state.data.employee.address?.country)} onChange={this.onChangeCountry}>
+                          <Select aria-autocomplete='none' showSearch={true} bordered={false} size={"small"} style={{ width: '100%' }} name='country'
+                            className={isValid(this.state.data.employee.address?.country)} onChange={this.onChangeCountry}>
                             {this.state.countries?.map((ctr, idx) => {
                               return (<Option key={idx} value={ctr.name}>{ctr.name}</Option>)
                             })}
@@ -289,8 +299,8 @@ class AddDoctor extends Component {
                       <div className="col-sm-6">
                         {this.state.countries?.filter(ctr => ctr.name === this.state.data.employee.address?.country)[0]?.states.length > 0 && <div className="form-group">
                           <label>State/Province<span className="text-danger">*</span></label>
-                          <Select aria-autocomplete='none' showSearch={true} bordered={false} size={"small"} style={{ width: '100%' }} name='province' 
-                          className={isValid(this.state.data.employee.address?.province)} onChange={this.onChangeProvince} value={this.state.data.employee.address.province}>
+                          <Select aria-autocomplete='none' showSearch={true} bordered={false} size={"small"} style={{ width: '100%' }} name='province'
+                            className={isValid(this.state.data.employee.address?.province)} onChange={this.onChangeProvince} value={this.state.data.employee.address.province}>
                             {this.state.countries?.filter(ctr => ctr.name === this.state.data.employee.address?.country)[0]?.states?.map((st, idx) => {
                               return (<Option key={idx} value={st.name}>{st.name}</Option>)
                             })}
@@ -320,8 +330,21 @@ class AddDoctor extends Component {
                       <textarea name="biography" className="form-control" rows={3} cols={30} onChange={this.onChange} />
                     </div>
                   </div>
-                              
-                  
+                  <div className="col-sm-12">
+                    <div className="card-container">
+                      <Tabs type="card">
+                        <TabPane tab="Educations" key="1">
+                          <Button>Add</Button>
+                          <Table
+
+                          ></Table>
+                        </TabPane>
+                        <TabPane tab="Experiences" key="2">
+                          <Button>Add</Button>
+                        </TabPane>
+                      </Tabs>
+                    </div>
+                  </div>
 
                   {/* <div className="col-sm-6">
                         <div className="form-group">
