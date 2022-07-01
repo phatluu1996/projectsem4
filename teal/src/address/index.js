@@ -21167,6 +21167,7 @@ export const countries = [
             }
         ]
     }
-]
+];
 
+const citys = []
 
