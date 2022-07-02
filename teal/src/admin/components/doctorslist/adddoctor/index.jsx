@@ -3,7 +3,7 @@ import OpenChat from "../../sidebar/openchatheader"
 import { countries } from '../../../../address';
 import { axiosAction, axiosActions, isFormValid, isValid, notify } from '../../../../actions';
 import { ADD, GET } from '../../../../constants';
-import { DatePicker, Select, Timeline, Modal, Tabs, Button, Table } from 'antd';
+import { DatePicker, Select, Timeline, Modal, Tabs, Button, Table, Input, Popconfirm } from 'antd';
 const { Option } = Select;
 const { TabPane } = Tabs;
 
@@ -44,31 +44,14 @@ class AddDoctor extends Component {
         },
         "doctorSchedules": [],
         "appointments": [],
-        "educationDetails": [{
-          "instiution": null,
-          "subject": null,
-          "start": null,
-          "end": null,
-          "degree": null,
-          "grade": null,
-          "retired": false,
-          "doctor": null,
-          "id": null
-        }],
-        "experienceDetails": [{
-          "officeName": null,
-          "country": null,
-          "start": null,
-          "end": null,
-          "jopPosition": null,
-          "doctor": null,
-          "retired": false,
-          "id": null
-        }],
+        "educationDetails": [
+        ],
+        "experienceDetails": [
+        ],
         "retired": false
       },
       countries: countries,
-      departments: []
+      departments: [],
     }
 
     this.onChangeCountry = this.onChangeCountry.bind(this);
@@ -77,6 +60,61 @@ class AddDoctor extends Component {
     this.onChangeDepartment = this.onChangeDepartment.bind(this);
     this.onChange = this.onChange.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
+    this.addNewEduDetails = this.addNewEduDetails.bind(this);
+    this.addNewExpDetails = this.addNewExpDetails.bind(this);
+    this.onDeleteEdu = this.onDeleteEdu.bind(this);
+  }
+
+  onDeleteEdu(key) {
+    const tmpData = { ...this.state.data };    
+    const tmp = tmpData.educationDetails.filter((item) => key != item.key);
+    tmpData.educationDetails = tmp;
+    this.setState({data : tmpData});
+  }
+
+  addNewEduDetails() {
+    const edu = {
+      "key": 0,
+      "instiution": "",
+      "subject": "",
+      "start": "",
+      "end": "",
+      "degree": "",
+      "grade": "",
+      "retired": false,
+    }
+    const tmp = { ...this.state.data };
+    const educationDetails = [...this.state.data.educationDetails];
+    if(tmp.length > 0){
+      edu.key = parseInt(Math.max(...educationDetails.map(x => x.key))) + 1;
+    }  
+    educationDetails.push(edu);    
+    tmp.educationDetails = educationDetails;
+    this.setState({
+      data: tmp
+    });
+  }
+
+  addNewExpDetails() {
+    const exp = {
+      "key": 0,
+      "officeName": "",
+      "country": "",
+      "start": "",
+      "end": "",
+      "jopPosition": "",
+      "retired": false,
+    }
+    const tmpData = { ...this.state.data };
+    const tmp = [...this.state.data.experienceDetails];  
+    if(tmp.length > 0){
+      exp.key = parseInt(Math.max(...tmp.map(x => x.key))) + 1;
+    }  
+    tmp.push(exp);    
+    tmpData.experienceDetails = tmp;
+    this.setState({
+      data: tmpData
+    });
   }
 
   onChange(e) {
@@ -179,25 +217,79 @@ class AddDoctor extends Component {
   }
 
   render() {
-    const educationsCols = [{
-      title : ""
-    },{
-
-    },{
-
-    }];
-
+    const eduColumns = [
+      {
+        title: "Instiution",
+        render: (text, record) => (
+          <div>
+            <Input value={record.instiution}></Input>
+          </div>
+        ),
+      },
+      {
+        title: "Subject",
+        render: (text, record) => (
+          <div>
+            <Input value={record.subject}></Input>
+          </div>
+        ),
+      },
+      {
+        title: "Start",
+        render: (text, record) => (
+          <div>
+            <DatePicker name='date' disabledTime={true}
+              showTime={false} format="YYYY-MM-DD" clearIcon={true}
+              allowClear={true} value={record.start} inputReadOnly={true}></DatePicker>
+          </div>
+        ),
+      },
+      {
+        title: "End",
+        render: (text, record) => (
+          <div>
+            <DatePicker name='date' disabledTime={true}
+              showTime={false} format="YYYY-MM-DD" clearIcon={true}
+              allowClear={true} value={record.end} inputReadOnly={true}></DatePicker>
+          </div>
+        ),
+      },
+      {
+        title: "Degree",
+        render: (text, record) => (
+          <div>
+            <Input value={record.degree}></Input>
+          </div>
+        ),
+      },
+      {
+        title: "Grade",
+        render: (text, record) => (
+          <div>
+            <Input value={record.grade}></Input>
+          </div>
+        ),              
+      },
+      {
+        title: "Action",
+        render: (text, record) => (
+          <Popconfirm title="Sure to delete?" onConfirm={() => this.onDeleteEdu(record.key)}>
+            <a>Delete</a>
+          </Popconfirm>
+        ),
+      }
+    ];
 
     return (!this.state.loading &&
       <div className="page-wrapper">
         <div className="content">
           <div className="row">
-            <div className="col-md-8 offset-md-2">
+            <div className="col-md-12">
               <h4 className="page-title">Add Doctor</h4>
             </div>
           </div>
           <div className="row">
-            <div className="col-md-8 offset-md-2">
+            <div className="col-md-12">
               <form onSubmit={this.onSubmit} className="needs-validation" noValidate>
                 <div className="row">
                   <div className="col-sm-6">
@@ -334,13 +426,14 @@ class AddDoctor extends Component {
                     <div className="card-container">
                       <Tabs type="card">
                         <TabPane tab="Educations" key="1">
-                          <Button>Add</Button>
+                          <Button className='mb-3' onClick={this.addNewEduDetails}>Add</Button>
                           <Table
-
+                            dataSource={this.state.data.educationDetails}
+                            columns={eduColumns}
                           ></Table>
                         </TabPane>
                         <TabPane tab="Experiences" key="2">
-                          <Button>Add</Button>
+
                         </TabPane>
                       </Tabs>
                     </div>

@@ -1,5 +1,3 @@
-
-
 export const countries = [
     {
         "name": "Afghanistan",

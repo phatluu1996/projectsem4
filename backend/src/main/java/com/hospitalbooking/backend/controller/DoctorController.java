@@ -51,7 +51,12 @@ public class DoctorController {
     public ResponseEntity<Doctor> add(@RequestBody Doctor doctor){
         addressRepos.save(doctor.getEmployee().getAddress());
         employeeRepos.save(doctor.getEmployee());
-        doctorRepos.save(doctor);
+        doctor.getEducationDetails().forEach(educationDetail -> {
+
+        });
+        doctor.getEducationDetails().forEach(educationDetail -> {
+
+        });
         return new ResponseEntity<>(doctorRepos.save(doctor), HttpStatus.OK);
     }
 
