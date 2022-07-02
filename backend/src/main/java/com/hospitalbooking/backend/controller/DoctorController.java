@@ -1,10 +1,7 @@
 package com.hospitalbooking.backend.controller;
 
 import com.hospitalbooking.backend.models.Doctor;
-import com.hospitalbooking.backend.repository.AddressRepos;
-import com.hospitalbooking.backend.repository.DoctorRepos;
-import com.hospitalbooking.backend.repository.EmployeeRepos;
-import com.hospitalbooking.backend.repository.UserRepos;
+import com.hospitalbooking.backend.repository.*;
 import com.hospitalbooking.backend.specification.DBSpecification;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,6 +24,10 @@ public class DoctorController {
 
     @Autowired
     private DoctorRepos doctorRepos;
+    @Autowired
+    private DocEducationRepos docEducationRepos;
+    @Autowired
+    private DocExperienceRepos docExperienceRepos;
     @Autowired
     private UserRepos userRepos;
     @Autowired
@@ -52,10 +53,10 @@ public class DoctorController {
         addressRepos.save(doctor.getEmployee().getAddress());
         employeeRepos.save(doctor.getEmployee());
         doctor.getEducationDetails().forEach(educationDetail -> {
-
+            docEducationRepos.save(educationDetail);
         });
-        doctor.getEducationDetails().forEach(educationDetail -> {
-
+        doctor.getExperienceDetails().forEach(experienceDetail -> {
+            docExperienceRepos.save(experienceDetail);
         });
         return new ResponseEntity<>(doctorRepos.save(doctor), HttpStatus.OK);
     }

@@ -63,13 +63,61 @@ class AddDoctor extends Component {
     this.addNewEduDetails = this.addNewEduDetails.bind(this);
     this.addNewExpDetails = this.addNewExpDetails.bind(this);
     this.onDeleteEdu = this.onDeleteEdu.bind(this);
+    this.onChangeEducation = this.onChangeEducation.bind(this);
+  }
+
+  onChangeEducation(record, arg, fieldName) {
+    const tmp = { ...this.state.data };
+    const item = tmp.educationDetails.find(e => e.key == record.key);
+    switch (fieldName) {
+      case "instiution":
+        if (item) {
+          item.instiution = arg.target.value;
+        }
+        break;
+
+      case "subject":
+        if (item) {
+          item.subject = arg.target.value;
+        }
+        break;
+
+      case "start":
+        if (item) {
+          item.start = arg;
+        }
+        break;
+
+      case "end":
+        if (item) {
+          item.end = arg;
+        }
+        break;
+
+      case "degree":
+        if (item) {
+          item.degree = arg.target.value;
+        }
+        break;
+
+      case "grade":
+        if (item) {
+          item.grade = arg.target.value;
+        }
+        break;
+
+      default:
+        break;
+    }
+    console.log(record);
+    this.setState({ data: tmp });
   }
 
   onDeleteEdu(key) {
-    const tmpData = { ...this.state.data };    
+    const tmpData = { ...this.state.data };
     const tmp = tmpData.educationDetails.filter((item) => key != item.key);
     tmpData.educationDetails = tmp;
-    this.setState({data : tmpData});
+    this.setState({ data: tmpData });
   }
 
   addNewEduDetails() {
@@ -85,10 +133,10 @@ class AddDoctor extends Component {
     }
     const tmp = { ...this.state.data };
     const educationDetails = [...this.state.data.educationDetails];
-    if(tmp.length > 0){
-      edu.key = parseInt(Math.max(...educationDetails.map(x => x.key))) + 1;
-    }  
-    educationDetails.push(edu);    
+    if (tmp.length > 0) {
+      edu.key = tmp.length + 1;
+    }
+    educationDetails.push(edu);
     tmp.educationDetails = educationDetails;
     this.setState({
       data: tmp
@@ -106,11 +154,11 @@ class AddDoctor extends Component {
       "retired": false,
     }
     const tmpData = { ...this.state.data };
-    const tmp = [...this.state.data.experienceDetails];  
-    if(tmp.length > 0){
+    const tmp = [...this.state.data.experienceDetails];
+    if (tmp.length > 0) {
       exp.key = parseInt(Math.max(...tmp.map(x => x.key))) + 1;
-    }  
-    tmp.push(exp);    
+    }
+    tmp.push(exp);
     tmpData.experienceDetails = tmp;
     this.setState({
       data: tmpData
@@ -222,7 +270,7 @@ class AddDoctor extends Component {
         title: "Instiution",
         render: (text, record) => (
           <div>
-            <Input value={record.instiution}></Input>
+            <Input name="instiution" value={record.instiution} onChange={(e) => this.onChangeEducation(record, e, "instiution")}></Input>
           </div>
         ),
       },
@@ -230,7 +278,7 @@ class AddDoctor extends Component {
         title: "Subject",
         render: (text, record) => (
           <div>
-            <Input value={record.subject}></Input>
+            <Input name="subject" value={record.subject} onChange={(e) => this.onChangeEducation(record, e, "subject")}></Input>
           </div>
         ),
       },
@@ -238,9 +286,9 @@ class AddDoctor extends Component {
         title: "Start",
         render: (text, record) => (
           <div>
-            <DatePicker name='date' disabledTime={true}
+            <DatePicker name='start' disabledTime={true}
               showTime={false} format="YYYY-MM-DD" clearIcon={true}
-              allowClear={true} value={record.start} inputReadOnly={true}></DatePicker>
+              allowClear={true} value={record.start} inputReadOnly={true} onChange={(value, e) => this.onChangeEducation(record, value, "start")}></DatePicker>
           </div>
         ),
       },
@@ -248,9 +296,9 @@ class AddDoctor extends Component {
         title: "End",
         render: (text, record) => (
           <div>
-            <DatePicker name='date' disabledTime={true}
+            <DatePicker name='end' disabledTime={true}
               showTime={false} format="YYYY-MM-DD" clearIcon={true}
-              allowClear={true} value={record.end} inputReadOnly={true}></DatePicker>
+              allowClear={true} value={record.end} inputReadOnly={true} onSelect={(value) => this.onChangeEducation(record, value, "end")}></DatePicker>
           </div>
         ),
       },
@@ -258,7 +306,7 @@ class AddDoctor extends Component {
         title: "Degree",
         render: (text, record) => (
           <div>
-            <Input value={record.degree}></Input>
+            <Input name="degree" value={record.degree} onChange={(e) => this.onChangeEducation(record, e, "degree")}></Input>
           </div>
         ),
       },
@@ -266,9 +314,9 @@ class AddDoctor extends Component {
         title: "Grade",
         render: (text, record) => (
           <div>
-            <Input value={record.grade}></Input>
+            <Input name="grade" value={record.grade} onChange={(e) => this.onChangeEducation(record, e, "grade")}></Input>
           </div>
-        ),              
+        ),
       },
       {
         title: "Action",
@@ -461,9 +509,9 @@ class AddDoctor extends Component {
               </form>
             </div>
           </div>
-        </div>
+        </div >
         <OpenChat />
-      </div>
+      </div >
     );
   }
 };
