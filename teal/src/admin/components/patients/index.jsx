@@ -103,7 +103,7 @@ class Patients extends Component {
             <a href="#" className="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
               <i className="fas fa-ellipsis-v" /></a>
             <div className="dropdown-menu dropdown-menu-right">
-              <Link className="dropdown-item" to="/edit-patient"><i className="fas fa-pencil-alt m-r-5" /> Edit</Link>
+              <Link className="dropdown-item" to={"/admin/patients/update/"+record.id}><i className="fas fa-pencil-alt m-r-5" /> Edit</Link>
               <a className="dropdown-item" href="#" data-toggle="modal" data-target="#delete_patient">
                 <i className="fas fa-trash m-r-5" /> Delete</a>
             </div>
