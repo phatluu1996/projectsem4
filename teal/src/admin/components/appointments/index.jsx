@@ -97,7 +97,7 @@ class Appointments extends Component {
         title: "Doctor Name",
         render: (text, record) => (
           <div>
-            {record.doctor?.lastName + " " + record.doctor?.firstName}
+            {record.doctor?.employee.lastName + " " + record.doctor?.employee.firstName}
           </div>
         ),
 

@@ -121,7 +121,7 @@ class AddSchedule extends Component {
                       <Select name='doctor' bordered={false} size={"small"} style={{ width: '100%' }}
                         className={this.state.data.doctor != null ? "form-control is-valid" : "form-control is-invalid"} onChange={this.onChangeDoctor}>
                         {this.state.doctors?.map(doctor => {
-                          return (<Option key={doctor.id} value={doctor.id}>{doctor.firstName + " " + doctor.lastName}</Option>)
+                          return (<Option key={doctor.id} value={doctor.id}>{doctor.employee.firstName + " " + doctor.employee.lastName}</Option>)
                         })}
                       </Select>
                       <div className="invalid-feedback">Doctor cannot be empty</div>

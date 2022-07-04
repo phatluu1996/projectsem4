@@ -63,7 +63,9 @@ class AddDoctor extends Component {
     this.addNewEduDetails = this.addNewEduDetails.bind(this);
     this.addNewExpDetails = this.addNewExpDetails.bind(this);
     this.onDeleteEdu = this.onDeleteEdu.bind(this);
+    this.onDeleteExp = this.onDeleteExp.bind(this);
     this.onChangeEducation = this.onChangeEducation.bind(this);
+    this.onChangeExperience = this.onChangeExperience.bind(this);
   }
 
   onChangeEducation(record, arg, fieldName) {
@@ -109,14 +111,57 @@ class AddDoctor extends Component {
       default:
         break;
     }
-    console.log(record);
     this.setState({ data: tmp });
   }
+
+  onChangeExperience(record, arg, fieldName) {
+    const tmp = { ...this.state.data };
+    const item = tmp.experienceDetails.find(e => e.key == record.key);
+    switch (fieldName) {
+      case "officeName":
+        item.officeName = arg.target.value;
+        break;
+
+      case "country":
+        if (item) {
+          item.country = arg;
+        }
+        break;
+
+      case "start":
+        if (item) {
+          item.start = arg;
+        }
+        break;
+
+      case "end":
+        if (item) {
+          item.end = arg;
+        }
+        break;
+
+      case "jobPosition":
+        item.jobPosition = arg.target.value;
+        break;
+
+      default:
+        break;
+    }
+    this.setState({ data: tmp });
+  }
+
 
   onDeleteEdu(key) {
     const tmpData = { ...this.state.data };
     const tmp = tmpData.educationDetails.filter((item) => key != item.key);
     tmpData.educationDetails = tmp;
+    this.setState({ data: tmpData });
+  }
+
+  onDeleteExp(key) {
+    const tmpData = { ...this.state.data };
+    const tmp = tmpData.experienceDetails.filter((item) => key != item.key);
+    tmpData.experienceDetails = tmp;
     this.setState({ data: tmpData });
   }
 
@@ -133,8 +178,8 @@ class AddDoctor extends Component {
     }
     const tmp = { ...this.state.data };
     const educationDetails = [...this.state.data.educationDetails];
-    if (tmp.length > 0) {
-      edu.key = tmp.length + 1;
+    if (educationDetails.length > 0) {
+      edu.key = educationDetails.length + 1;
     }
     educationDetails.push(edu);
     tmp.educationDetails = educationDetails;
@@ -153,15 +198,15 @@ class AddDoctor extends Component {
       "jopPosition": "",
       "retired": false,
     }
-    const tmpData = { ...this.state.data };
-    const tmp = [...this.state.data.experienceDetails];
-    if (tmp.length > 0) {
-      exp.key = parseInt(Math.max(...tmp.map(x => x.key))) + 1;
+    const tmp = { ...this.state.data };
+    const experienceDetails = [...this.state.data.experienceDetails];
+    if (experienceDetails.length > 0) {
+      exp.key = experienceDetails.length + 1;
     }
-    tmp.push(exp);
-    tmpData.experienceDetails = tmp;
+    experienceDetails.push(exp);
+    tmp.experienceDetails = experienceDetails;
     this.setState({
-      data: tmpData
+      data: tmp
     });
   }
 
@@ -267,10 +312,11 @@ class AddDoctor extends Component {
   render() {
     const eduColumns = [
       {
-        title: "Instiution",
+        title: "Institution",
         render: (text, record) => (
           <div>
-            <Input name="instiution" value={record.instiution} onChange={(e) => this.onChangeEducation(record, e, "instiution")}></Input>
+            <Input className={isValid(record.instiution)} name="instiution" value={record.instiution} onChange={(e) => this.onChangeEducation(record, e, "instiution")}></Input>
+            <div className="invalid-feedback">Cannot be left empty</div>
           </div>
         ),
       },
@@ -278,7 +324,8 @@ class AddDoctor extends Component {
         title: "Subject",
         render: (text, record) => (
           <div>
-            <Input name="subject" value={record.subject} onChange={(e) => this.onChangeEducation(record, e, "subject")}></Input>
+            <Input className={isValid(record.subject)} name="subject" value={record.subject} onChange={(e) => this.onChangeEducation(record, e, "subject")}></Input>
+            <div className="invalid-feedback">Cannot be left empty</div>
           </div>
         ),
       },
@@ -286,9 +333,10 @@ class AddDoctor extends Component {
         title: "Start",
         render: (text, record) => (
           <div>
-            <DatePicker name='start' disabledTime={true}
+            <DatePicker className={isValid(record.start)} name='start' disabledTime={true}
               showTime={false} format="YYYY-MM-DD" clearIcon={true}
-              allowClear={true} value={record.start} inputReadOnly={true} onChange={(value, e) => this.onChangeEducation(record, value, "start")}></DatePicker>
+              allowClear={true} value={record.start} onChange={(value, e) => this.onChangeEducation(record, value, "start")}></DatePicker>
+            <div className="invalid-feedback">Cannot be left empty</div>
           </div>
         ),
       },
@@ -296,9 +344,10 @@ class AddDoctor extends Component {
         title: "End",
         render: (text, record) => (
           <div>
-            <DatePicker name='end' disabledTime={true}
+            <DatePicker className={isValid(record.end)} name='end' disabledTime={true}
               showTime={false} format="YYYY-MM-DD" clearIcon={true}
-              allowClear={true} value={record.end} inputReadOnly={true} onSelect={(value) => this.onChangeEducation(record, value, "end")}></DatePicker>
+              allowClear={true} value={record.end} onSelect={(value) => this.onChangeEducation(record, value, "end")}></DatePicker>
+            <div className="invalid-feedback">Cannot be left empty</div>
           </div>
         ),
       },
@@ -306,7 +355,8 @@ class AddDoctor extends Component {
         title: "Degree",
         render: (text, record) => (
           <div>
-            <Input name="degree" value={record.degree} onChange={(e) => this.onChangeEducation(record, e, "degree")}></Input>
+            <Input className={isValid(record.degree)} name="degree" value={record.degree} onChange={(e) => this.onChangeEducation(record, e, "degree")}></Input>
+            <div className="invalid-feedback">Cannot be left empty</div>
           </div>
         ),
       },
@@ -314,14 +364,80 @@ class AddDoctor extends Component {
         title: "Grade",
         render: (text, record) => (
           <div>
-            <Input name="grade" value={record.grade} onChange={(e) => this.onChangeEducation(record, e, "grade")}></Input>
+            <Input className={isValid(record.grade)} name="grade" value={record.grade} onChange={(e) => this.onChangeEducation(record, e, "grade")}></Input>
+            <div className="invalid-feedback">Cannot be left empty</div>
           </div>
         ),
       },
       {
         title: "Action",
         render: (text, record) => (
-          <Popconfirm title="Sure to delete?" onConfirm={() => this.onDeleteEdu(record.key)}>
+          <Popconfirm className='btn btn-info' title="Sure to delete?" onConfirm={() => this.onDeleteEdu(record.key)}>
+            <a>Delete</a>
+          </Popconfirm>
+        ),
+      }
+    ];
+
+    const expColumns = [
+      {
+        title: "Office",
+        render: (text, record) => (
+          <div>
+            <Input className={isValid(record.officeName)} name="officeName" value={record.officeName} onChange={(e) => this.onChangeExperience(record, e, "officeName")}></Input>
+            <div className="invalid-feedback">Cannot be left empty</div>
+          </div>
+        ),
+      },
+      {
+        title: "Country",
+        render: (text, record) => (
+          <div>
+            <Select aria-autocomplete='none' showSearch={true} bordered={false} size={"small"} style={{ width: '100%' }} name='country'
+              className={isValid(record.country)} onChange={(e) => this.onChangeExperience(record, e, "country")}>
+              {this.state.countries?.map((ctr, idx) => {
+                return (<Option key={idx} value={ctr.name}>{ctr.name}</Option>)
+              })}
+            </Select>
+            <div className="invalid-feedback">Cannot be left empty</div>
+          </div>
+        ),
+      },
+      {
+        title: "Start",
+        render: (text, record) => (
+          <div>
+            <DatePicker className={isValid(record.start)} name='start' disabledTime={true}
+              showTime={false} format="YYYY-MM-DD" clearIcon={true}
+              allowClear={true} value={record.start} onChange={(value, e) => this.onChangeExperience(record, value, "start")}></DatePicker>
+            <div className="invalid-feedback">Cannot be left empty</div>
+          </div>
+        ),
+      },
+      {
+        title: "End",
+        render: (text, record) => (
+          <div>
+            <DatePicker className={isValid(record.end)} name='end' disabledTime={true}
+              showTime={false} format="YYYY-MM-DD" clearIcon={true}
+              allowClear={true} value={record.end} onSelect={(value) => this.onChangeExperience(record, value, "end")}></DatePicker>
+            <div className="invalid-feedback">Cannot be left empty</div>
+          </div>
+        ),
+      },
+      {
+        title: "Job Position",
+        render: (text, record) => (
+          <div>
+            <Input className={isValid(record.jobPosition)} name="jobPosition" value={record.jobPosition} onChange={(e) => this.onChangeExperience(record, e, "jobPosition")}></Input>
+            <div className="invalid-feedback">Cannot be left empty</div>
+          </div>
+        ),
+      },
+      {
+        title: "Action",
+        render: (text, record) => (
+          <Popconfirm className='btn btn-info' title="Sure to delete?" onConfirm={() => this.onDeleteExp(record.key)}>
             <a>Delete</a>
           </Popconfirm>
         ),
@@ -392,7 +508,7 @@ class AddDoctor extends Component {
                       <label>Date of Birth<span className="text-danger">*</span></label>
                       <DatePicker name='date' className={isValid(this.state.data.employee.dateOfBirth)} disabledTime={true}
                         showTime={false} format="YYYY-MM-DD" clearIcon={true}
-                        allowClear={true} onChange={this.onChangeDateOfBirth} onSelect={this.onChangeDateOfBirth} inputReadOnly={true}></DatePicker>
+                        allowClear={true} onChange={this.onChangeDateOfBirth} onSelect={this.onChangeDateOfBirth}></DatePicker>
                       <div className="invalid-feedback">Date of birth cannot be empty</div>
                     </div>
                   </div>
@@ -478,29 +594,24 @@ class AddDoctor extends Component {
                           <Table
                             dataSource={this.state.data.educationDetails}
                             columns={eduColumns}
+                            pagination={{
+                              pageSize: 5,
+                            }}
                           ></Table>
                         </TabPane>
                         <TabPane tab="Experiences" key="2">
-
+                          <Button className='mb-3' onClick={this.addNewExpDetails}>Add</Button>
+                          <Table
+                            dataSource={this.state.data.experienceDetails}
+                            columns={expColumns}
+                            pagination={{
+                              pageSize: 5,
+                            }}
+                          ></Table>
                         </TabPane>
                       </Tabs>
                     </div>
                   </div>
-
-                  {/* <div className="col-sm-6">
-                        <div className="form-group">
-                          <label>Avatar</label>
-                          <div className="profile-upload">
-                            <div className="upload-img">
-                              <img alt="" src={User_img} />
-                            </div>
-                            <div className="upload-input">
-                              <input type="file" className="form-control" />
-                            </div>
-                          </div>
-                        </div>
-                      </div> */}
-
                 </div>
                 <div className="m-t-20 text-center">
                   <button className="btn btn-primary submit-btn">Create Doctor</button>

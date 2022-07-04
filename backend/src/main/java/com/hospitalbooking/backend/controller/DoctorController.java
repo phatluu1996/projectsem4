@@ -65,6 +65,14 @@ public class DoctorController {
     public ResponseEntity<Doctor> update(@RequestBody Doctor doctor, @PathVariable Long id){
         Optional<Doctor> optional = doctorRepos.findById(id);
         return optional.map(model -> {
+            addressRepos.save(doctor.getEmployee().getAddress());
+            employeeRepos.save(doctor.getEmployee());
+            doctor.getEducationDetails().forEach(educationDetail -> {
+                docEducationRepos.save(educationDetail);
+            });
+            doctor.getExperienceDetails().forEach(experienceDetail -> {
+                docExperienceRepos.save(experienceDetail);
+            });
             doctor.setId(model.getId());
             return new ResponseEntity<>(doctorRepos.save(doctor), HttpStatus.OK);
         }).orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));

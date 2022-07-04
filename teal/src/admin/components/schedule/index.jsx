@@ -85,7 +85,7 @@ class Schedule extends Component {
             <a href="#0" className="avatar avatar-sm mr-2">
               {/* <img alt="" src={record.image} /> */}
             </a>
-            {record.doctor?.lastName + " " + record.doctor?.firstName}
+            {record.doctor?.employee.lastName + " " + record.doctor?.employee.firstName}
           </div>
         ),
       },

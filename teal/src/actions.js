@@ -1,6 +1,5 @@
 import axios from 'axios';
 import { api, ADD, DELETE, UPDATE, GET } from './constants';
-import { NotificationContainer, NotificationManager } from 'react-notifications';
 import moment from "moment";
 import { notification } from 'antd';
 
@@ -132,7 +131,8 @@ export const isValid = (condition) => {
 }
 
 export const countAge = (text) =>{
-    if(moment(text).format('YYYY') === moment().format('YYYY')) return 0
-    const age = moment(text).fromNow().split(" ");
-    return age[0];
+    // if(moment(text).yearformat('YYYY') === moment().format('YYYY')) return 0
+    // const age = moment(text).fromNow().split(" ");
+    // return age[0];
+    return moment(text).year === moment().year;
   }
