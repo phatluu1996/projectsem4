@@ -45,6 +45,7 @@ public class PatientController {
         Optional<Patient> optional = patientRepos.findById(id);
         return optional.map(model -> {
             patient.setId(model.getId());
+            addressRepos.save(patient.getAddress());
             return new ResponseEntity<>(patientRepos.save(patient), HttpStatus.OK);
         }).orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }

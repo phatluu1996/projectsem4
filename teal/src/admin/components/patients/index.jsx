@@ -3,7 +3,7 @@ import { Table } from "antd";
 import { Link } from "react-router-dom";
 import OpenChat from "../sidebar/openchatheader"
 import { axiosAction,notify,countAge } from '../../../actions';
-import { GET } from "../../../constants";
+import { GET,DELETE } from "../../../constants";
 import { itemRender, onShowSizeChange, } from "../../components/paginationfunction";
 import { User_img,Sent_img } from "../imagepath";
 import moment from "moment";
@@ -14,11 +14,14 @@ class Patients extends Component {
     super(props);
     this.state = {
       show: null,
+      idDtl:null,
       loading:false,
       data: []
     };
     this.fetchData = this.fetchData.bind(this);
-  }
+    this.onClickDlt = this.onClickDlt.bind(this);
+    this.handleDel = this.handleDel.bind(this);
+ }
 
 
 
@@ -41,6 +44,13 @@ class Patients extends Component {
     },(err) => notify('error', "Error"));
   }
 
+  onClickDlt = () => {
+    axiosAction("/patients/"+this.state.idDtl,DELETE, res => {
+      notify('success', '','Success')
+      this.fetchData();
+    },(err) => notify('error', "Error"));
+  }
+
   handleClose = () => {
     this.setState({
       show: false,
@@ -52,6 +62,13 @@ class Patients extends Component {
       show: id,
     });
   };
+
+  handleDel = (id) => {
+    this.setState({
+      idDtl: id,
+    });
+  };
+
   
 
   render() {
@@ -104,7 +121,7 @@ class Patients extends Component {
               <i className="fas fa-ellipsis-v" /></a>
             <div className="dropdown-menu dropdown-menu-right">
               <Link className="dropdown-item" to={"/admin/patients/update/"+record.id}><i className="fas fa-pencil-alt m-r-5" /> Edit</Link>
-              <a className="dropdown-item" href="#" data-toggle="modal" data-target="#delete_patient">
+              <a className="dropdown-item" onClick={() => this.handleDel(record.id)} href="#" data-toggle="modal" data-target="#delete_patient">
                 <i className="fas fa-trash m-r-5" /> Delete</a>
             </div>
           </div>
@@ -158,9 +175,10 @@ class Patients extends Component {
             <div className="modal-body text-center">
               <img src={Sent_img} alt="" width={50} height={46} />
               <h3>Are you sure want to delete this Patient?</h3>
-              <div className="m-t-20"> <a href="#" className="btn btn-white mr-0" data-dismiss="modal">Close</a>
-                <button type="submit" className="btn btn-danger">Delete</button>
-              </div>
+             <div className="m-t-20"> 
+                  <a  className="btn btn-white mr-0" data-dismiss="modal">Close</a>
+                  <a  className="btn btn-danger" onClick={this.onClickDlt} data-dismiss="modal">Delete</a>
+                </div>
             </div>
           </div>
         </div>
