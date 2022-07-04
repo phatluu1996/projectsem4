@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import OpenChat from "../../sidebar/openchatheader"
 import { User_img } from "../../imagepath"
-import { axiosAction , isFormValid, isValid, notify } from '../../../../actions';
+import { axiosAction, isFormValid, isValid, notify } from '../../../../actions';
 import { GET, UPDATE } from "../../../../constants";
 import { countries } from '../../../../address';
 import { DatePicker, Select } from 'antd';
+import { toMoment } from '../../../../utils';
 
 class EditPatient extends Component {
   id = this.props.match.params.id;
@@ -12,6 +13,7 @@ class EditPatient extends Component {
     super(props);
     this.state = {
       loading: false,
+      
       crrValue: "",
       countries: countries,
       countrySelect: null,
@@ -38,17 +40,23 @@ class EditPatient extends Component {
     this.onSelectCountry = this.onSelectCountry.bind(this);
     this.onChangeDate = this.onChangeDate.bind(this);
   }
+  
 
   componentDidMount() {
+    this.setState({
+      loading: true
+    });
     this.fetchData();
   }
 
   componentWillUnmount() {
   }
 
+  
+
   fetchData = () => {
     axiosAction("/patients/" + this.id, GET, res => {
-      console.log(res);
+      console.log(res.data);
       this.setState({
         data: res.data,
         loading: false,
@@ -63,6 +71,7 @@ class EditPatient extends Component {
       tmp.address.province = "";
     }
     tmp.address.country = this.state.countries[value].name
+    console.log(tmp.address.country);
     this.setState({
       crrValue: null,
       countrySelect: this.state.countries[value],
@@ -82,6 +91,11 @@ class EditPatient extends Component {
     e.preventDefault();
     const tmp = { ...this.state.data }
     console.log(tmp);
+    if (!isFormValid(e)) return;
+    axiosAction("/patients/"+this.id,UPDATE, res => {
+      notify('success', '','Success')
+      this.props.history.push("/admin/patients");
+    },(err) => notify('error', "Error"),tmp);
   }
 
   onChange = (e) => {
@@ -134,7 +148,7 @@ class EditPatient extends Component {
       <div className="content">
         <div className="row">
           <div className="col-md-8 offset-md-2">
-            <h4 className="page-title">Add Patient</h4>
+            <h4 className="page-title">Edit Patient</h4>
           </div>
         </div>
         <div className="row">
@@ -144,51 +158,52 @@ class EditPatient extends Component {
                 <div className="col-sm-6">
                   <div className="form-group">
                     <label>First Name <span className="text-danger">*</span></label>
-                    <input className={isValid(this.state.data.firstName)} name='firstName' type="text" onChange={(e) => this.onChange(e)} defaultValue={this.state.data?.firstName} />
+                    <input className={isValid(this.state.data?.firstName)} name='firstName' type="text" onChange={(e) => this.onChange(e)} defaultValue={this.state.data?.firstName} />
                     <div className="invalid-feedback">First name cannot be empty</div>
                   </div>
                 </div>
                 <div className="col-sm-6">
                   <div className="form-group">
                     <label>Last Name</label>
-                    <input className={isValid(this.state.data.lastName)} name='lastName' type="text" onChange={(e) => this.onChange(e)} defaultValue={this.state.data?.lastName} />
+                    <input className={isValid(this.state.data?.lastName)} name='lastName' type="text" onChange={(e) => this.onChange(e)} defaultValue={this.state.data?.lastName} />
                     <div className="invalid-feedback">Last name cannot be empty</div>
                   </div>
                 </div>
                 <div className="col-sm-6">
                   <div className="form-group">
                     <label>Email <span className="text-danger">*</span></label>
-                    <input className={isValid(this.state.data.email)} name='email' type="email" onChange={(e) => this.onChange(e)} defaultValue={this.state.data?.email} />
+                    <input className={isValid(this.state.data?.email)} name='email' type="email" onChange={(e) => this.onChange(e)} defaultValue={this.state.data?.email} />
                     <div className="invalid-feedback"> Email cannot be empty</div>
                   </div>
                 </div>
                 <div className="col-sm-6">
                   <div className="form-group">
-                    <label>Date of Birth</label>
-                    <DatePicker name='dateOfBirth' className={isValid(this.state.data.firstName)} aria-required
+                    <label>Date of Birth <span className="text-danger">*</span></label>
+                    <DatePicker name='dateOfBirth' className={isValid(this.state.data?.dateOfBirth)} aria-required
                       showTime={true} format="YYYY-MM-DD" clearIcon={true}
-                      defaultValue={this.state.data?.dateOfBirth}
+                      defaultOpen
+                      value={toMoment(this.state.data?.dateOfBirth)}
                       allowClear={true} onChange={this.onChangeDate} onSelect={this.onChangeDate}></DatePicker>
                   </div>
                 </div>
                 <div className="col-sm-6">
                   <div className="form-group gender-select">
-                    <label className="gen-label">Gender:</label>
+                    <label className="gen-label">Gender<span className="text-danger">*</span></label>
                     <div className="form-check-inline">
                       <label className="form-check-label">
-                        <input type="radio" name="gender" value={true} defaultValue={this.state.data?.gender} className="form-check-input"  onChange={(e) => this.onChange(e)} />Male
+                        <input type="radio" name="gender" value={true} defaultChecked={this.state.data?.gender} className="form-check-input" onChange={(e) => this.onChange(e)} />Male
                       </label>
                     </div>
                     <div className="form-check-inline">
                       <label className="form-check-label">
-                        <input type="radio" name="gender" value={false} defaultValue={!this.state.data?.gender} className="form-check-input" onChange={(e) => this.onChange(e)} />Female
+                        <input type="radio" name="gender" value={false} defaultChecked={!this.state.data?.gender}  className="form-check-input" onChange={(e) => this.onChange(e)} />Female
                       </label>
                     </div>
                   </div>
                 </div>
                 <div className="col-sm-6">
                   <div className="form-group">
-                    <label>CID Number</label>
+                    <label>CID Number <span className="text-danger">*</span></label>
                     <input className="form-control" name='cId' type="text" onChange={(e) => this.onChange(e)} defaultValue={this.state.data?.cId} />
                   </div>
                 </div>
@@ -196,13 +211,13 @@ class EditPatient extends Component {
                   <div className="row">
                     <div className="col-sm-12">
                       <div className="form-group">
-                        <label>Address</label>
+                        <label>Address <span className="text-danger">*</span></label>
                         <input type="text" className="form-control" name='line' onChange={(e) => this.onChange(e)} defaultValue={this.state.data?.address?.line} />
                       </div>
                     </div>
                     <div className="col-sm-6 col-md-6 col-lg-3">
                       <div className="form-group">
-                        <label>Country</label>
+                        <label>Country<span className="text-danger">*</span></label>
                         <Select
                           defaultValue={this.state.data?.address?.country}
                           bordered={false}
@@ -217,12 +232,13 @@ class EditPatient extends Component {
                       </div>
                     </div>
                     <div className="col-sm-6 col-md-6 col-lg-3">
-                      {this.state.countrySelect?.states.length > 0 && <div className="form-group">
-                        <label>State/Province</label>
+                      <div className="form-group">
+                        <label>State/Province <span className="text-danger">*</span></label>
                         <Select
+                          disabled={this.state.data?.address?.province != ""||this.state.countrySelect?.states.length > 0 ?false:true}
                           defaultValue={this.state.data?.address?.province}
                           bordered={false}
-                          value={this.state.data.address.province}
+                          value={this.state.data?.address?.province}
                           style={{ width: '100%' }}
                           name='state'
                           className="form-control"
@@ -231,31 +247,34 @@ class EditPatient extends Component {
                             return (<Select.Option key={index}>{state.name}</Select.Option>)
                           })}
                         </Select>
-                      </div>}
+                      </div>
                     </div>
                     <div className="col-sm-6 col-md-6 col-lg-3">
                       <div className="form-group">
-                        <label>City</label>
+                        <label>City <span className="text-danger">*</span></label>
                         <input type="text" name='city' className="form-control" onChange={(e) => this.onChange(e)} defaultValue={this.state.data?.address?.city} />
+                        <div className="invalid-feedback">Please input city.</div>
                       </div>
                     </div>
                     <div className="col-sm-6 col-md-6 col-lg-3">
                       <div className="form-group">
-                        <label>Postal Code</label>
-                        <input type="text" className="form-control" name='postalCode' onChange={(e) => this.onChange(e)} defaultValue={this.state.data?.address?.province} />
+                        <label>Postal Code <span className="text-danger">*</span></label>
+                        <input type="text" className="form-control" name='postalCode' onChange={(e) => this.onChange(e)} defaultValue={this.state.data?.address?.postalCode} />
+                        <div className="invalid-feedback">Please input postal code.</div>
                       </div>
                     </div>
                   </div>
                 </div>
                 <div className="col-sm-6">
                   <div className="form-group">
-                    <label>Phone </label>
-                    <input className="form-control" name='phoneNumber' type="text" onChange={(e) => this.onChange(e)} defaultValue={this.state.data?.address?.phoneNumber} />
+                    <label>Phone <span className="text-danger">*</span></label>
+                    <input className="form-control" name='phoneNumber' type="text" onChange={(e) => this.onChange(e)} defaultValue={this.state.data?.phoneNumber} />
+                    <div className="invalid-feedback">Please input phone number.</div>
                   </div>
                 </div>
                 <div className="col-sm-6">
                   <div className="form-group">
-                    <label>Avatar</label>
+                    <label>Avatar <span className="text-danger">*</span></label>
                     <div className="profile-upload">
                       <div className="upload-img">
                         <img alt="" src={User_img} />
