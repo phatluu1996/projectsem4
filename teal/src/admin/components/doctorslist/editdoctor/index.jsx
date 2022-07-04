@@ -156,18 +156,24 @@ class EditDoctor extends Component {
   onDeleteEdu(key) {
     const tmpData = { ...this.state.data };
     const tmp = tmpData.educationDetails.find((item) => key == item.key);
-    tmp.retired = true;
-    tmp.doctor = null;
-    // tmpData.educationDetails[key] = tmp;
+    if(tmp.id){
+      tmp.retired = true;
+    }else{
+      tmp = tmpData.educationDetails.filter((item) => key != item.key);
+      tmpData.educationDetails = tmp;
+    }
     this.setState({ data: tmpData });
   }
 
   onDeleteExp(key) {
     const tmpData = { ...this.state.data };
     const tmp = tmpData.experienceDetails.find((item) => key == item.key);
-    tmp.retired = true;
-    tmp.doctor = null;
-    // tmpData.experienceDetails[key] = tmp;
+    if(tmp.id){
+      tmp.retired = true;
+    }else{
+      tmp = tmpData.experienceDetails.filter((item) => key != item.key);
+      tmpData.experienceDetails = tmp;
+    }
     this.setState({ data: tmpData });
   }
 
