@@ -31,7 +31,7 @@ public class Employee  extends UserProfile{
     @OneToOne(fetch = FetchType.LAZY,
             cascade =  CascadeType.ALL,
             mappedBy = "employee")
-    @JoinColumn(name = "doctor_id", nullable = true)
+    @JoinColumn(name = "user_id", nullable = true)
     @JsonIgnoreProperties("employee")
     private User user;
 
