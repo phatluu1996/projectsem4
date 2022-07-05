@@ -5,7 +5,9 @@ import { countries } from '../../../../../address';
 import { DatePicker, Select } from 'antd';
 import { isValid, isFormValid, axiosAction, notify } from '../../../../../actions'
 const { Option } = Select;
-import { ADD, employeeRoles } from '../../../../../constants';
+import { ADD, GET, employeeRoles } from '../../../../../constants';
+import { toMoment } from '../../../../../utils';
+import moment from 'moment';
 
 class AddEmployee extends Component {
   constructor(props) {
@@ -15,7 +17,7 @@ class AddEmployee extends Component {
       data: {
         "cId": null,
         "employeeRole": null,
-        "joiningDate": null,
+        "joiningDate": moment(),
         "firstName": null,
         "lastName": null,
         "gender": null,
@@ -79,7 +81,7 @@ class AddEmployee extends Component {
           tmp.user.username = "nouser";
           tmp.user.password = "nouser";
           tmp.user.retired = true;
-        }else{
+        } else {
           tmp.user.retired = false;
           tmp.user.username = "";
           tmp.user.password = "";
@@ -96,7 +98,7 @@ class AddEmployee extends Component {
         break;
       case "country":
         tmp.address.country = arg;
-        if (tmp.address.province && !countries.filter(ctr => ctr.name == val)[0].states.find(st => st.name == tmp.address.province)) {
+        if (tmp.address.province && !countries.filter(ctr => ctr.name == arg)[0].states.find(st => st.name == tmp.address.province)) {
           tmp.address.province = '';
         }
         break;
@@ -173,14 +175,14 @@ class AddEmployee extends Component {
                       <label>Date of Birth<span className="text-danger">*</span></label>
                       <DatePicker name='date' className={isValid(this.state.data.dateOfBirth)} disabledTime={true}
                         showTime={false} format="YYYY-MM-DD" clearIcon={true}
-                        allowClear={true} onChange={(arg) => this.onChange(arg, "dob")} onSelect={(arg) => this.onChange(arg, "dob")}></DatePicker>
+                        allowClear={true} onChange={(arg) => this.onChange(arg, "dob")} onSelect={(arg) => this.onChange(arg, "dob")} value={toMoment(this.state.data.dateOfBirth)}></DatePicker>
                       <div className="invalid-feedback">Date of birth cannot be empty</div>
                     </div>
                   </div>
                   <div className="col-sm-6">
                     <div className="form-group">
                       <label>Citizen Identification <span className="text-danger">*</span></label>
-                      <input name="cid" className={isValid(this.state.data.cId)} type="number" onChange={(arg) => this.onChange(arg, "cid")} />
+                      <input name="cid" className={isValid(this.state.data.cId)} type="number" onChange={(arg) => this.onChange(arg, "cid")} value={this.state.data.cId} />
                       <div className="invalid-feedback">Citizen identification cannot be empty</div>
                     </div>
                   </div>
@@ -210,19 +212,19 @@ class AddEmployee extends Component {
                       <div className="invalid-feedback">Username cannot be empty</div>
                     </div>
                   </div>
-                  <div className="col-sm-6">
-                    <div className="form-group">
-                      <label>Password<span className="text"></span></label>
-                      <input className={isValid(this.state.data.user.password)} type="password" value={this.state.data.user.password} onChange={(arg) => this.onChange(arg, "password")} />
-                      <div className="invalid-feedback">Password cannot be empty</div>
-                    </div>
-                  </div></>}
+                    <div className="col-sm-6">
+                      <div className="form-group">
+                        <label>Password<span className="text"></span></label>
+                        <input className={isValid(this.state.data.user.password)} type="password" value={this.state.data.user.password} onChange={(arg) => this.onChange(arg, "password")} />
+                        <div className="invalid-feedback">Password cannot be empty</div>
+                      </div>
+                    </div></>}
                   <div className="col-sm-12">
                     <div className="row">
                       <div className="col-sm-12">
                         <div className="form-group">
                           <label>Address<span className="text-danger">*</span></label>
-                          <input name="line" type="text" className={isValid(this.state.data.address?.line)} onChange={(arg) => this.onChange(arg, "line")} />
+                          <input name="line" type="text" className={isValid(this.state.data.address?.line)} onChange={(arg) => this.onChange(arg, "line")} value={this.state.data.address.line} />
                           <div className="invalid-feedback">Address line cannot be empty</div>
                         </div>
                       </div>
@@ -253,7 +255,7 @@ class AddEmployee extends Component {
                       <div className="col-sm-6">
                         <div className="form-group">
                           <label>City<span className="text-danger">*</span></label>
-                          <input name="city" type="text" className={isValid(this.state.data.address?.city)} onChange={(arg) => this.onChange(arg, "city")} />
+                          <input name="city" type="text" className={isValid(this.state.data.address?.city)} onChange={(arg) => this.onChange(arg, "city")} value={this.state.data.address.city} />
                           <div className="invalid-feedback">City cannot be empty</div>
                         </div>
                       </div>
@@ -278,7 +280,6 @@ class AddEmployee extends Component {
         </div>
         <OpenChat />
       </div>
-
     );
   }
 };
