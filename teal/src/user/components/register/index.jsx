@@ -14,6 +14,7 @@ class Register extends Component {
       data:{
         firstName : null,
         lastName : null,
+        username: null,
         email : null,
         password : null,
         confirmPassword : null,
@@ -21,16 +22,19 @@ class Register extends Component {
       },
       statusChange:{
         firstName: false,
-        lastName : false,
+        lastName: false,
+        username: false,
         email: false,
-        password:false,
-        confirmPassword:false,
-        phone:false
+        password: false,
+        confirmPassword: false,
+        phone: false
       }
     }
 
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleChange = this.handleChange.bind(this);
+    this.inputBorder = this.inputBorder.bind(this);
+    this.inputClassname = this.inputClassname.bind(this);
 
   }
 
@@ -58,7 +62,7 @@ class Register extends Component {
       statusChange[e.target.name] = this.state.data.password == e.target.value;
     }
 
-    if(e.target.name == "checkbox"){
+    if(e.target.name == "username"){
       statusChange[e.target.name] = e.target.value;
     }
 
@@ -86,14 +90,22 @@ class Register extends Component {
       let newPatient = {
         username : dataCheck.email,
         password : dataCheck.password,
-        role : 'USER'
+        role : 'user'
       };
-      // NotificationManager.success('success', "Success", 2000);
-      axiosAction("/users", ADD, (res) => {
+      
+      axiosAction("/register", ADD, (res) => {
         notify('success', "Success")
         this.props.history.push("/");
       }, (err) => notify('error', 'Error'), newPatient);
     }
+  }
+
+  inputBorder = (c1, c2) => {
+    return c1?{border : c2?'1px solid green':'1px solid red'}:{};
+  }
+
+  inputClassname = (c1, c2) => {
+    return c1?(c2?"form-control is-valid":"form-control is-invalid"):"form-control";
   }
 
   render() {
@@ -112,8 +124,8 @@ class Register extends Component {
                 <div className="form-group">
                   <label>First Name</label>
                   <input type="text" 
-                    style={this.state.data.firstName!=null?{border : (this.state.data.firstName && this.state.statusChange.firstName)?'1px solid green':'1px solid red'}:{}}
-                    className={"form-control" + (this.state.data.firstName!=null?(this.state.data.firstName && this.state.statusChange.firstName?" is-valid":" is-invalid"):"")} 
+                    style={this.inputBorder(this.state.data.firstName!=null, this.state.data.firstName && this.state.statusChange.firstName)}
+                    className={this.inputClassname(this.state.data.firstName!=null, this.state.data.firstName && this.state.statusChange.firstName)} 
                     name="firstName" 
                     onBlur={this.handleChange}
                   />
@@ -122,18 +134,28 @@ class Register extends Component {
                 <div className="form-group">
                   <label>Last Name</label>
                   <input type="text" 
-                    style={this.state.data.lastName!=null?{border : (this.state.data.lastName && this.state.statusChange.lastName)?'1px solid green':'1px solid red'}:{}}
-                    className={"form-control" + (this.state.data.lastName!=null?(this.state.data.lastName && this.state.statusChange.lastName?" is-valid":" is-invalid"):"")}
+                    style={this.inputBorder(this.state.data.lastName!=null, this.state.data.lastName && this.state.statusChange.lastName)}
+                    className={this.inputClassname(this.state.data.lastName!=null, this.state.data.lastName && this.state.statusChange.lastName)}
                     name="lastName" 
                     onBlur={this.handleChange} 
                 />
                   <div className="invalid-feedback">Please enter last name.</div>
                 </div>
                 <div className="form-group">
+                  <label>User Name</label>
+                  <input type="text" 
+                    style={this.inputBorder(this.state.data.username!=null, this.state.data.username && this.state.statusChange.username)}
+                    className={this.inputClassname(this.state.data.username!=null, this.state.data.username && this.state.statusChange.username)}
+                    name="username" 
+                    onBlur={this.handleChange} 
+                />
+                  <div className="invalid-feedback">Please enter user name.</div>
+                </div>
+                <div className="form-group">
                   <label>Email Address</label>
                   <input type="email" 
-                    style={this.state.data.email!=null?{border : (this.state.data.email && this.state.statusChange.email)?'1px solid green':'1px solid red'}:{}}
-                    className={"form-control" + (this.state.data.email!=null?(this.state.data.email && this.state.statusChange.email?" is-valid":" is-invalid"):"")}
+                    style={this.inputBorder(this.state.data.email!=null, this.state.data.email && this.state.statusChange.email)}
+                    className={this.inputClassname(this.state.data.email!=null, this.state.data.email && this.state.statusChange.email)}
                     name="email"
                     onBlur={this.handleChange}
                 />
@@ -142,8 +164,8 @@ class Register extends Component {
                 <div className="form-group">
                   <label>Password</label>
                   <input 
-                    style={this.state.data.password!=null?{border : (this.state.data.password && this.state.statusChange.password)?'1px solid green':'1px solid red'}:{}}
-                    className={"form-control" + (this.state.data.password!=null?(this.state.data.password && this.state.statusChange.password?" is-valid":" is-invalid"):"")}
+                    style={this.inputBorder(this.state.data.password!=null, this.state.data.password && this.state.statusChange.password)}
+                    className={this.inputClassname(this.state.data.password!=null, this.state.data.password && this.state.statusChange.password)}
                     type="password" 
                     name="password" 
                     onBlur={this.handleChange}/>
@@ -153,8 +175,8 @@ class Register extends Component {
                   <label>Confirm Password</label>
                   <input 
                     type="password" 
-                    style={this.state.data.confirmPassword!=null?{border : (this.state.data.confirmPassword && this.state.statusChange.confirmPassword)?'1px solid green':'1px solid red'}:{}}
-                    className={"form-control" + (this.state.data.confirmPassword!=null?(this.state.data.confirmPassword && this.state.statusChange.confirmPassword?" is-valid":" is-invalid"):"")}
+                    style={this.inputBorder(this.state.data.confirmPassword!=null, this.state.data.confirmPassword && this.state.statusChange.confirmPassword)}
+                    className={this.inputClassname(this.state.data.confirmPassword!=null, this.state.data.confirmPassword && this.state.statusChange.confirmPassword)}
                     name="confirmPassword" 
                     onBlur={this.handleChange}/>
                     <div className="invalid-feedback">Password must be the same.</div>
@@ -163,8 +185,8 @@ class Register extends Component {
                   <label>Mobile Number</label>
                   <input 
                     type="text"
-                    style={this.state.data.phone!=null?{border : (this.state.data.phone && this.state.statusChange.phone)?'1px solid green':'1px solid red'}:{}}
-                    className={"form-control" + (this.state.data.phone!=null?(this.state.data.phone && this.state.statusChange.phone?" is-valid":" is-invalid"):"")} 
+                    style={this.inputBorder(this.state.data.phone!=null, this.state.data.phone && this.state.statusChange.phone)}
+                    className={this.inputClassname(this.state.data.phone!=null, this.state.data.phone && this.state.statusChange.phone)} 
                     name="phone" 
                     onBlur={this.handleChange}/>
                     <div className="invalid-feedback">Please enter phone number.</div>

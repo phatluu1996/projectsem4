@@ -2,7 +2,10 @@ import axios from 'axios';
 import moment from 'moment';
 
 export const api = axios.create({
-    baseURL: 'http://localhost:8080/api'
+    baseURL: 'http://localhost:8080/api',
+    headers: {
+        "Content-type": "application/json"
+    }
 });
 
 export const GET = "get";

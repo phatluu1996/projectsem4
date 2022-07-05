@@ -7,4 +7,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface PatientRepos extends JpaRepository<Patient, Long>, JpaSpecificationExecutor {
+    Boolean existsByEmail(String username);
 }

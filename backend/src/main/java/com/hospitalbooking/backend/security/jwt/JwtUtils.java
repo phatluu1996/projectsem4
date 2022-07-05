@@ -17,7 +17,7 @@ import java.util.Date;
 public class JwtUtils {
     private static final Logger logger = LoggerFactory.getLogger(JwtUtils.class);
 
-    @Value("travelBookingSecretKey")
+    @Value("hospitalBookingSecretKey")
     private String jwtSecret;
     @Value("86400000")
     private int jwtExpirationMs;
