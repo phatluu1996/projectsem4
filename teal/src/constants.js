@@ -18,14 +18,14 @@ export const DayOptions = [
     { value: '5', label: 'Thursday', shortLabel: 'thur' },
     { value: '6', label: 'Friday', shortLabel: 'fri' },
     { value: '7', label: 'Saturday', shortLabel: 'sat' },
-  ]
+]
 export const disabledHoursFromNow = () => {
     const hours = [];
-    for (let i = 0; i < moment().hour(); i += 1){
-        if(!outOfficeHours.includes(i)){
+    for (let i = 0; i < moment().hour(); i += 1) {
+        if (!outOfficeHours.includes(i)) {
             hours.push(i);
-        }        
-    } 
+        }
+    }
     return hours;
 };
 
@@ -44,3 +44,35 @@ export const disabledHours = (hours) => {
 export const disabledMinutes = (minutes) => {
     return minutes;
 }
+
+export const employeeRoles = [
+    {
+        value : 'ADMIN',
+        label : 'Admin'
+    },
+    {
+        value : 'DOCTOR',
+        label : 'Doctor'
+    },
+    {
+        value : 'NURSE',
+        label : 'Nurse'
+    },
+    {
+        value : 'LABORATORIST',
+        label : 'Laboratorist'
+    },
+    {
+        value : 'PHARMACIST',
+        label : 'Pharmacist'
+    },
+    {
+        value : 'ACCOUNTANT',
+        label : 'Accountant'
+    },
+    {
+        value : 'RECEPTIONIST',
+        label : 'Receptionist'
+    },
+]
+

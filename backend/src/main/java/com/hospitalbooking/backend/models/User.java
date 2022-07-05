@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
 
+import static com.hospitalbooking.backend.constant.UserRole.*;
+
 @Entity
 @Table(name = "[user]")
 public class User {
@@ -20,9 +22,17 @@ public class User {
     @Column(name = "reset_password", length = 255)
     private String resetPassword;
 
-    @ManyToOne
-    @JoinColumn(name = "doctor_id", referencedColumnName = "id")
-    private Doctor doctor;
+//    @ManyToOne
+//    @JoinColumn(name = "employee_id", referencedColumnName = "id")
+//    private Employee employee;
+
+    @OneToOne(fetch = FetchType.EAGER, optional = false)
+    @JsonIgnoreProperties("user")
+    private Employee employee;
+
+    @OneToOne(fetch = FetchType.EAGER, optional = false)
+    @JsonIgnoreProperties("user")
+    private Patient patient;
 
     @Column(name = "retired")
     private boolean retired;
@@ -30,14 +40,15 @@ public class User {
     public User() {
     }
 
-    public User(Long id, String username, String password, String role, String resetPassword, boolean retired, Doctor doctor) {
+    public User(Long id, String username, String password, String role, String resetPassword, Employee employee, Patient patient, boolean retired) {
         this.id = id;
         this.username = username;
         this.password = password;
         this.role = role;
         this.resetPassword = resetPassword;
+        this.employee = employee;
+        this.patient = patient;
         this.retired = retired;
-        this.doctor = doctor;
     }
 
     public Long getId() {
@@ -80,19 +91,31 @@ public class User {
         this.resetPassword = resetPassword;
     }
 
-    public Doctor getDoctor() {
-        return doctor;
-    }
-
-    public void setDoctor(Doctor doctor) {
-        this.doctor = doctor;
-    }
-
     public boolean isRetired() {
         return retired;
     }
 
     public void setRetired(boolean retired) {
         this.retired = retired;
+    }
+
+    public Employee getEmployee() {
+        return employee;
+    }
+
+    public void setEmployee(Employee employee) {
+        this.employee = employee;
+    }
+
+    public Patient getPatient() {
+        return patient;
+    }
+
+    public void setPatient(Patient patient) {
+        this.patient = patient;
+    }
+
+    public Object getProfile(){
+        return role == PATIENT ? patient : employee;
     }
 }

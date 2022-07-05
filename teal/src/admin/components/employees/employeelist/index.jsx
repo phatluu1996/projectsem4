@@ -4,6 +4,10 @@ import { User_img, Sent_img } from "../../imagepath"
 import { Tag } from 'antd';
 import { Link } from 'react-router-dom';
 import OpenChat from "../../sidebar/openchatheader"
+import { axiosAction, axiosActions, notify } from '../../../../actions';
+import { DELETE, GET } from "../../../../constants";
+import { toMoment } from "../../../../utils";
+
 import {
   itemRender,
   onShowSizeChange,
@@ -13,118 +17,131 @@ class EmployeeList extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      show: null,
-      data: [
-        {
-          id: 1,
-          image: User_img,
-          Name: 'Albina Simonis',
-          EmployeeID: 'NS-0001',
-          Email: 'albinasimonis@example.com',
-          Mobile: '	828-634-2744',
-          Date: '7 May 2015',
-          tags: 'Nurse'
-        },
-        {
-          id: 2,
-          image: User_img,
-          Name: 'Cristina Groves',
-          EmployeeID: 'NS-0002',
-          Email: 'cristinagroves@example.com',
-          Mobile: '928-344-5176',
-          Date: '7 May 2015',
-          tags: 'Doctor',
-        },
-        {
-          id: 3,
-          image: User_img,
-          Name: 'Mary Mericle',
-          EmployeeID: 'NS-0003',
-          Email: 'marymericle@example.com',
-          Mobile: '603-831-4983',
-          Date: '7 May 2015',
-          tags: 'Accountant',
-        },
-        {
-          id: 4,
-          image: User_img,
-          Name: 'Haylie Feeney',
-          EmployeeID: 'NS-0004',
-          Email: 'hayliefeeney@example.com',
-          Mobile: '828-634-2744',
-          Date: '7 May 2015',
-          tags: 'Accountant',
-        },
-        {
-          id: 5,
-          image: User_img,
-          Name: 'Zoe Butler',
-          EmployeeID: 'NS-0005',
-          Email: 'zoebutler@example.com',
-          Mobile: '444-555-9999',
-          Date: '7 May 2015',
-          tags: 'Accountant',
-        },
-
-      ],
+      loading: true,
+      data: [],
+      selectdId: 0
     };
+    this.fetchData = this.fetchData.bind(this);
+    this.deleteData = this.deleteData.bind(this);
   }
-  componentDidMount() {
 
+  fetchData() {
+    axiosAction("/employees", GET, res => {
+      this.setState({
+        data: res.data,
+        loading: false,
+      });
+    }, () => { });
+  }
+
+  deleteData() {
+    const deleteReq = {
+      url: "/employees/" + this.state.selectdId,
+      method: DELETE,
+      callback: (res) => {
+        axiosActions([fetchReq]);
+      },
+      data: {}
+    }
+
+    const fetchReq = {
+      url: "/employees",
+      method: GET,
+      callback: (res) => {
+        notify('success', '', 'Success');
+        this.setState({
+          data: res.data,
+          loading: false,
+          selectdId: 0
+        });
+      },
+      data: {}
+    }
+    axiosActions([deleteReq]);
+  }
+
+  componentDidMount() {
+    this.fetchData();
     if ($('.floating').length > 0) {
       $('.floating').on('focus blur', function (e) {
         $(this).parents('.form-focus').toggleClass('focused', (e.type === 'focus' || this.value.length > 0));
       }).trigger('blur');
     }
   }
+
   render() {
     const { data } = this.state;
 
     const columns = [
       {
-        title: "Name",
-        dataIndex: "Name",
+        title: "ID",
+        render: (text, record) => (
+          <div>
+            {"EMP-" + record.id}
+          </div>
+        ),
+      },
+      {
+        title: "Employee Name",
         render: (text, record) => (
           <div className="table-avatar">
             <a href="#0" className="avatar avatar-sm mr-2">
-              <img alt="" src={record.image} />
+              {/* <img alt="" src={record.image} /> */}
             </a>
-            {text}
+            {record.lastName + " " + record.firstName}
           </div>
         ),
-        sorter: (a, b) => a.Name.length - b.Name.length,
 
       },
       {
-        title: "Employee ID",
-        dataIndex: "EmployeeID",
-        sorter: (a, b) => a.EmployeeID.length - b.EmployeeID.length,
+        title: "Gender",
+        render: (text, record) => (
+          <div>
+            {record.gender}
+          </div>
+        ),
+      },
+      {
+        title: "BirthDay",
+        render: (text, record) => (
+          <div>
+            {toMoment(record.dateOfBirth).format("DD-MM-YYYY")}
+          </div>
+        ),
       },
       {
         title: "Email",
-        dataIndex: "Email",
-        sorter: (a, b) => a.Email.length - b.Email.length,
+        render: (text, record) => (
+          <div>
+            {record.email}
+          </div>
+        ),
       },
       {
-        title: "Mobile",
-        dataIndex: "Mobile",
-        sorter: (a, b) => a.Mobile.length - b.Mobile.length,
-      },
-      {
-        title: "Join Date",
-        dataIndex: "Date",
-        sorter: (a, b) => a.Date.length - b.Date.length,
+        title: "Phone",
+        render: (text, record) => (
+          <div>
+            {record.phoneNumber}
+          </div>
+        ),
       },
       {
         title: "Role",
-        dataIndex: "tags",
         render: (text, record) => (
-          <Tag color={text === 'Nurse' ? "green" : text === 'Accountant' ? "purple" : 'red'} key={text} className="custom-badge">
-            {text}
-          </Tag>
+          <div>
+            {record.employeeRole}
+          </div>
         ),
-        sorter: (a, b) => a.tags.length - b.tags.length,
-
+      },
+      {
+        title: "Status",
+        render: (text, record) => (
+          <span>
+            <Tag color={record.status ? "green" : "red"} className="custom-badge">
+              {record.status ? "Active" : "Inactive"}
+            </Tag>
+          </span>
+        ),
       },
       {
         title: "Action",
@@ -133,8 +150,8 @@ class EmployeeList extends Component {
           <div className="dropdown dropdown-action">
             <a href="#" className="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i className="fas fa-ellipsis-v" /></a>
             <div className="dropdown-menu dropdown-menu-right">
-              <Link className="dropdown-item" to="/edit-employee"><i className="fas fa-pencil-alt m-r-5" /> Edit</Link>
-              <a className="dropdown-item" href="#" data-toggle="modal" data-target="#delete_employee"><i className="fas fa-trash m-r-5" /> Delete</a>
+              <Link className="dropdown-item" to={`/admin/employees/update/${record.id}`}><i className="fas fa-pencil-alt m-r-5" />Edit</Link>
+              <a className="dropdown-item" href="#" data-toggle="modal" data-target="#delete_employee" onClick={() => this.setState({ selectdId: record.id })}><i className="fas fa-trash m-r-5" /> Delete</a>
             </div>
           </div>
         ),
@@ -150,7 +167,7 @@ class EmployeeList extends Component {
               <h4 className="page-title">Employee</h4>
             </div>
             <div className="col-sm-8 col-9 text-right m-b-20">
-              <Link to="/add-employee" className="btn btn-primary float-right btn-rounded"><i className="fas fa-plus" /> Add Employee</Link>
+              <Link to="/admin/employees/add" className="btn btn-primary float-right btn-rounded"><i className="fas fa-plus" /> Add Employee</Link>
             </div>
           </div>
           <div className="row filter-row">
@@ -195,6 +212,7 @@ class EmployeeList extends Component {
                   rowKey={(record) => record.id}
                   showSizeChanger={true}
                   pagination={{
+                    pageSize: 5,
                     total: data.length,
                     showTotal: (total, range) =>
                       `Showing ${range[0]} to ${range[1]} of ${total} entries`,
@@ -214,8 +232,9 @@ class EmployeeList extends Component {
               <div className="modal-body text-center">
                 <img src={Sent_img} alt="" width={50} height={46} />
                 <h3>Are you sure want to delete this Employee?</h3>
-                <div className="m-t-20"> <a href="#" className="btn btn-white mr-0" data-dismiss="modal">Close</a>
-                  <button type="submit" className="btn btn-danger">Delete</button>
+                <div className="m-t-20">
+                  <a href="#" className="btn btn-white mr-0" data-dismiss="modal">Close</a>
+                  <a href="#" className="btn btn-danger" data-dismiss="modal" onClick={this.deleteData}>Delete</a>
                 </div>
               </div>
             </div>

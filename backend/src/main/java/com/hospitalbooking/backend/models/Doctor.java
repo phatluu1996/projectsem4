@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "[doctor]")
-public class Doctor {
+public class Doctor{
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,10 +22,13 @@ public class Doctor {
     @JoinColumn(name = "department_id", referencedColumnName = "id")
     private Department department;
 
-    @ManyToOne
-    @JoinColumn(name = "employee_id", referencedColumnName = "id")
-    private Employee employee;
+//    @ManyToOne
+//    @JoinColumn(name = "employee_id", referencedColumnName = "id")
+//    private Employee employee;
 
+    @OneToOne(fetch = FetchType.EAGER, optional = false)
+    @JsonIgnoreProperties("doctor")
+    private Employee employee;
     @OneToMany
     @JoinColumn(name = "doctor_id", referencedColumnName = "id")
     @JsonIgnoreProperties("doctor")

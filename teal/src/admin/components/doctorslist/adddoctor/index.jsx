@@ -528,7 +528,6 @@ class AddDoctor extends Component {
                             value="Female" onChange={this.onChange} />Female
                         </label>
                       </div>
-
                     </div>
                   </div>
                   <div className="col-sm-12">

@@ -7,7 +7,6 @@ import OpenChat from "../sidebar/openchatheader";
 import { axiosAction, axiosActions, notify } from '../../../actions';
 import { DELETE, GET } from "../../../constants";
 import { toMoment } from "../../../utils";
-import moment from 'moment';
 
 class Doctors extends Component {
   constructor(props) {

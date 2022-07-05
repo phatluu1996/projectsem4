@@ -46,7 +46,7 @@ public class AuthorizeController {
         String jwt = jwtUtils.generateJwtToken(authentication);
 
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-        User user = userRepos.getById(userDetails.getId());
+//        User user = userRepos.getById(userDetails.getId());
 
         Optional<User> optional = userRepos.findById(userDetails.getId());
 
@@ -59,7 +59,7 @@ public class AuthorizeController {
             if(roles.get(0).equals("ROLE_ADMIN")){
                 headerName = "Admin";
             }else if(roles.get(0).equals("ROLE_DOCTOR")){
-                headerName = user.getDoctor().getEmployee().getFirstName();
+                headerName = model.getEmployee().getFirstName() + " " + model.getEmployee().getLastName();
             }else {
                 return ResponseEntity.ok(new MessageResponse("Error authorize !", false));
             }
