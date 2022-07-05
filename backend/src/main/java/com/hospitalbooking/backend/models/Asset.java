@@ -28,7 +28,7 @@ public class Asset {
     private String model;
 
     @Column(name = "serial_number", length = 250, columnDefinition = "nvarchar(250)")
-    private String serial_number;
+    private String serialNumber;
 
     @Column(name = "supplier", length = 250, columnDefinition = "nvarchar(250)")
     private String supplier;
@@ -38,6 +38,9 @@ public class Asset {
 
     @Column(name = "cost")
     private int cost;
+
+    @Column(name = "status", length = 250, columnDefinition = "nvarchar(250)")
+    private String status;
 
     @Column(name = "description", columnDefinition = "text")
     private String description;
@@ -53,16 +56,17 @@ public class Asset {
     public Asset() {
     }
 
-    public Asset(Long id, String assetName, Date purchaseDate, String manufacture, String model, String serial_number, String supplier, int warranty, int cost, String description, Employee employee, boolean retired) {
+    public Asset(Long id, String assetName, Date purchaseDate, String manufacture, String model, String serialNumber, String supplier, int warranty, int cost, String status, String description, Employee employee, boolean retired) {
         this.id = id;
         this.assetName = assetName;
         this.purchaseDate = purchaseDate;
         this.manufacture = manufacture;
         this.model = model;
-        this.serial_number = serial_number;
+        this.serialNumber = serialNumber;
         this.supplier = supplier;
         this.warranty = warranty;
         this.cost = cost;
+        this.status = status;
         this.description = description;
         this.employee = employee;
         this.retired = retired;
@@ -108,12 +112,12 @@ public class Asset {
         this.model = model;
     }
 
-    public String getSerial_number() {
-        return serial_number;
+    public String getSerialNumber() {
+        return serialNumber;
     }
 
-    public void setSerial_number(String serial_number) {
-        this.serial_number = serial_number;
+    public void setSerialNumber(String serialNumber) {
+        this.serialNumber = serialNumber;
     }
 
     public String getSupplier() {
@@ -138,6 +142,14 @@ public class Asset {
 
     public void setCost(int cost) {
         this.cost = cost;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     public String getDescription() {
