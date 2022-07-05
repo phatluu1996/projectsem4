@@ -29,6 +29,7 @@ public class Doctor{
     @OneToOne(fetch = FetchType.EAGER, optional = false)
     @JsonIgnoreProperties("doctor")
     private Employee employee;
+
     @OneToMany
     @JoinColumn(name = "doctor_id", referencedColumnName = "id")
     @JsonIgnoreProperties("doctor")

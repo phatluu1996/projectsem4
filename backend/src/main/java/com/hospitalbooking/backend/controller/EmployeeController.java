@@ -44,10 +44,11 @@ public class EmployeeController {
     @PostMapping("/employees")
     public ResponseEntity<Employee> add(@RequestBody Employee employee){
         addressRepos.save(employee.getAddress());
-        Employee savedEmployee = employeeRepos.save(employee);
         if(employee.getUser() != null){
             userRepos.save(employee.getUser());
         }
+        Employee savedEmployee = employeeRepos.save(employee);
+
         return new ResponseEntity<>(savedEmployee, HttpStatus.OK);
     }
 
