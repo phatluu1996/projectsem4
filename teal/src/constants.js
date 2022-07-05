@@ -50,14 +50,6 @@ export const disabledMinutes = (minutes) => {
 
 export const employeeRoles = [
     {
-        value : 'ADMIN',
-        label : 'Admin'
-    },
-    {
-        value : 'DOCTOR',
-        label : 'Doctor'
-    },
-    {
         value : 'NURSE',
         label : 'Nurse'
     },
@@ -77,5 +69,9 @@ export const employeeRoles = [
         value : 'RECEPTIONIST',
         label : 'Receptionist'
     },
+    {
+        value : 'OTHER',
+        label : 'Other'
+    }
 ]
 

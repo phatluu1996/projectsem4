@@ -55,12 +55,11 @@ public class EmployeeController {
     public ResponseEntity<Employee> update(@RequestBody Employee employee, @PathVariable Long id){
         Optional<Employee> optional = employeeRepos.findById(id);
         return optional.map(model -> {
-            addressRepos.save(employee.getAddress());
             employee.setId(model.getId());
+            addressRepos.save(employee.getAddress());
+            User savedUser = userRepos.save(employee.getUser());
+            employee.setUser(savedUser);
             Employee savedEmployee = employeeRepos.save(employee);
-            if(employee.getUser() != null){
-                userRepos.save(employee.getUser());
-            }
             return new ResponseEntity<>(savedEmployee, HttpStatus.OK);
         }).orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }

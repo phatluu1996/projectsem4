@@ -8,4 +8,5 @@ public class EmployeeRole {
     public static final String PHARMACIST = "PHARMACIST";
     public static final String ACCOUNTANT = "ACCOUNTANT";
     public static final String RECEPTIONIST = "RECEPTIONIST";
+    public static final String OTHER = "OTHER";
 }

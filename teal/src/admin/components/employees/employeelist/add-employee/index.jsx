@@ -36,7 +36,8 @@ class AddEmployee extends Component {
         },
         "user": {
           "username": null,
-          "password": null
+          "password": null,
+          "retired": false,
         },
         "retired": false,
       },
@@ -47,7 +48,7 @@ class AddEmployee extends Component {
 
   }
 
-  onChange( arg, fieldName) {
+  onChange(arg, fieldName) {
     const tmp = { ...this.state.data };
 
     switch (fieldName) {
@@ -63,6 +64,12 @@ class AddEmployee extends Component {
       case "phone":
         tmp.phoneNumber = arg.target.value;
         break;
+      case "cid":
+        tmp.cId = arg.target.value;
+        break;
+      case "leave":
+        tmp.remainingLeave = arg.target.value;
+        break;
       case "dob":
         tmp.dateOfBirth = arg;
         break;
@@ -71,6 +78,9 @@ class AddEmployee extends Component {
         if (arg != "RECEPTIONIST") {
           tmp.user.username = "";
           tmp.user.password = "";
+          tmp.user.retired = true;
+        }else{
+          tmp.user.retired = false;
         }
         break;
       case "username":
@@ -116,7 +126,6 @@ class AddEmployee extends Component {
 
   }
   render() {
-
     return (
       <div className="page-wrapper">
         <div className="content">
@@ -168,9 +177,23 @@ class AddEmployee extends Component {
                   </div>
                   <div className="col-sm-6">
                     <div className="form-group">
+                      <label>Citizen Identification <span className="text-danger">*</span></label>
+                      <input name="cid" className={isValid(this.state.data.cId)} type="number" onChange={(arg) => this.onChange(arg, "cid")} />
+                      <div className="invalid-feedback">Citizen identification cannot be empty</div>
+                    </div>
+                  </div>
+                  <div className="col-sm-6">
+                    <div className="form-group">
+                      <label>Remaining Leaves <span className="text-danger">*</span></label>
+                      <input name="leave" className={isValid(this.state.data.remainingLeave)} value={this.state.data.remainingLeave} type="number" onChange={(arg) => this.onChange(arg, "leave")} />
+                      <div className="invalid-feedback">RemainingLeave cannot be empty</div>
+                    </div>
+                  </div>
+                  <div className="col-sm-6">
+                    <div className="form-group">
                       <label>Role<span className="text"></span></label>
                       <Select aria-autocomplete='none' showSearch={true} bordered={false} size={"small"} style={{ width: '100%' }} name='role'
-                        className={isValid(this.state.data.employeeRole)} onChange={(arg) => this.onChange(arg, "role")}>
+                        className={isValid(this.state.data.employeeRole)} value={this.state.data.employeeRole} onChange={(arg) => this.onChange(arg, "role")}>
                         {employeeRoles?.map((ctr, idx) => {
                           return (<Option key={idx} value={ctr.value}>{ctr.label}</Option>)
                         })}
@@ -178,20 +201,20 @@ class AddEmployee extends Component {
                       <div className="invalid-feedback">Role cannot be empty</div>
                     </div>
                   </div>
-                  <div className="col-sm-6">
+                  {this.state.data.employeeRole == 'RECEPTIONIST' && <><div className="col-sm-6">
                     <div className="form-group">
                       <label>Username <span className="text-danger">*</span></label>
-                      <input className={isValid(this.state.data.user.username)} type="text" onChange={(arg) => this.onChange(arg, "username")} />
+                      <input className={isValid(this.state.data.user.username)} type="text" value={this.state.data.user.username} onChange={(arg) => this.onChange(arg, "username")} />
                       <div className="invalid-feedback">Username cannot be empty</div>
                     </div>
                   </div>
                   <div className="col-sm-6">
                     <div className="form-group">
                       <label>Password<span className="text"></span></label>
-                      <input className={isValid(this.state.data.user.password)} type="password" onChange={(arg) => this.onChange(arg, "password")} />
+                      <input className={isValid(this.state.data.user.password)} type="password" value={this.state.data.user.password} onChange={(arg) => this.onChange(arg, "password")} />
                       <div className="invalid-feedback">Password cannot be empty</div>
                     </div>
-                  </div>
+                  </div></>}
                   <div className="col-sm-12">
                     <div className="row">
                       <div className="col-sm-12">

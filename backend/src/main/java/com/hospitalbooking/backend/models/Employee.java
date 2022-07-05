@@ -27,7 +27,7 @@ public class Employee  extends UserProfile{
     @JoinColumn(name = "doctor_id", nullable = true)
     @JsonIgnoreProperties("employee")
     private Doctor doctor;
-    
+
     @OneToOne(fetch = FetchType.EAGER, optional = false)
     @JsonIgnoreProperties("employee")
     private User user;
