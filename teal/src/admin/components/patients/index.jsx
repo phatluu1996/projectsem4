@@ -97,7 +97,7 @@ class Patients extends Component {
         dataIndex: "address",
         render: (text, record) => (
           <div>
-            {record.address.line + " " + record.address.city +" "+record.address.province+" "+record.address.country}
+            {record.address?.line + " " + record.address?.city +" "+record.address?.province+" "+record.address?.country}
           </div>
         ),
       },
