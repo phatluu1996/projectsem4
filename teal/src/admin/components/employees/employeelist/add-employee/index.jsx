@@ -76,11 +76,13 @@ class AddEmployee extends Component {
       case "role":
         tmp.employeeRole = arg;
         if (arg != "RECEPTIONIST") {
-          tmp.user.username = "";
-          tmp.user.password = "";
+          tmp.user.username = "nouser";
+          tmp.user.password = "nouser";
           tmp.user.retired = true;
         }else{
           tmp.user.retired = false;
+          tmp.user.username = "";
+          tmp.user.password = "";
         }
         break;
       case "username":
