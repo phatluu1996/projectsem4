@@ -2,6 +2,7 @@ package com.hospitalbooking.backend.controller;
 
 import com.hospitalbooking.backend.constant.EmployeeRole;
 import com.hospitalbooking.backend.models.Employee;
+import com.hospitalbooking.backend.models.User;
 import com.hospitalbooking.backend.repository.AddressRepos;
 import com.hospitalbooking.backend.repository.EmployeeRepos;
 import com.hospitalbooking.backend.repository.UserRepos;
@@ -44,11 +45,9 @@ public class EmployeeController {
     @PostMapping("/employees")
     public ResponseEntity<Employee> add(@RequestBody Employee employee){
         addressRepos.save(employee.getAddress());
-        if(employee.getUser() != null){
-            userRepos.save(employee.getUser());
-        }
+        User savedUser = userRepos.save(employee.getUser());
+        employee.setUser(savedUser);
         Employee savedEmployee = employeeRepos.save(employee);
-
         return new ResponseEntity<>(savedEmployee, HttpStatus.OK);
     }
 

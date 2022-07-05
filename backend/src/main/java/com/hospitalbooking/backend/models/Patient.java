@@ -12,11 +12,13 @@ import java.util.List;
 public class Patient extends UserProfile{
 
 
-    @OneToOne(fetch = FetchType.LAZY,
-            cascade =  CascadeType.ALL,
-            mappedBy = "patient")
-    @JoinColumn(name = "doctor_id", nullable = true)
-    @JsonIgnoreProperties("patient")
+//    @OneToOne(fetch = FetchType.LAZY,
+//            cascade =  CascadeType.ALL,
+//            mappedBy = "patient")
+//    @JoinColumn(name = "doctor_id", nullable = true)
+//    @JsonIgnoreProperties("patient")
+    @OneToOne(fetch = FetchType.EAGER, optional = false)
+    @JsonIgnoreProperties("employee")
     private User user;
 
     @OneToMany

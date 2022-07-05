@@ -22,15 +22,17 @@ public class User {
     @Column(name = "reset_password", length = 255)
     private String resetPassword;
 
-//    @ManyToOne
-//    @JoinColumn(name = "employee_id", referencedColumnName = "id")
-//    private Employee employee;
-
-    @OneToOne(fetch = FetchType.EAGER, optional = false)
+    @OneToOne(fetch = FetchType.LAZY,
+        cascade =  CascadeType.ALL,
+        mappedBy = "user")
+    @JoinColumn(name = "employee_id", nullable = true)
     @JsonIgnoreProperties("user")
     private Employee employee;
 
-    @OneToOne(fetch = FetchType.EAGER, optional = false)
+    @OneToOne(fetch = FetchType.LAZY,
+            cascade =  CascadeType.ALL,
+            mappedBy = "user")
+    @JoinColumn(name = "patient_id", nullable = true)
     @JsonIgnoreProperties("user")
     private Patient patient;
 
@@ -113,9 +115,5 @@ public class User {
 
     public void setPatient(Patient patient) {
         this.patient = patient;
-    }
-
-    public Object getProfile(){
-        return role == PATIENT ? patient : employee;
     }
 }
