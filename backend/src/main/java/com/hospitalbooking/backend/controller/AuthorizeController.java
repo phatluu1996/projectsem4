@@ -1,9 +1,12 @@
 package com.hospitalbooking.backend.controller;
 
+import com.hospitalbooking.backend.models.Patient;
 import com.hospitalbooking.backend.models.User;
+import com.hospitalbooking.backend.repository.PatientRepos;
 import com.hospitalbooking.backend.repository.UserRepos;
 import com.hospitalbooking.backend.security.jwt.JwtUtils;
 import com.hospitalbooking.backend.security.payload.request.LoginRequest;
+import com.hospitalbooking.backend.security.payload.request.RegisterRequest;
 import com.hospitalbooking.backend.security.payload.response.JwtResponse;
 import com.hospitalbooking.backend.security.payload.response.MessageResponse;
 import com.hospitalbooking.backend.security.services.UserDetailsImpl;
@@ -17,7 +20,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -31,12 +36,15 @@ public class AuthorizeController {
     private UserRepos userRepos;
 
     @Autowired
+    private PatientRepos patientRepos;
+
+    @Autowired
     private PasswordEncoder encoder;
 
     @Autowired
     private JwtUtils jwtUtils;
 
-    @PostMapping("/authorize")
+    @PostMapping("/login")
     public ResponseEntity<?> authorize(@Valid @RequestBody LoginRequest loginRequest) {
 
         Authentication authentication = authenticationManager.authenticate(
@@ -70,5 +78,105 @@ public class AuthorizeController {
                     roles));
         });
         return ResponseEntity.ok(new MessageResponse("Error authorize !", false));
+    }
+
+    @PostMapping("/register")
+    public ResponseEntity<?> registerUser(@Valid @RequestBody RegisterRequest registerRequest) {
+        if (userRepos.existsByUsername(registerRequest.getUsername())) {
+            return ResponseEntity
+                    .ok()
+                    .body(new MessageResponse("Username is already in use!", false));
+        }
+
+        // Create new user's account
+        Patient patient;
+
+        User user = new User(registerRequest.getUsername(),
+                encoder.encode(registerRequest.getPassword())
+        );
+        user.setRetired(false);
+
+        String strRoles = registerRequest.getRole();
+        if (strRoles == null) {
+            return ResponseEntity
+                    .ok()
+                    .body(new MessageResponse("Role is not found.",false));
+        } else {
+            switch (strRoles.toLowerCase()) {
+                case "admin":
+                    user.setRole("ADMIN");
+                    userRepos.save(user);
+                    break;
+//                case "airline":
+//                    account.setRole("AIRLINE");
+//
+//                    airline = new Airline();
+//                    airline.setAirlineName(signUpRequest.getAirlineName());
+//
+//                    if (airlineRepository.existsByEmail(signUpRequest.getEmail())){
+//                        return ResponseEntity
+//                                .ok()
+//                                .body(new MessageResponse("Email is already in use!", false));
+//                    }else {
+//                        airline.setEmail(signUpRequest.getEmail());
+//                        airline.setAccount(account);
+//                        accountRepository.save(account);
+//                        airlineRepository.save(airline);
+//                    }
+//                    break;
+//                case "hotel":
+//                    account.setRole("HOTEL");
+//
+//                    hotel = new Hotel();
+//                    hotel.setHotelName(signUpRequest.getHotelName());
+//
+//                    if (hotelRepository.existsByEmail(signUpRequest.getEmail())){
+//                        return ResponseEntity
+//                                .ok()
+//                                .body(new MessageResponse("Email is already in use!", false));
+//                    }else {
+//                        hotel.setEmail(signUpRequest.getEmail());
+//                        hotel.setAccount(account);
+//                        accountRepository.save(account);
+//                        hotelRepository.save(hotel);
+//                    }
+//                    break;
+                case "user":
+                    user.setRole("USER");
+
+                    patient = new Patient();
+                    patient.setFirstName(registerRequest.getUserFirstName());
+                    patient.setLastName(registerRequest.getUserLastName());
+
+                    if (patientRepos.existsByEmail(registerRequest.getEmail())) {
+                        return ResponseEntity
+                                .ok()
+                                .body(new MessageResponse("Email is already in use!",false));
+                    }else {
+                        patient.setEmail(registerRequest.getEmail());
+//                        patient.setcId(user.getId());
+                        userRepos.save(user);
+                        patientRepos.save(patient);
+                    }
+                    break;
+                default:
+                    return ResponseEntity
+                            .ok()
+                            .body(new MessageResponse("Role is not found.",false));
+            }
+        }
+
+//        StringBuilder linkReset = new StringBuilder();
+//        linkReset.append("http://localhost:3000/activateAccount?id=");
+//        linkReset.append(user.getId());
+//
+//        Map<String, Object> emailMap = new HashMap<>();
+//        emailMap.put("username", registerRequest.getUserFirstName()+" "+registerRequest.getUserLastName());
+//        emailMap.put("changePasswordlink", linkReset.toString());
+
+//        String templateHtml = emailService.templateResolve("confirm_account", emailMap);
+//        emailService.sendSimpleMessage(signUpRequest.getEmail(), null, "Confirm account", templateHtml);
+
+        return ResponseEntity.ok(new MessageResponse("User registered successfully!", true));
     }
 }
