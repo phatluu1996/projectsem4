@@ -232,6 +232,7 @@ class AppUniversal extends Component {
 
             {/* <PrivateRoute component={AdminDashboard} path="/admin/dashboard" exact /> */}
             <BusinessRoute component={Home} path="/" exact/>
+            <BusinessRoute restricted={false} path="/appointment" exact component={Appointment} />
             
             <BusinessRoute restricted={false} path="/login" exact component={Login} />
             <BusinessRoute restricted={true} component={Register} path="/register" exact />

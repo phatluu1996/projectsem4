@@ -44,7 +44,7 @@ public class UserDetailsImpl implements UserDetails{
 
             case UserRole.DOCTOR:
                 role =  new SimpleGrantedAuthority("ROLE_DOCTOR");
-
+                break;
             default:
                 role = new SimpleGrantedAuthority("ROLE_USER");
                 break;

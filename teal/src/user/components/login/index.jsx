@@ -78,7 +78,7 @@ class Login extends Component {
         <div className="main-content account-content">
         <div className="content">
           <div className="container">
-            <div className="account-box">
+            <div className="account-box" id="login-box">
               <form className="form-signin" onSubmit={this.handleSubmit}>
                 <div className="account-title">
                   <h3>Login</h3>

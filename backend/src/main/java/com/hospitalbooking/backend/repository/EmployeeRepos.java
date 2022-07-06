@@ -7,5 +7,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface EmployeeRepos extends JpaRepository<Employee, Long>, JpaSpecificationExecutor {
+    boolean existsByEmail(String email);
 
 }

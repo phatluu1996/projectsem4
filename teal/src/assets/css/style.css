@@ -426,12 +426,19 @@ Version      : 1.3
 	background-color: #fafafa;
 	min-height: 428px;
 }
-#business .account-box {
+#business #login-box.account-box {
 	background-color: #fff;
 	border: 1px solid #eaeaea;
 	margin: 0 auto;
 	padding: 30px;
 	width: 450px;
+}
+
+#business #register-box.account-box{
+	background-color: #fff;
+	border: 1px solid #eaeaea;
+	margin: 0 auto;
+	padding: 30px;
 }
 #business .account-box .form-control {
 	border: 1px solid #eaeaea;

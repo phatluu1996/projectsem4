@@ -1,7 +1,11 @@
 package com.hospitalbooking.backend.controller;
 
+import com.hospitalbooking.backend.models.Doctor;
+import com.hospitalbooking.backend.models.Employee;
 import com.hospitalbooking.backend.models.Patient;
 import com.hospitalbooking.backend.models.User;
+import com.hospitalbooking.backend.repository.DoctorRepos;
+import com.hospitalbooking.backend.repository.EmployeeRepos;
 import com.hospitalbooking.backend.repository.PatientRepos;
 import com.hospitalbooking.backend.repository.UserRepos;
 import com.hospitalbooking.backend.security.jwt.JwtUtils;
@@ -39,6 +43,12 @@ public class AuthorizeController {
     private PatientRepos patientRepos;
 
     @Autowired
+    private EmployeeRepos employeeRepos;
+
+    @Autowired
+    private DoctorRepos doctorRepos;
+
+    @Autowired
     private PasswordEncoder encoder;
 
     @Autowired
@@ -54,30 +64,29 @@ public class AuthorizeController {
         String jwt = jwtUtils.generateJwtToken(authentication);
 
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-//        User user = userRepos.getById(userDetails.getId());
 
-        Optional<User> optional = userRepos.findById(userDetails.getId());
+        User optional = userRepos.getById(userDetails.getId());
 
-        optional.map(model -> {
-            String headerName = "";
-            List<String> roles = userDetails.getAuthorities().stream()
-                    .map(item -> item.getAuthority())
-                    .collect(Collectors.toList());
+        String headerName = "";
+        List<String> roles = userDetails.getAuthorities().stream()
+                .map(item -> item.getAuthority())
+                .collect(Collectors.toList());
 
-            if(roles.get(0).equals("ROLE_ADMIN")){
-                headerName = "Admin";
-            }else if(roles.get(0).equals("ROLE_DOCTOR")){
-                headerName = model.getEmployee().getFirstName() + " " + model.getEmployee().getLastName();
-            }else {
-                return ResponseEntity.ok(new MessageResponse("Error authorize !", false));
-            }
-            return ResponseEntity.ok(new JwtResponse(jwt,
-                    userDetails.getId(),
-                    userDetails.getUsername(),
-                    headerName,
-                    roles));
-        });
-        return ResponseEntity.ok(new MessageResponse("Error authorize !", false));
+        if(roles.get(0).equals("ROLE_ADMIN")){
+            headerName = "Admin";
+        }else if(roles.get(0).equals("ROLE_DOCTOR")){
+            headerName = optional.getEmployee().getFirstName() + " " + optional.getEmployee().getLastName();
+        }else if(roles.get(0).equals("ROLE_USER")){
+            headerName = optional.getPatient().getFirstName() + " " + optional.getPatient().getLastName();
+        }else {
+            return ResponseEntity.ok(new MessageResponse("Error authorize !", false));
+        }
+
+        return ResponseEntity.ok(new JwtResponse(jwt,
+                userDetails.getId(),
+                userDetails.getUsername(),
+                headerName,
+                roles));
     }
 
     @PostMapping("/register")
@@ -88,8 +97,16 @@ public class AuthorizeController {
                     .body(new MessageResponse("Username is already in use!", false));
         }
 
+        if (patientRepos.existsByEmail(registerRequest.getEmail()) || employeeRepos.existsByEmail(registerRequest.getEmail()) || doctorRepos.existsByEmail(registerRequest.getEmail())) {
+            return ResponseEntity
+                    .ok()
+                    .body(new MessageResponse("Email is already in use!",false));
+        }
+
         // Create new user's account
         Patient patient;
+        Employee employee;
+        Doctor doctor;
 
         User user = new User(registerRequest.getUsername(),
                 encoder.encode(registerRequest.getPassword())
@@ -107,57 +124,47 @@ public class AuthorizeController {
                     user.setRole("ADMIN");
                     userRepos.save(user);
                     break;
-//                case "airline":
-//                    account.setRole("AIRLINE");
-//
-//                    airline = new Airline();
-//                    airline.setAirlineName(signUpRequest.getAirlineName());
-//
-//                    if (airlineRepository.existsByEmail(signUpRequest.getEmail())){
-//                        return ResponseEntity
-//                                .ok()
-//                                .body(new MessageResponse("Email is already in use!", false));
-//                    }else {
-//                        airline.setEmail(signUpRequest.getEmail());
-//                        airline.setAccount(account);
-//                        accountRepository.save(account);
-//                        airlineRepository.save(airline);
-//                    }
-//                    break;
-//                case "hotel":
-//                    account.setRole("HOTEL");
-//
-//                    hotel = new Hotel();
-//                    hotel.setHotelName(signUpRequest.getHotelName());
-//
-//                    if (hotelRepository.existsByEmail(signUpRequest.getEmail())){
-//                        return ResponseEntity
-//                                .ok()
-//                                .body(new MessageResponse("Email is already in use!", false));
-//                    }else {
-//                        hotel.setEmail(signUpRequest.getEmail());
-//                        hotel.setAccount(account);
-//                        accountRepository.save(account);
-//                        hotelRepository.save(hotel);
-//                    }
-//                    break;
+                case "doctor":
+                    user.setRole("AIRLINE");
+
+                    employee = new Employee();
+                    employee.setFirstName(registerRequest.getUserFirstName());
+                    employee.setLastName(registerRequest.getUserLastName());
+                    employee.setEmail(registerRequest.getEmail());
+                    employee.setUser(user);
+
+                    doctor = new Doctor();
+                    doctor.setEmployee(employee);
+
+                    userRepos.save(user);
+                    employeeRepos.save(employee);
+                    doctorRepos.save(doctor);
+
+                    break;
+                case "employee":
+                    user.setRole("EMPLOYEE");
+
+                    employee = new Employee();
+                    employee.setFirstName(registerRequest.getUserFirstName());
+                    employee.setLastName(registerRequest.getUserLastName());
+                    employee.setEmail(registerRequest.getEmail());
+                    employee.setUser(user);
+
+                    userRepos.save(user);
+                    employeeRepos.save(employee);
+
+                    break;
                 case "user":
                     user.setRole("USER");
 
                     patient = new Patient();
                     patient.setFirstName(registerRequest.getUserFirstName());
                     patient.setLastName(registerRequest.getUserLastName());
+                    patient.setEmail(registerRequest.getEmail());
 
-                    if (patientRepos.existsByEmail(registerRequest.getEmail())) {
-                        return ResponseEntity
-                                .ok()
-                                .body(new MessageResponse("Email is already in use!",false));
-                    }else {
-                        patient.setEmail(registerRequest.getEmail());
-//                        patient.setcId(user.getId());
-                        userRepos.save(user);
-                        patientRepos.save(patient);
-                    }
+                    userRepos.save(user);
+                    patientRepos.save(patient);
+
                     break;
                 default:
                     return ResponseEntity
