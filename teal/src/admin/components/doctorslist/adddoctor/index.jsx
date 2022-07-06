@@ -17,7 +17,6 @@ class AddDoctor extends Component {
       data: {
         "shortBiography": '',
         "department": null,
-        "user": null,
         "employee": {
           "cId": null,
           "employeeRole": "DOCTOR",
@@ -28,6 +27,11 @@ class AddDoctor extends Component {
           "dateOfBirth": null,
           "email": null,
           "phoneNumber": null,
+          "user": {
+            "username": null,
+            "password": null,
+            "retired": false
+          },
           "status": true,
           "doctor": null,
           "remainingLeave": 0,
@@ -214,6 +218,14 @@ class AddDoctor extends Component {
     const val = e.target.value;
     const tmp = { ...this.state.data };
     switch (e.target.name) {
+      case "username":
+        tmp.employee.user.username = val;
+        break;
+
+      case "password":
+        tmp.employee.user.password = val;
+        break;
+
       case "cid":
         tmp.employee.cId = val;
         break;
@@ -528,6 +540,20 @@ class AddDoctor extends Component {
                             value="Female" onChange={this.onChange} />Female
                         </label>
                       </div>
+                    </div>
+                  </div>
+                  <div className="col-sm-6">
+                    <div className="form-group">
+                      <label>Username <span className="text-danger">*</span></label>
+                      <input className={isValid(this.state.data.employee.user.username)} name="username" type="text" value={this.state.data.employee.user.username} onChange={this.onChange} />
+                      <div className="invalid-feedback">Username cannot be empty</div>
+                    </div>
+                  </div>
+                  <div className="col-sm-6">
+                    <div className="form-group">
+                      <label>Password<span className="text"></span></label>
+                      <input className={isValid(this.state.data.employee.user.password)} name="password" type="password" value={this.state.data.employee.user.password} onChange={this.onChange} />
+                      <div className="invalid-feedback">Password cannot be empty</div>
                     </div>
                   </div>
                   <div className="col-sm-12">

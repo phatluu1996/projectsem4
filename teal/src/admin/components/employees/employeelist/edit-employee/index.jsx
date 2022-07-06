@@ -66,6 +66,9 @@ class EditEmployee extends Component {
       case "phone":
         tmp.phoneNumber = arg.target.value;
         break;
+      case "gender":
+        tmp.gender = arg.target.value;
+        break;
       case "cid":
         tmp.cId = arg.target.value;
         break;
@@ -192,6 +195,24 @@ class EditEmployee extends Component {
                     </div>
                   </div>
                   <div className="col-sm-6">
+                    <div className="form-group gender-select">
+                      <label className="gen-label">Gender:<span className="text-danger">*</span></label>
+                      <div className="form-check-inline">
+                        <label className="form-check-label">
+                          <input type="radio" name="gender" className={this.state.data.gender ? "form-check-input is-valid" : "form-check-input is-invalid"}
+                            value="Male" onChange={(arg) => this.onChange(arg, "gender")} defaultChecked={this.state.data.gender == "Male"} />Male
+                          <div className="invalid-feedback">Gender must be selected </div>
+                        </label>
+                      </div>
+                      <div className="form-check-inline">
+                        <label className="form-check-label">
+                          <input type="radio" name="gender" className={this.state.data.gender ? "form-check-input is-valid" : "form-check-input is-invalid"}
+                            value="Female" onChange={(arg) => this.onChange(arg, "gender")} defaultChecked={this.state.data.gender == "Female"} />Female
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="col-sm-12">
                     <div className="form-group">
                       <label>Citizen Identification <span className="text-danger">*</span></label>
                       <input name="cid" className={isValid(this.state.data.cId)} type="number" onChange={(arg) => this.onChange(arg, "cid")} value={this.state.data.cId} />
@@ -274,7 +295,7 @@ class EditEmployee extends Component {
                       <div className="col-sm-6">
                         <div className="form-group">
                           <label>Postal Code<span className="text-danger">*</span></label>
-                          <input name="postal" type="number" className={isValid(this.state.data.address?.postalCode)} onChange={(arg) => this.onChange(arg, "postal")} value={this.state.data.address.postalCode}/>
+                          <input name="postal" type="number" className={isValid(this.state.data.address?.postalCode)} onChange={(arg) => this.onChange(arg, "postal")} value={this.state.data.address.postalCode} />
                           <div className="invalid-feedback">Postal Code cannot be empty</div>
                         </div>
                       </div>

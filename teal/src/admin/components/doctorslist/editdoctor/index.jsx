@@ -18,10 +18,14 @@ class EditDoctor extends Component {
       loading: true,
       data: {
         "shortBiography": '',
-        "department": null,
-        "user": null,
+        "department": null,        
         "employee": {
           "cId": null,
+          "user": {
+            "username": null,
+            "password": null,
+            "retired": false
+          },
           "employeeRole": "DOCTOR",
           "joiningDate": null,
           "firstName": null,
@@ -156,9 +160,9 @@ class EditDoctor extends Component {
   onDeleteEdu(key) {
     const tmpData = { ...this.state.data };
     const tmp = tmpData.educationDetails.find((item) => key == item.key);
-    if(tmp.id){
+    if (tmp.id) {
       tmp.retired = true;
-    }else{
+    } else {
       tmp = tmpData.educationDetails.filter((item) => key != item.key);
       tmpData.educationDetails = tmp;
     }
@@ -168,9 +172,9 @@ class EditDoctor extends Component {
   onDeleteExp(key) {
     const tmpData = { ...this.state.data };
     const tmp = tmpData.experienceDetails.find((item) => key == item.key);
-    if(tmp.id){
+    if (tmp.id) {
       tmp.retired = true;
-    }else{
+    } else {
       tmp = tmpData.experienceDetails.filter((item) => key != item.key);
       tmpData.experienceDetails = tmp;
     }
@@ -228,6 +232,14 @@ class EditDoctor extends Component {
     switch (e.target.name) {
       case "cid":
         tmp.employee.cId = val;
+        break;
+
+      case "username":
+        tmp.employee.user.username = val;
+        break;
+
+      case "password":
+        tmp.employee.user.password = val;
         break;
 
       case "firstName":
@@ -360,7 +372,7 @@ class EditDoctor extends Component {
           <div>
             <DatePicker className={isValid(record.start)} name='start' disabledTime={true}
               showTime={false} format="YYYY-MM-DD" clearIcon={true}
-              allowClear={true} value={ toMoment(record.start)} onChange={(value, e) => this.onChangeEducation(record, value, "start")}></DatePicker>
+              allowClear={true} value={toMoment(record.start)} onChange={(value, e) => this.onChangeEducation(record, value, "start")}></DatePicker>
             <div className="invalid-feedback">Cannot be left empty</div>
           </div>
         ),
@@ -553,7 +565,20 @@ class EditDoctor extends Component {
                             value="Female" onChange={this.onChange} defaultChecked={this.state.data.employee.gender == "Female"} />Female
                         </label>
                       </div>
-
+                    </div>
+                  </div>
+                  <div className="col-sm-6">
+                    <div className="form-group">
+                      <label>Username <span className="text-danger">*</span></label>
+                      <input className={isValid(this.state.data.employee.user.username)} name="username" type="text" value={this.state.data.employee.user.username} onChange={this.onChange} />
+                      <div className="invalid-feedback">Username cannot be empty</div>
+                    </div>
+                  </div>
+                  <div className="col-sm-6">
+                    <div className="form-group">
+                      <label>Password<span className="text"></span></label>
+                      <input className={isValid(this.state.data.employee.user.password)} name="password" type="password" value={this.state.data.employee.user.password} onChange={this.onChange} />
+                      <div className="invalid-feedback">Password cannot be empty</div>
                     </div>
                   </div>
                   <div className="col-sm-12">
@@ -561,7 +586,7 @@ class EditDoctor extends Component {
                       <div className="col-sm-12">
                         <div className="form-group">
                           <label>Address<span className="text-danger">*</span></label>
-                          <input name="line" type="text" className={isValid(this.state.data.employee.address?.line)} onChange={this.onChange} value={this.state.data.employee.address?.line}/>
+                          <input name="line" type="text" className={isValid(this.state.data.employee.address?.line)} onChange={this.onChange} value={this.state.data.employee.address?.line} />
                         </div>
                         <div className="invalid-feedback">Address line cannot be empty</div>
                       </div>
@@ -592,14 +617,14 @@ class EditDoctor extends Component {
                       <div className="col-sm-6">
                         <div className="form-group">
                           <label>City<span className="text-danger">*</span></label>
-                          <input name="city" type="text" className={isValid(this.state.data.employee.address?.city)} onChange={this.onChange} value={this.state.data.employee.address?.city}/>
+                          <input name="city" type="text" className={isValid(this.state.data.employee.address?.city)} onChange={this.onChange} value={this.state.data.employee.address?.city} />
                           <div className="invalid-feedback">City cannot be empty</div>
                         </div>
                       </div>
                       <div className="col-sm-6">
                         <div className="form-group">
                           <label>Postal Code<span className="text-danger">*</span></label>
-                          <input name="postal" type="number" className={isValid(this.state.data.employee.address?.postalCode)} onChange={this.onChange} value={this.state.data.employee.address?.postalCode}/>
+                          <input name="postal" type="number" className={isValid(this.state.data.employee.address?.postalCode)} onChange={this.onChange} value={this.state.data.employee.address?.postalCode} />
                           <div className="invalid-feedback">Postal Code cannot be empty</div>
                         </div>
                       </div>
@@ -608,7 +633,7 @@ class EditDoctor extends Component {
                   <div className="col-sm-12">
                     <div className="form-group">
                       <label>Short Biography</label>
-                      <textarea name="biography" className="form-control" rows={3} cols={30} onChange={this.onChange} value={this.state.data.shortBiography}/>
+                      <textarea name="biography" className="form-control" rows={3} cols={30} onChange={this.onChange} value={this.state.data.shortBiography} />
                     </div>
                   </div>
                   <div className="col-sm-12">

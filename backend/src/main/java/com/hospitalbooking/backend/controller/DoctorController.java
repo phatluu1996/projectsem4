@@ -1,8 +1,6 @@
 package com.hospitalbooking.backend.controller;
 
-import com.hospitalbooking.backend.models.Doctor;
-import com.hospitalbooking.backend.models.DoctorEducationDetail;
-import com.hospitalbooking.backend.models.DoctorExperienceDetail;
+import com.hospitalbooking.backend.models.*;
 import com.hospitalbooking.backend.repository.*;
 import com.hospitalbooking.backend.specification.DBSpecification;
 import org.slf4j.Logger;
@@ -55,7 +53,10 @@ public class DoctorController {
     @PostMapping("/doctors")
     public ResponseEntity<Doctor> add(@RequestBody Doctor doctor){
         addressRepos.save(doctor.getEmployee().getAddress());
-        employeeRepos.save(doctor.getEmployee());
+        User savedUser = userRepos.save(doctor.getEmployee().getUser());
+        doctor.getEmployee().setUser(savedUser);
+        Employee saveEmployee = employeeRepos.save(doctor.getEmployee());
+        doctor.setEmployee(saveEmployee);
         doctor.getEducationDetails().forEach(educationDetail -> {
             docEducationRepos.save(educationDetail);
         });
@@ -70,6 +71,8 @@ public class DoctorController {
         Optional<Doctor> optional = doctorRepos.findById(id);
         return optional.map(model -> {
             addressRepos.save(doctor.getEmployee().getAddress());
+            User savedUser = userRepos.save(doctor.getEmployee().getUser());
+            doctor.getEmployee().setUser(savedUser);
             employeeRepos.save(doctor.getEmployee());
             List<DoctorEducationDetail> removeEdu = new ArrayList<>();
             doctor.getEducationDetails().forEach(educationDetail -> {

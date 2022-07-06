@@ -1,12 +1,13 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import { Table, Tag } from "antd";
+import { Table, Tag, Select } from "antd";
 import { Sent_img } from "../imagepath"
 import { itemRender, onShowSizeChange } from "../../components/paginationfunction";
 import OpenChat from "../sidebar/openchatheader";
 import { axiosAction, axiosActions, notify } from '../../../actions';
 import { DELETE, GET } from "../../../constants";
 import { toMoment } from "../../../utils";
+const { Option } = Select;
 
 class Doctors extends Component {
   constructor(props) {
@@ -14,19 +15,51 @@ class Doctors extends Component {
     this.state = {
       loading: true,
       data: [],
-      selectdId: 0
+      filterData: [],
+      selectdId: 0,
+      departments: []
     };
     this.fetchData = this.fetchData.bind(this);
     this.deleteData = this.deleteData.bind(this);
+    this.filterData = this.filterData.bind(this);
+    this.resetFilter = this.resetFilter.bind(this);
   }
 
   fetchData() {
-    axiosAction("/doctors", GET, res => {
-      this.setState({
-        data: res.data,
-        loading: false,
-      });
-    }, () => { });
+    // axiosAction("/doctors", GET, res => {
+    //   this.setState({
+    //     data: res.data,
+    //     filterData: res.data,
+    //     loading: false,
+    //   });
+    // }, () => { });
+    const fetchReq = {
+      url: "/doctors",
+      method: GET,
+      callback: (res) => {
+        this.setState({
+          data: res.data,
+          filterData: res.data,
+          loading: false,
+          selectdId: 0
+        });
+      },
+      data: {}
+    }
+
+    const fetchDepartment = {
+      url: "/departments",
+      method: GET,
+      callback: (res) => {
+        this.setState({
+          departments: res.data,
+          loading: false
+        });
+      },
+      data: {}
+    }
+
+    axiosActions([fetchReq, fetchDepartment]);
   }
 
   deleteData() {
@@ -34,7 +67,7 @@ class Doctors extends Component {
       url: "/doctors/" + this.state.selectdId,
       method: DELETE,
       callback: (res) => {
-        axiosActions([fetchReq]);
+        axiosActions([fetchReq, fetchDepartment]);
       },
       data: {}
     }
@@ -46,8 +79,20 @@ class Doctors extends Component {
         notify('success', '', 'Success');
         this.setState({
           data: res.data,
+          filterData: res.data,
           loading: false,
           selectdId: 0
+        });
+      },
+      data: {}
+    }
+
+    const fetchDepartment = {
+      url: "/departments",
+      method: GET,
+      callback: (res) => {
+        this.setState({
+          departments: res.data
         });
       },
       data: {}
@@ -55,8 +100,36 @@ class Doctors extends Component {
     axiosActions([deleteReq]);
   }
 
+  filterData(e) {
+    e.preventDefault();
+    let form = e.target;
+    let tmp = [...this.state.data];
+    if (form.id.value) {
+      tmp = tmp.filter(e => ("DTR-" + e.id).includes(form.id.value));
+    }
+
+    if (form.name.value) {
+      tmp = tmp.filter(e => (e.firstName.trim() + " " + e.lastName.trim()).includes(form.name.value));
+    }
+
+    if (form.department.value) {
+      tmp = tmp.filter(e => e.department.id == form.department.value);
+    }
+
+    this.setState({ filterData: tmp });
+  }
+
+  resetFilter(e) {
+    e.target.department.value = '';
+  }
+
   componentDidMount() {
     this.fetchData();
+    if ($('.floating').length > 0) {
+      $('.floating').on('focus blur', function (e) {
+        $(this).parents('.form-focus').toggleClass('focused', (e.type === 'focus' || this.value.length > 0));
+      }).trigger('blur');
+    }
   }
 
   render() {
@@ -159,6 +232,37 @@ class Doctors extends Component {
               </Link>
             </div>
           </div>
+          <form className="row filter-row" noValidate onSubmit={this.filterData} onReset={this.resetFilter}>
+            <div className="col-sm-4">
+              <div className="form-group form-focus">
+                <label className="focus-label" >Doctor ID</label>
+                <input type="text" className="form-control floating" name="id" />
+              </div>
+            </div>
+            <div className="col-sm-4">
+              <div className="form-group form-focus">
+                <label className="focus-label">Doctor Name</label>
+                <input type="text" className="form-control floating" name="name" />
+              </div>
+            </div>
+            <div className="col-sm-2">
+              <div className="form-group form-focus select-focus">
+                <label className="focus-label">Department</label>
+                <select className="form-control floating" name="department">
+                  <option value={''}>None</option>
+                  {this.state.departments?.map((dep, idx) => {
+                    return (<option key={idx} value={dep.id}>{dep.name}</option>)
+                  })}
+                </select>
+              </div>
+            </div>
+            <div className="col-sm-1">
+              <button className="btn btn-success btn-block" type='submit'> Search </button>
+            </div>
+            <div className="col-sm-1">
+              <button className="btn btn-danger btn-block" type='reset'> Reset </button>
+            </div>
+          </form>
           <div className="row">
             <div className="col-md-12">
               <Table
@@ -168,11 +272,11 @@ class Doctors extends Component {
                 style={{ overflowX: "scroll" }}
                 columns={columns}
                 // bordered
-                dataSource={data}
+                dataSource={this.state.filterData}
                 rowKey={(record) => record.id}
                 showSizeChanger={true}
                 pagination={{
-                  total: data.length,
+                  total: this.state.filterData.length,
                   showTotal: (total, range) =>
                     `Showing ${range[0]} to ${range[1]} of ${total} entries`,
                   showSizeChanger: true,

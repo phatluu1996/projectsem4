@@ -5,7 +5,7 @@ import { Tag } from 'antd';
 import { Link } from 'react-router-dom';
 import OpenChat from "../../sidebar/openchatheader"
 import { axiosAction, axiosActions, notify } from '../../../../actions';
-import { DELETE, GET } from "../../../../constants";
+import { DELETE, GET, employeeRoles } from "../../../../constants";
 import { toMoment } from "../../../../utils";
 
 import {
@@ -19,16 +19,20 @@ class EmployeeList extends Component {
     this.state = {
       loading: true,
       data: [],
+      filterData: [],
       selectdId: 0
     };
     this.fetchData = this.fetchData.bind(this);
     this.deleteData = this.deleteData.bind(this);
+    this.filterData = this.filterData.bind(this);
+    this.resetFilter = this.resetFilter.bind(this);
   }
 
   fetchData() {
     axiosAction("/employees", GET, res => {
       this.setState({
         data: res.data,
+        filterData: res.data,
         loading: false,
       });
     }, () => { });
@@ -51,6 +55,7 @@ class EmployeeList extends Component {
         notify('success', '', 'Success');
         this.setState({
           data: res.data,
+          filterData: res.data,
           loading: false,
           selectdId: 0
         });
@@ -58,6 +63,29 @@ class EmployeeList extends Component {
       data: {}
     }
     axiosActions([deleteReq]);
+  }
+
+  filterData(e) {
+    e.preventDefault();
+    let form = e.target;
+    let tmp = [...this.state.data];
+    if (form.id.value) {
+      tmp = tmp.filter(e => ("EMP-" + e.id).includes(form.id.value));
+    }
+
+    if (form.name.value) {
+      tmp = tmp.filter(e => (e.firstName.trim() + " " + e.lastName.trim()).includes(form.name.value));
+    }
+
+    if (form.role.value) {
+      tmp = tmp.filter(e => e.employeeRole == form.role.value);
+    }
+
+    this.setState({ filterData: tmp });
+  }
+
+  resetFilter(e) {
+    e.target.role.value = '';
   }
 
   componentDidMount() {
@@ -170,36 +198,35 @@ class EmployeeList extends Component {
               <Link to="/admin/employees/add" className="btn btn-primary float-right btn-rounded"><i className="fas fa-plus" /> Add Employee</Link>
             </div>
           </div>
-          <div className="row filter-row">
-            <div className="col-sm-6 col-md-3">
+          <form className="row filter-row" noValidate onSubmit={this.filterData} onReset={this.resetFilter}>
+            <div className="col-sm-4">
               <div className="form-group form-focus">
-                <label className="focus-label">Employee ID</label>
-                <input type="text" className="form-control floating" />
+                <label className="focus-label" >Employee ID</label>
+                <input type="text" className="form-control floating" name="id"/>
               </div>
             </div>
-            <div className="col-sm-6 col-md-3">
+            <div className="col-sm-4">
               <div className="form-group form-focus">
                 <label className="focus-label">Employee Name</label>
-                <input type="text" className="form-control floating" />
+                <input type="text" className="form-control floating" name="name"/>
               </div>
             </div>
-            <div className="col-sm-6 col-md-3">
+            <div className="col-sm-2">
               <div className="form-group form-focus select-focus">
                 <label className="focus-label">Role</label>
-                <select className="form-control select floating">
-                  <option>Select Role</option>
-                  <option>Nurse</option>
-                  <option>Pharmacist</option>
-                  <option>Laboratorist</option>
-                  <option>Accountant</option>
-                  <option>Receptionist</option>
+                <select className="form-control floating" name="role">
+                  <option value={null}>None</option>
+                  {employeeRoles.map((role, idx) => { return (<option key={idx} value={role.value}>{role.label}</option>) })}
                 </select>
               </div>
             </div>
-            <div className="col-sm-6 col-md-3">
-              <a href="#" className="btn btn-success btn-block"> Search </a>
+            <div className="col-sm-1">
+              <button className="btn btn-success btn-block" type='submit'> Search </button>
             </div>
-          </div>
+            <div className="col-sm-1">
+              <button className="btn btn-danger btn-block" type='reset'> Reset </button>
+            </div>
+          </form>
           <div className="row">
             <div className="col-md-12">
               <div className="table-responsive">
@@ -208,12 +235,12 @@ class EmployeeList extends Component {
                   style={{ overflowX: "auto" }}
                   columns={columns}
                   // bordered
-                  dataSource={data}
+                  dataSource={this.state.filterData}
                   rowKey={(record) => record.id}
                   showSizeChanger={true}
                   pagination={{
                     pageSize: 5,
-                    total: data.length,
+                    total: this.state.filterData.length,
                     showTotal: (total, range) =>
                       `Showing ${range[0]} to ${range[1]} of ${total} entries`,
                     showSizeChanger: true,
