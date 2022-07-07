@@ -24,10 +24,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
@@ -97,7 +94,7 @@ public class AuthorizeController {
                     .body(new MessageResponse("Username is already in use!", false));
         }
 
-        if (patientRepos.existsByEmail(registerRequest.getEmail()) || employeeRepos.existsByEmail(registerRequest.getEmail()) || doctorRepos.existsByEmail(registerRequest.getEmail())) {
+        if (patientRepos.existsByEmail(registerRequest.getEmail()) || employeeRepos.existsByEmail(registerRequest.getEmail())) {
             return ResponseEntity
                     .ok()
                     .body(new MessageResponse("Email is already in use!",false));

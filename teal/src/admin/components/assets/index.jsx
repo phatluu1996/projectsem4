@@ -7,17 +7,20 @@ import {
 import { Link } from 'react-router-dom';
 import OpenChat from "../sidebar/openchatheader";
 import { Sent_img } from "../imagepath"
-import { axiosAction, GET } from "../../../actions";
-import { DatePicker } from 'antd';
+import { axiosAction, GET , DELETE } from "../../../actions";
+// import { DatePicker } from 'antd';
 
 class Assets extends Component {
   constructor(props) {
     super(props);
     this.state = {
       loading: true,
+      idDtl:null,
       data: [],
     };
     this.fetchData = this.fetchData.bind(this);
+    this.onClickDlt = this.onClickDlt.bind(this);
+    this.handleDel = this.handleDel.bind(this);
   }
 
   componentDidMount() {
@@ -39,12 +42,18 @@ class Assets extends Component {
     }, (err) => notify('error', "Error"));
   }
 
-  // onClickDlt = () => {
-  //   axiosAction("/patients/"+this.state.idDtl,DELETE, res => {
-  //     notify('success', '','Success')
-  //     this.fetchData();
-  //   },(err) => notify('error', "Error"));
-  // }
+  onClickDlt = () => {
+    axiosAction("/assets/"+this.state.idDtl,DELETE, res => {
+      notify('success', '','Success')
+      this.fetchData();
+    },(err) => notify('error', "Error"));
+  }
+
+  handleDel = (id) => {
+    this.setState({
+      idDtl: id,
+    });
+  };
 
   render() {
     const { data } = this.state;
@@ -101,8 +110,8 @@ class Assets extends Component {
           <div className="dropdown dropdown-action">
             <a href="#" className="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i className="fas fa-ellipsis-v" /></a>
             <div className="dropdown-menu dropdown-menu-right">
-              <Link className="dropdown-item" to="/edit-asset"><i className="fas fa-pencil-alt m-r-5" /> Edit</Link>
-              <a className="dropdown-item" href="#" data-toggle="modal" data-target="#delete_asset"><i className="fas fa-trash m-r-5" /> Delete</a>
+              <Link className="dropdown-item" to={"/admin/assets/update/"+record.id}><i className="fas fa-pencil-alt m-r-5" /> Edit</Link>
+              <a className="dropdown-item" onClick={() => this.handleDel(record.id)} href="#" data-toggle="modal" data-target="#delete_asset"><i className="fas fa-trash m-r-5" /> Delete</a>
             </div>
           </div>
         ),
@@ -181,8 +190,9 @@ class Assets extends Component {
               <div className="modal-body text-center">
                 <img src={Sent_img} alt="" width={50} height={46} />
                 <h3>Are you sure want to delete this Asset?</h3>
-                <div className="m-t-20"> <a href="#" className="btn btn-white mr-0" data-dismiss="modal">Close</a>
-                  <button type="submit" className="btn btn-danger">Delete</button>
+                <div className="m-t-20"> 
+                  <a href="#" className="btn btn-white mr-0" data-dismiss="modal">Close</a>
+                  <a  className="btn btn-danger" onClick={this.onClickDlt} data-dismiss="modal">Delete</a>
                 </div>
               </div>
             </div>

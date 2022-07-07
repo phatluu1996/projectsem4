@@ -18,7 +18,7 @@ public class Patient extends UserProfile{
 //    @JoinColumn(name = "doctor_id", nullable = true)
 //    @JsonIgnoreProperties("patient")
     @OneToOne(fetch = FetchType.EAGER, optional = false)
-    @JsonIgnoreProperties("employee")
+    @JsonIgnoreProperties("patient")
     private User user;
 
     @OneToMany
@@ -37,6 +37,14 @@ public class Patient extends UserProfile{
     public Patient(Long id, String cId, String firstName, String lastName, String gender, Date dateOfBirth, String email, String phoneNumber, Address address, boolean retired, List<Appointment> appointments) {
         super(id, cId, firstName, lastName, gender, dateOfBirth, email, phoneNumber, address, retired);
         this.appointments = appointments;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public List<Appointment> getAppointments() {

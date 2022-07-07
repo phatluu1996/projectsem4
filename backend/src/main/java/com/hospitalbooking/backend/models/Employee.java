@@ -29,12 +29,12 @@ public class Employee  extends UserProfile{
     private Doctor doctor;
 
     @OneToOne(fetch = FetchType.EAGER, optional = false)
-    @JsonIgnoreProperties("employee")
+    @JsonIgnoreProperties({"employee", "patient"})
     private User user;
 
     @OneToMany
     @JoinColumn(name = "employee_id", referencedColumnName = "id")
-    @JsonIgnoreProperties("employee")
+    @JsonIgnoreProperties({"employee","user"})
     private List<EmployeeLeave> leaves;
 
     public Employee() {

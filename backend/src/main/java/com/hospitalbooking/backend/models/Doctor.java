@@ -15,6 +15,7 @@ public class Doctor{
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @Column(name = "short_biography", columnDefinition = "text")
     private String shortBiography;
 
