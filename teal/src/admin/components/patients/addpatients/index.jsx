@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import OpenChat from "../../sidebar/openchatheader";
 import { User_img } from "../../imagepath";
-import { axiosAction , isFormValid, isValid, notify } from '../../../../actions';
+import { axiosAction, isFormValid, isValid, notify } from '../../../../actions';
 import { GET, ADD } from "../../../../constants";
 import { DatePicker, Select } from 'antd';
 import { countries } from '../../../../address/index';
@@ -29,6 +29,11 @@ class AddPatient extends Component {
           line: null,
           country: null,
           city: null
+        },
+        user: {
+          username: null,
+          password: null,
+          role: "patient"
         }
       },
     };
@@ -48,14 +53,14 @@ class AddPatient extends Component {
 
   onSelectCountry = (value) => {
     const tmp = { ...this.state.data };
-    if(!this.state.countries[value].states.find(state => tmp.address.province == state.name)){
-        tmp.address.province = "";
+    if (!this.state.countries[value].states.find(state => tmp.address.province == state.name)) {
+      tmp.address.province = "";
     }
     tmp.address.country = this.state.countries[value].name
     this.setState({
       crrValue: null,
       countrySelect: this.state.countries[value],
-      data:tmp
+      data: tmp
     });
   }
 
@@ -71,10 +76,10 @@ class AddPatient extends Component {
     e.preventDefault();
     const tmp = { ...this.state.data }
     if (!isFormValid(e)) return;
-    axiosAction("/patients",ADD, res => {
-      notify('success', '','Success')
+    axiosAction("/patients", ADD, res => {
+      notify('success', '', 'Success')
       this.props.history.push("/admin/patients");
-    },(err) => notify('error', "Error"),tmp);
+    }, (err) => notify('error', "Error"), tmp);
   }
 
   onChange = (e) => {
@@ -107,6 +112,12 @@ class AddPatient extends Component {
         break;
       case 'line':
         tmp.address.line = value;
+        break;
+      case 'username':
+        tmp.user.username = value;
+        break;
+      case 'password':
+        tmp.user.password = value;
         break;
     }
     this.setState({ data: tmp });
@@ -150,6 +161,20 @@ class AddPatient extends Component {
                   </div>
                   <div className="col-sm-6">
                     <div className="form-group">
+                      <label>Username<span className="text-danger">*</span></label>
+                      <input className={isValid(this.state.data?.user?.username)} name='username' type="text" onChange={(e) => this.onChange(e)} />
+                      <div className="invalid-feedback">Username cannot be empty</div>
+                    </div>
+                  </div>
+                  <div className="col-sm-6">
+                    <div className="form-group">
+                      <label>Password<span className="text-danger">*</span></label>
+                      <input className={isValid(this.state.data?.user?.password)} type="password" name='password' onChange={(e) => this.onChange(e)} />
+                      <div className="invalid-feedback">Password name cannot be empty</div>
+                    </div>
+                  </div>
+                  <div className="col-sm-6">
+                    <div className="form-group">
                       <label>Email <span className="text-danger">*</span></label>
                       <input className={isValid(this.state.data.email)} name='email' type="email" onChange={(e) => this.onChange(e)} />
                       <div className="invalid-feedback">Email cannot be empty</div>
@@ -158,10 +183,15 @@ class AddPatient extends Component {
                   <div className="col-sm-6">
                     <div className="form-group">
                       <label>Date of Birth<span className="text-danger">*</span></label>
-                      <DatePicker name='dateOfBirth' className={isValid(this.state.data.dateOfBirth)} aria-required
-                        showTime={true} format="YYYY-MM-DD" clearIcon={true}
-                        allowClear={true} onChange={this.onChangeDate} onSelect={this.onChangeDate}></DatePicker>
-                        <div className="invalid-feedback">Date of birth cannot be empty</div>
+                      <DatePicker name='dateOfBirth' 
+                        className={isValid(this.state.data.dateOfBirth)} aria-required
+                        showTime={false} 
+                        format="YYYY-MM-DD" 
+                        clearIcon={true}
+                        allowClear={true} 
+                        onChange={this.onChangeDate} 
+                        onSelect={this.onChangeDate}></DatePicker>
+                      <div className="invalid-feedback">Date of birth cannot be empty</div>
                     </div>
                   </div>
                   <div className="col-sm-6">
@@ -213,10 +243,10 @@ class AddPatient extends Component {
                         </div>
                       </div>
                       <div className="col-sm-6 col-md-6 col-lg-3">
-                      {this.state.countrySelect?.states.length > 0 &&<div className="form-group">
+                        {this.state.countrySelect?.states.length > 0 && <div className="form-group">
                           <label>State/Province<span className="text-danger">*</span></label>
-                           <Select
-                            defaultValue={""}                          
+                          <Select
+                            defaultValue={""}
                             bordered={false}
                             value={this.state.data.address.province}
                             style={{ width: '100%' }}
@@ -233,14 +263,14 @@ class AddPatient extends Component {
                       <div className="col-sm-6 col-md-6 col-lg-3">
                         <div className="form-group">
                           <label>City<span className="text-danger">*</span></label>
-                          <input type="text" name='city' className={isValid(this.state.data.address.city)}  onChange={(e) => this.onChange(e)} />
+                          <input type="text" name='city' className={isValid(this.state.data.address.city)} onChange={(e) => this.onChange(e)} />
                           <div className="invalid-feedback">Please select city cannot be empty</div>
                         </div>
                       </div>
                       <div className="col-sm-6 col-md-6 col-lg-3">
                         <div className="form-group">
                           <label>Postal Code<span className="text-danger">*</span></label>
-                          <input type="text" className={isValid(this.state.data.address.postalCode)}  name='postalCode' onChange={(e) => this.onChange(e)} />
+                          <input type="text" className={isValid(this.state.data.address.postalCode)} name='postalCode' onChange={(e) => this.onChange(e)} />
                           <div className="invalid-feedback">Postal code cannot be empty</div>
                         </div>
                       </div>
@@ -249,7 +279,7 @@ class AddPatient extends Component {
                   <div className="col-sm-6">
                     <div className="form-group">
                       <label>Phone <span className="text-danger">*</span></label>
-                      <input className={isValid(this.state.data.phoneNumber)}  name='phoneNumber' type="text" onChange={(e) => this.onChange(e)} />
+                      <input className={isValid(this.state.data.phoneNumber)} name='phoneNumber' type="text" onChange={(e) => this.onChange(e)} />
                       <div className="invalid-feedback">Phone number code cannot be empty</div>
                     </div>
                   </div>
