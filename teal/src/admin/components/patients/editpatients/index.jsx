@@ -36,7 +36,6 @@ class EditPatient extends Component {
           password: null,
           role: "patient"
         },
-        appointments:[]
       },
     };
     this.fetchData = this.fetchData.bind(this);

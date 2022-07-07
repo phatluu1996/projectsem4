@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { axiosAction, isValid, isFormValid, GET , ADD } from "../../../../actions";
+import { axiosAction, isValid, isFormValid, GET , ADD , notify  } from "../../../../actions";
 import OpenChat from "../../sidebar/openchatheader";
 import { DatePicker, Select } from 'antd';
 
@@ -20,7 +20,7 @@ class AssetsAdd extends Component {
         cost: 0,
         status: null,
         description: null,
-        employee: null //
+        employee: {} //
       },
     };
     this.fetchData = this.fetchData.bind(this);
@@ -67,7 +67,7 @@ class AssetsAdd extends Component {
     const tmp = { ...this.state.data }
     console.log(tmp);
     if (!isFormValid(e)) return;
-    axiosAction("/assets",UPDA, res => {
+    axiosAction("/assets", ADD , res => {
       notify('success', '','Success')
       this.props.history.push("/admin/assets");
     },(err) => notify('error', "Error"),tmp);
