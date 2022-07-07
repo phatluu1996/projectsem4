@@ -97,7 +97,7 @@ public class AuthorizeController {
                     .body(new MessageResponse("Username is already in use!", false));
         }
 
-        if (patientRepos.existsByEmail(registerRequest.getEmail()) || employeeRepos.existsByEmail(registerRequest.getEmail()) || doctorRepos.existsByEmail(registerRequest.getEmail())) {
+        if (patientRepos.existsByEmail(registerRequest.getEmail()) || employeeRepos.existsByEmail(registerRequest.getEmail())) {
             return ResponseEntity
                     .ok()
                     .body(new MessageResponse("Email is already in use!",false));

@@ -51,7 +51,7 @@ public class ModelViewerController {
                 return new ResponseEntity<>(new Address(), HttpStatus.OK);
 
             default:
-                return new ResponseEntity<>(new Doctor(), HttpStatus.OK);
+                return new ResponseEntity<>(null, HttpStatus.OK);
         }
     }
 }

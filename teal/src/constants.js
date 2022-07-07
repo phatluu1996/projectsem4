@@ -50,28 +50,39 @@ export const disabledMinutes = (minutes) => {
 
 export const employeeRoles = [
     {
-        value : 'NURSE',
-        label : 'Nurse'
+        value: 'NURSE',
+        label: 'Nurse'
     },
     {
-        value : 'LABORATORIST',
-        label : 'Laboratorist'
+        value: 'LABORATORIST',
+        label: 'Laboratorist'
     },
     {
-        value : 'PHARMACIST',
-        label : 'Pharmacist'
+        value: 'PHARMACIST',
+        label: 'Pharmacist'
     },
     {
-        value : 'ACCOUNTANT',
-        label : 'Accountant'
+        value: 'ACCOUNTANT',
+        label: 'Accountant'
     },
     {
-        value : 'RECEPTIONIST',
-        label : 'Receptionist'
+        value: 'RECEPTIONIST',
+        label: 'Receptionist'
     },
     {
-        value : 'OTHER',
-        label : 'Other'
+        value: 'OTHER',
+        label: 'Other'
     }
+]
+
+export const leave_type = [
+    { value: 'cassual', label: 'Casual Leave' },
+    { value: 'medical', label: 'Medical Leave' },
+    { value: 'unpaid', label: 'Loss of Pay' },
+]
+export const leave_status = [
+    { value: 'pending', label: 'Pending' },
+    { value: 'approved', label: 'Approved' },
+    { value: 'rejected', label: 'Rejected' }
 ]
 

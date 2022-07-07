@@ -7,5 +7,4 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface DoctorRepos extends JpaRepository<Doctor, Long>, JpaSpecificationExecutor {
-    boolean existsByEmail(String email);
 }

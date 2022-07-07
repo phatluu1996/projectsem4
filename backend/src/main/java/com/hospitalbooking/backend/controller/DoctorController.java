@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.print.Doc;
@@ -38,6 +39,9 @@ public class DoctorController {
     @Autowired
     private AddressRepos addressRepos;
 
+    @Autowired
+    private PasswordEncoder encoder;
+
     @GetMapping("/doctors/{id}")
     public ResponseEntity<Doctor> one(@PathVariable Long id){
         return doctorRepos.findById(id).map(doctor -> new ResponseEntity<>(doctor, HttpStatus.OK))
@@ -53,7 +57,9 @@ public class DoctorController {
     @PostMapping("/doctors")
     public ResponseEntity<Doctor> add(@RequestBody Doctor doctor){
         addressRepos.save(doctor.getEmployee().getAddress());
-        User savedUser = userRepos.save(doctor.getEmployee().getUser());
+        User user = doctor.getEmployee().getUser();
+        user.setPassword(encoder.encode(user.getPassword()));
+        User savedUser = userRepos.save(user);
         doctor.getEmployee().setUser(savedUser);
         Employee saveEmployee = employeeRepos.save(doctor.getEmployee());
         doctor.setEmployee(saveEmployee);
@@ -71,7 +77,9 @@ public class DoctorController {
         Optional<Doctor> optional = doctorRepos.findById(id);
         return optional.map(model -> {
             addressRepos.save(doctor.getEmployee().getAddress());
-            User savedUser = userRepos.save(doctor.getEmployee().getUser());
+            User user = doctor.getEmployee().getUser();
+            user.setPassword(encoder.encode(user.getPassword()));
+            User savedUser = userRepos.save(user);
             doctor.getEmployee().setUser(savedUser);
             employeeRepos.save(doctor.getEmployee());
             List<DoctorEducationDetail> removeEdu = new ArrayList<>();

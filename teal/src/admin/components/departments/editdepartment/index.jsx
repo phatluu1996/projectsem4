@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import OpenChat from "../../sidebar/openchatheader";
 import { axiosAction,notify} from '../../../../actions';
-import { GET,UPDATE} from "../../../../constants";
+import { GET,UPDATE } from "../../../../constants";
 import { Redirect } from 'react-router-dom';
 
 class EditDepartment extends Component{

@@ -28,6 +28,9 @@ public class EmployeeLeave {
     @Column(name = "leave_type", length = 30, columnDefinition = "nvarchar(30)")
     private String leaveType;
 
+    @Column(name = "status", length = 30, columnDefinition = "nvarchar(30)")
+    private String status;
+
     @Column(name = "retired")
     private boolean retired;
 
@@ -104,4 +107,8 @@ public class EmployeeLeave {
     public void setEmployee(Employee employee) {
         this.employee = employee;
     }
+
+    public String getStatus() { return status; }
+
+    public void setStatus(String status) { this.status = status; }
 }

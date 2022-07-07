@@ -55,9 +55,16 @@ class SidebarNav extends Component {
               <MenuItem to="/admin/patients" icon="fas fa-wheelchair" title="Patients" />
               <MenuItem to="/admin/doctors" icon="fas fa-user-md" title="Doctors" />
               <MenuItem to="/admin/schedules" icon="far fa-calendar-check" title="Schedules" />
-              <MenuItem to="/admin/appointments" icon="far fa-calendar-alt" title="Appointments" />              
+              <MenuItem to="/admin/appointments" icon="far fa-calendar-alt" title="Appointments" />
               <MenuItem to="/admin/departments" icon="far fa-hospital" title="Departments" />
-              <MenuItem to="/admin/employees" icon="fas fa-user" title="Employees" />
+              {/* <MenuItem to="/admin/employees" icon="fas fa-user" title="Employees" /> */}
+              <li className="submenu">
+                <a href="#"><i className="fas fa-user" /> <span> Employees </span> <span className="menu-arrow" /></a>
+                <ul style={{ display: 'none' }}>
+                  <li><MenuItem to="/admin/employees" icon="" title="List" /></li>
+                  <li><MenuItem to="/admin/leaves" icon="" title="Leaves" /></li>
+                </ul>
+              </li>
               <MenuItem to="/admin/assets" icon="fas fa-cube" title="Assets" />
 
               {/* <li className={`${url === "patients" || url === "add-patients" || url === "edit-patient" ? "active" : ""}`}>

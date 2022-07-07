@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -30,6 +31,9 @@ public class EmployeeController {
     @Autowired
     private AddressRepos addressRepos;
 
+    @Autowired
+    private PasswordEncoder encoder;
+
     @GetMapping("/employees/{id}")
     public ResponseEntity<Employee> one(@PathVariable Long id){
         return employeeRepos.findById(id).map(employee -> new ResponseEntity<>(employee, HttpStatus.OK))
@@ -45,7 +49,9 @@ public class EmployeeController {
     @PostMapping("/employees")
     public ResponseEntity<Employee> add(@RequestBody Employee employee){
         addressRepos.save(employee.getAddress());
-        User savedUser = userRepos.save(employee.getUser());
+        User user = employee.getUser();
+        user.setPassword(encoder.encode(user.getPassword()));
+        User savedUser = userRepos.save(user);
         employee.setUser(savedUser);
         Employee savedEmployee = employeeRepos.save(employee);
         return new ResponseEntity<>(savedEmployee, HttpStatus.OK);
@@ -57,7 +63,9 @@ public class EmployeeController {
         return optional.map(model -> {
             employee.setId(model.getId());
             addressRepos.save(employee.getAddress());
-            User savedUser = userRepos.save(employee.getUser());
+            User user = employee.getUser();
+            user.setPassword(encoder.encode(user.getPassword()));
+            User savedUser = userRepos.save(user);
             employee.setUser(savedUser);
             Employee savedEmployee = employeeRepos.save(employee);
             return new ResponseEntity<>(savedEmployee, HttpStatus.OK);
