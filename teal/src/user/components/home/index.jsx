@@ -1,5 +1,8 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
+import { axiosAction } from "../../../actions";
+import "../../../constants";
+import { GET } from "../../../constants";
 
 import OwlCarousel from 'react-owl-carousel';
 import 'owl.carousel/dist/assets/owl.carousel.css';
@@ -9,6 +12,29 @@ import { Icon_01,Icon_02,Icon_03,Icon_04,Icon_05,Icon_06,Icon_07,Icon_08,Icon_09
   Doctor_thumb_06,Doctor_thumb_07,Doctor_thumb_08,Doctor_thumb_09 } from "../imagepath"
 
 class Home extends Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      loading: true,
+      departments: [],
+      selectdId: 0
+    };
+
+    this.fetchData = this.fetchData.bind(this);
+  }
+
+  fetchData() {
+    axiosAction("/departments", GET, res => {
+      this.setState({
+        departments: res.data,
+        loading: false,
+      });
+    }, () => { });
+  }
+
+  componentDidMount() {
+    this.fetchData();
+  }
 
   render() {  
     var responsive = {
@@ -33,8 +59,9 @@ class Home extends Component {
       items: 6
       }
     }
-    return (
-        <>
+    const { departments } = this.state.departments;
+    return (!this.state.loading &&
+      <>
          {/* Content */}
       <div className="main-content">
         <section className="section home-banner row-middle">
@@ -43,10 +70,10 @@ class Home extends Component {
             <div className="row">
               <div className="col-lg-9 col-md-9">
                 <div className="banner-content">
-                  <h1>Clean Medical Template</h1>
+                  {/* <h1>MediApp</h1>
                   <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-                    tempor incididunt ut labore et dolore magna aliqua.</p> 
-                  <Link title="Consult" className="btn btn-primary consult-btn" to="/appointment">Consult</Link>
+                    tempor incididunt ut labore et dolore magna aliqua.</p>  */}
+                  {/* <Link title="Consult" className="btn btn-primary consult-btn" to="/appointment">Consult</Link> */}
                 </div>
               </div>
             </div>
@@ -57,11 +84,9 @@ class Home extends Component {
             <div className="row">
               <div className="col-12">
                 <div className="section-header text-center">
-                  <h3 className="header-title">About Medifab</h3>
+                  <h3 className="header-title">About Mediapp</h3>
                   <div className="line" />
-                  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce vitae risus
-                    nec dui venenatis dignissim. Aenean vitae metus in augue pretium ultrices.
-                    Duis dictum eget dolor vel blandit.</p>
+                  <p>With over 950 service staff, including 130 Vietnamese and expatriate doctors, provides care across more than 30 medical specialties at its 220-bed hub hospital. It also operates an outpatient clinic at the heart of District 1, Ho Chi Minh City’s traditional business district. In addition to catering for the local Vietnamese population, also receives patients from neighbouring countries of Cambodia, Laos and Myanmar.</p>
                 </div>
               </div>
             </div>
@@ -72,8 +97,7 @@ class Home extends Component {
                     <img width={60} height={60} alt="Book an Appointment" src={Icon_01} />
                   </div>
                   <h4>Book an Appointment</h4>
-                  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-                    tempor.
+                  <p>Easiest and fastest to booking.
                   </p>
                 </div>
               </div>
@@ -83,8 +107,7 @@ class Home extends Component {
                     <img width={60} height={60} alt="Consult with a Doctor" src={Icon_02} />
                   </div>
                   <h4>Consult with a Doctor</h4>
-                  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-                    tempor.
+                  <p>Friendly doctor.
                   </p>
                 </div>
               </div>
@@ -94,8 +117,7 @@ class Home extends Component {
                     <img width={60} height={60} alt="Make a family Doctor" src={Icon_03} />
                   </div>
                   <h4>Make a family Doctor</h4>
-                  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-                    tempor.
+                  <p>Like a family.
                   </p>
                 </div>
               </div>
@@ -109,9 +131,7 @@ class Home extends Component {
                 <div className="section-header text-center">
                   <h3 className="header-title">Meet our Doctors</h3>
                   <div className="line" />
-                  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce vitae risus
-                    nec dui venenatis dignissim. Aenean vitae metus in augue pretium ultrices.
-                    Duis dictum eget dolor vel blandit.
+                  <p>Enjoy your time with our doctor.
                   </p>
                 </div>
               </div>
@@ -215,87 +235,36 @@ class Home extends Component {
             </div>
           </div>
         </section>
-        <section className="section departments">
+        <section className="content departments">
           <div className="container">
             <div className="row">
               <div className="col-12">
                 <div className="section-header text-center">
                   <h3 className="header-title">Departments</h3>
                   <div className="line" />
-                  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce vitae risus
-                    nec dui venenatis dignissim. Aenean vitae metus in augue pretium ultrices.
-                    Duis dictum eget dolor vel blandit.
+                  <p>With over 950 service staff, including 130 Vietnamese and expatriate doctors, provides care across more than 30 medical specialties at its 220-bed hub hospital. It also operates an outpatient clinic at the heart of District 1, Ho Chi Minh City’s traditional business district. In addition to catering for the local Vietnamese population, also receives patients from neighbouring countries of Cambodia, Laos and Myanmar...
                   </p>
                 </div>
               </div>
             </div>
             <div className="row">
-              <div className="col-md-4">
-                <div className="dept-box">
-                  <div className="dept-img"> 
-                    <Link to="/department-details"><img width={67} height={80} alt="Dentists" src={Icon_04} /></Link>
-                  </div>
-                  <h4>
-                    <Link to="/department-details">Dentists</Link>
-                  </h4>
-                  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-                    tempor.
-                  </p>
-                </div>
-              </div>
-              <div className="col-md-4">
-                <div className="dept-box">
-                  <div className="dept-img"> 
-                    <Link to="/department-details"><img width={63} height={80} alt="Neurology" src={Icon_05} /></Link>
-                  </div>
-                  <h4><Link to="/department-details">Neurology</Link></h4>
-                  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-                    tempor.
-                  </p>
-                </div>
-              </div>
-              <div className="col-md-4">
-                <div className="dept-box">
-                  <div className="dept-img">
-                    <Link to="/department-details"><img width={92} height={80} alt="Opthalmology" src={Icon_06} /></Link>
-                  </div>
-                  <h4><Link to="/department-details">Opthalmology</Link></h4>
-                  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-                    tempor.
-                  </p>
-                </div>
-              </div>
-              <div className="col-md-4">
-                <div className="dept-box">
-                  <div className="dept-img"> 
-                    <Link to="/department-details"><img width={40} height={80} alt="Orthopedics" src={Icon_07} /></Link>
-                  </div>
-                  <h4><Link to="/department-details">Orthopedics</Link></h4>
-                  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-                    tempor.
-                  </p>
-                </div>
-              </div>
-              <div className="col-md-4">
-                <div className="dept-box">
-                  <div className="dept-img"> 
-                    <Link to="/department-details"><img width={76} height={80} alt="Cancer Department" src={Icon_08} /></Link>
-                  </div>
-                  <h4><Link to="/department-details">Cancer Department</Link></h4>
-                  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-                    tempor.
-                  </p>
-                </div>
-              </div>
-              <div className="col-md-4">
-                <div className="dept-box">
-                  <div className="dept-img"> 
-                    <Link to="/department-details"><img width={47} height={80} alt="ENT Department" src={Icon_09} /></Link>
-                  </div>
-                  <h4><Link to="/department-details">ENT Department</Link></h4>
-                  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-                    tempor.
-                  </p>
+              <div className="col-md-12">
+                {/* Departments List */}
+                <div className="row department-row">
+                {this.state.departments?.map((department, index) => {
+                  return (
+                    <div key={index} className="col-md-4">
+                      <div className="dept-box">
+                        <div className="dept-img">
+                          <Link to="/department-details"><img width={67} height={80} alt="Dentists" src={Icon_04} /></Link>
+                        </div>
+                        <h4><Link to="/department-details">{department.name}</Link></h4>
+                        <p>{department.description}</p>
+                      </div>
+                    </div>
+                  )
+                })}
+                  
                 </div>
               </div>
             </div>
@@ -315,9 +284,7 @@ class Home extends Component {
                 <div className="section-header text-center">
                   <h3 className="header-title">Testimonials</h3>
                   <div className="line" />
-                  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce vitae risus
-                    nec dui venenatis dignissim. Aenean vitae metus in augue pretium ultrices.
-                    Duis dictum eget dolor vel blandit.
+                  <p>To provide international standard of healthcare services. To provide highly trained medical staff who are trained in the most up-to-date medical techniques and modern methods of patient care. To use modern medical equipment which are correctly and regularly maintained. To provide friendly and efficient service. To provide the finest amenities ensuring the highest standards of cleanliness and hygiene.
                   </p>
                 </div>
               </div>
@@ -338,8 +305,7 @@ class Home extends Component {
                         <img className="img-fluid" src={Testi_03} alt="" width={150} height={150} />
                       </div>
                       <div className="testimonial-text">
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-                          tempor incididunt ut labore et dolore.
+                        <p>Realy good service and we will come back soon.
                         </p>
                       </div>
                       <div className="testimonial-author">
@@ -354,8 +320,7 @@ class Home extends Component {
                         <img className="img-fluid" src={Testi_02} alt="" width={150} height={150} />
                       </div>
                       <div className="testimonial-text">
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-                          tempor incididunt ut labore et dolore.
+                        <p>Realy good service and we will come back soon.
                         </p>
                       </div>
                       <div className="testimonial-author">
@@ -370,8 +335,7 @@ class Home extends Component {
                         <img className="img-fluid" src={Testi_05} alt="" width={150} height={150} />
                       </div>
                       <div className="testimonial-text">
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-                          tempor incididunt ut labore et dolore.
+                        <p>Realy good service and we will come back soon.
                         </p>
                       </div>
                       <div className="testimonial-author">
@@ -386,8 +350,7 @@ class Home extends Component {
                         <img className="img-fluid" src={Testi_04} alt="" width={150} height={150} />
                       </div>
                       <div className="testimonial-text">
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-                          tempor incididunt ut labore et dolore.
+                        <p>Realy good service and we will come back soon.
                         </p>
                       </div>
                       <div className="testimonial-author">
@@ -402,8 +365,7 @@ class Home extends Component {
                         <img className="img-fluid" src={Testi_01} alt="" width={150} height={150} />
                       </div>
                       <div className="testimonial-text">
-                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-                          tempor incididunt ut labore et dolore.
+                        <p>Realy good service and we will come back soon.
                         </p>
                       </div>
                       <div className="testimonial-author">

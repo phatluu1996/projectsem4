@@ -97,9 +97,9 @@ class Appointment extends Component {
                       <div className="form-group">
                         <label>Select the Treatment Name</label>
                         <select className="form-control select">
-                          <option value>Option 1</option>
-                          <option value>Option 1</option>
-                          <option value>Option 1</option>
+                          <option value>Blood Checkup</option>
+                          <option value>Cardiology</option>
+                          <option value>Heart attack</option>
                         </select>
                       </div>
                       <div className="form-group">

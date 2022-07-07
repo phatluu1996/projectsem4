@@ -1,5 +1,5 @@
 // export {default as Logo_icon} from 'BusinessAssets/img/logo-icon.png';
-export {default as Logo} from 'BusinessAssets/img/logo.png';
+export {default as Logo} from 'BusinessAssets/img/logo.jpg';
 export {default as Department_img} from 'BusinessAssets/img/department-img.jpg';
 export {default as Service_img} from 'BusinessAssets/img/service-img.jpg';
 export {default as About_img} from 'BusinessAssets/img/about-img.png';
