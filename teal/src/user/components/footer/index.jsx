@@ -17,12 +17,12 @@ class Footer extends Component {
                   <h4 className="footer-title">Location</h4>
                   <div className="about-clinic">
                     <p><strong>Address:</strong>
-                      <br />1603 Old York Rd,
-                      <br />Houma, LA, 75429</p>
+                      <br />590 CMT8 Ward 11 Dist 3,
+                      <br />HCMC, VN, 723564</p>
                     <p className="m-b-0"><strong>Phone</strong>:
-                      <a href="tel:+8503867896">(850) 386-7896</a>
+                      <a href="tel:+84981578920">(+84) 981578920</a>
                       <br /> <strong>Fax</strong>: 
-                      <a href="tel:+8503867896">(850) 386-7896</a>
+                      <a href="tel:+84981578920">(+84) 981578920</a>
                     </p>
                   </div>
                 </div>
@@ -75,7 +75,7 @@ class Footer extends Component {
                 <div className="footer-widget">
                   <h4 className="footer-title">Appointment</h4>
                   <div className="appointment-btn">
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit</p>
+                    <p>Any where - Any Time. Mediapp always with you.</p>
                     <ul className="social-icons clearfix">
                       <li>
                         <a href="#" target="_blank" title="Facebook"><i className="fab fa-facebook-f" /></a>
@@ -105,7 +105,7 @@ class Footer extends Component {
               <div className="row">
                 <div className="col-12">
                   <div className="copy-text text-center">
-                    <p>© 2019 <a href="#">Medifab</a>. All rights reserved.</p>
+                    <p>© 2022 <a href="#">Mediapp</a>. All rights reserved-Designed by Group 1 - T1.2008.E1.</p>
                   </div>
                 </div>
               </div>
