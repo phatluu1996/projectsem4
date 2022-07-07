@@ -1,7 +1,8 @@
 import { data } from "jquery";
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import { DatePicker, Select } from 'antd';
+import { Select } from 'antd';
+import { countries } from '../../../address';
 import { NotificationContainer, NotificationManager } from 'react-notifications';
 import { ADD, GET, UPDATE } from '../../../constants';
 import { axiosAction, axiosActions, notify } from '../../../actions';
@@ -19,7 +20,16 @@ class Register extends Component {
         email: null,
         password: null,
         confirmPassword: null,
-        phone: null
+        phone: null,
+        cid: null,
+        address: {
+          line: null,
+          postalCode: null,
+          province: null,
+          city: null,
+          country: null,
+          retired: false
+        }
       },
       statusChange: {
         firstName: false,
@@ -28,8 +38,17 @@ class Register extends Component {
         email: false,
         password: false,
         confirmPassword: false,
-        phone: false
-      }
+        phone: false,
+        cid: false,
+        address: {
+          line: false,
+          postalCode: false,
+          province: false,
+          city: false,
+          country: false
+        },
+      },
+      initCountries: countries
     }
 
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -45,28 +64,35 @@ class Register extends Component {
     let data = { ...this.state.data };
     let statusChange = { ...this.state.statusChange };
 
-    data[e.target.name] = e.target.value;
+    var addressField = ["line", "country", "province", "city", "postalCode"];
+
+    if (addressField.indexOf(e.target.name) == -1) {
+
+      data[e.target.name] = e.target.value;
+
+      switch (e.target.name) {
+        case "email":
+          statusChange[e.target.name] = validEmail.test(e.target.value);
+          break;
+
+        case "password":
+          statusChange[e.target.name] = validPassword.test(e.target.value);
+          break;
+
+        case "confirmPassword":
+          statusChange[e.target.name] = this.state.data.password == e.target.value;
+          break;
+
+        default:
+          statusChange[e.target.name] = !(e.target.value == "");
+      }
+
+    } else {
+      data.address[e.target.name] = e.target.value;
+      statusChange.address[e.target.name] = !(e.target.value == "");
+    }
 
     this.setState({ data: data });
-
-    statusChange[e.target.name] = !(e.target.value == "");
-
-    if (e.target.name == "email") {
-      statusChange[e.target.name] = validEmail.test(e.target.value);
-    }
-
-    if (e.target.name == "password") {
-      statusChange[e.target.name] = validPassword.test(e.target.value);
-    }
-
-    if (e.target.name == "confirmPassword") {
-      statusChange[e.target.name] = this.state.data.password == e.target.value;
-    }
-
-    if (e.target.name == "username") {
-      statusChange[e.target.name] = e.target.value;
-    }
-
     this.setState({ statusChange: statusChange });
   }
 
@@ -77,27 +103,43 @@ class Register extends Component {
 
     if (this.state.data.firstName == null) { dataCheck.firstName = ""; }
     if (this.state.data.lastName == null) { dataCheck.lastName = ""; }
+    if (this.state.data.username == null) { dataCheck.username = ""; }
     if (this.state.data.email == null) { dataCheck.email = ""; }
     if (this.state.data.password == null) { dataCheck.password = ""; }
     if (this.state.data.confirmPassword == null) { dataCheck.confirmPassword = ""; }
     if (this.state.data.phone == null) { dataCheck.phone = ""; }
+    if (this.state.data.cid == null) { dataCheck.cid = ""; }
+    if (this.state.data.address.line == null) { dataCheck.address.line = ""; }
+    if (this.state.data.address.postalCode == null) { dataCheck.address.postalCode = ""; }
+    if (this.state.data.address.country == null) { dataCheck.address.country = ""; }
+    if (this.state.data.address.province == null) { dataCheck.address.province = ""; }
+    if (this.state.data.address.city == null) { dataCheck.address.city = ""; }
 
     isAllValid = this.state.statusChange.firstName && this.state.statusChange.lastName && this.state.statusChange.email
-      && this.state.statusChange.password && this.state.statusChange.confirmPassword && this.state.statusChange.phone;
+      && this.state.statusChange.password && this.state.statusChange.confirmPassword && this.state.statusChange.phone
+      && this.state.statusChange.cid && this.state.statusChange.username && this.state.statusChange.address.line
+      // && this.state.statusChange.address.country && this.state.statusChange.address.province
+      && this.state.statusChange.address.city && this.state.statusChange.address.postalCode;
 
     if (!isAllValid) {
       this.setState({ data: dataCheck });
     } else {
       let newPatient = {
-        username: dataCheck.email,
+        firstName: dataCheck.username,
+        lastName: dataCheck.lastName,
+        username: dataCheck.username,
         password: dataCheck.password,
+        email: dataCheck.email,
+        phone: dataCheck.phone,
+        cid: dataCheck.cid,
+        address: dataCheck.address,
         role: 'user'
       };
 
-      axiosAction("/register", ADD, (res) => {
-        notify('success', "Success")
-        this.props.history.push("/");
-      }, (err) => notify('error', 'Error'), newPatient);
+      // axiosAction("/register", ADD, (res) => {
+      //   notify('success', "Success")
+      //   this.props.history.push("/");
+      // }, (err) => notify('error', 'Error'), newPatient);
     }
   }
 
@@ -168,7 +210,7 @@ class Register extends Component {
                       <div className="form-group">
                         <label>Mobile Number</label>
                         <input
-                          type="text"
+                          type="number"
                           style={this.inputBorder(this.state.data.phone != null, this.state.data.phone && this.state.statusChange.phone)}
                           className={this.inputClassname(this.state.data.phone != null, this.state.data.phone && this.state.statusChange.phone)}
                           name="phone"
@@ -198,9 +240,42 @@ class Register extends Component {
                         />
                         <div className="invalid-feedback">Please enter valid email.</div>
                       </div>
-
                       <div className="row">
                         <div className="form-group col-sm-6">
+                          <label>Identity Card</label>
+                          <input
+                            type="text"
+                            style={this.inputBorder(this.state.data.cid != null, this.state.data.cid && this.state.statusChange.cid)}
+                            className={this.inputClassname(this.state.data.cid != null, this.state.data.cid && this.state.statusChange.cid)}
+                            name="cid"
+                            onBlur={this.handleChange} />
+                          <div className="invalid-feedback">Please enter identity card.</div>
+                        </div>
+                        <div className="form-group col-sm-6">
+                          <label>Postal Code</label>
+                          <input
+                            type="text"
+                            style={this.inputBorder(this.state.data.address.postalCode != null, this.state.data.address.postalCode && this.state.statusChange.address.postalCode)}
+                            className={this.inputClassname(this.state.data.address.postalCode != null, this.state.data.address.postalCode && this.state.statusChange.address.postalCode)}
+                            name="postalCode"
+                            onBlur={this.handleChange} />
+                          <div className="invalid-feedback">Please enter postal code.</div>
+                        </div>
+                      </div>
+
+                      <div className="form-group">
+                        <label>Address</label>
+                        <input
+                          type="text"
+                          style={this.inputBorder(this.state.data.address.line != null, this.state.data.address.line && this.state.statusChange.address.line)}
+                          className={this.inputClassname(this.state.data.address.line != null, this.state.data.address.line && this.state.statusChange.address.line)}
+                          name="line"
+                          onBlur={this.handleChange} />
+                        <div className="invalid-feedback">Please enter address.</div>
+                      </div>
+
+                      <div className="row">
+                        <div className="form-group col-sm-4">
                           <label>Country</label>
                           {/* <input
                             type="text"
@@ -212,18 +287,17 @@ class Register extends Component {
                             aria-autocomplete='none'
                             showSearch={true} bordered={false} size={"small"} style={{ width: '100%' }}
                             name='country'
-                            className="form-control"
+                            className={this.inputClassname(this.state.data.address.country != null, this.state.data.address.country && this.state.statusChange.address.country)}
                           // className={isValid(this.state.data.address?.province)} 
-                          // onChange={(arg) => this.onChange(arg, "province")} 
-                          // value={this.state.data.address.province}
+                          onChange={(arg) => this.onChange(arg, "province")} 
                           >
-                            {/* {this.state.countries?.filter(ctr => ctr.name === this.state.data.address?.country)[0]?.states?.map((st, idx) => {
+                            {this.state.initCountries?.filter(ctr => ctr.name === this.state.data.address?.country)[0]?.states?.map((st, idx) => {
                                   return (<Option key={idx} value={st.name}>{st.name}</Option>)
-                                })} */}
+                                })}
                           </Select>
                           <div className="invalid-feedback">Please enter phone number.</div>
                         </div>
-                        <div className="form-group col-sm-6">
+                        <div className="form-group col-sm-4">
                           <label>State</label>
                           {/* <input
                             type="text"
@@ -234,54 +308,29 @@ class Register extends Component {
                           <Select
                             aria-autocomplete='none'
                             showSearch={true} bordered={false} size={"small"} style={{ width: '100%' }}
-                            name='state'
-                            className="form-control"
+                            name='province'
+                            className={this.inputClassname(this.state.data.address.province != null, this.state.data.address.province && this.state.statusChange.address.province)}
                           // className={isValid(this.state.data.address?.province)} 
-                          // onChange={(arg) => this.onChange(arg, "province")} 
-                          // value={this.state.data.address.province}
+                          onChange={(arg) => this.onChange(arg, "province")} 
+                          value={this.state.data.address.province}
                           >
-                            {/* {this.state.countries?.filter(ctr => ctr.name === this.state.data.address?.country)[0]?.states?.map((st, idx) => {
+                            {this.state.initCountries?.filter(ctr => ctr.name === this.state.data.address?.country)[0]?.states?.map((st, idx) => {
                                   return (<Option key={idx} value={st.name}>{st.name}</Option>)
-                                })} */}
+                                })}
                           </Select>
                           <div className="invalid-feedback">Please enter phone number.</div>
                         </div>
-                      </div>
-
-                      <div className="form-group">
-                        <label>Address</label>
-                        <input
-                          type="text"
-                          style={this.inputBorder(this.state.data.phone != null, this.state.data.phone && this.state.statusChange.phone)}
-                          className={this.inputClassname(this.state.data.phone != null, this.state.data.phone && this.state.statusChange.phone)}
-                          name="address"
-                          onBlur={this.handleChange} />
-                        <div className="invalid-feedback">Please enter phone number.</div>
-                      </div>
-
-                      <div className="row">
-                        <div className="form-group col-sm-6">
+                        <div className="form-group col-sm-4">
                           <label>City</label>
                           <input
                             type="text"
-                            style={this.inputBorder(this.state.data.phone != null, this.state.data.phone && this.state.statusChange.phone)}
-                            className={this.inputClassname(this.state.data.phone != null, this.state.data.phone && this.state.statusChange.phone)}
-                            name="state"
+                            style={this.inputBorder(this.state.data.address.city != null, this.state.data.address.city && this.state.statusChange.address.city)}
+                            className={this.inputClassname(this.state.data.address.city != null, this.state.data.address.city && this.state.statusChange.address.city)}
+                            name="city"
                             onBlur={this.handleChange} />
-                          <div className="invalid-feedback">Please enter phone number.</div>
-                        </div>
-                        <div className="form-group col-sm-6">
-                          <label>Postal Code</label>
-                          <input
-                            type="text"
-                            style={this.inputBorder(this.state.data.phone != null, this.state.data.phone && this.state.statusChange.phone)}
-                            className={this.inputClassname(this.state.data.phone != null, this.state.data.phone && this.state.statusChange.phone)}
-                            name="country"
-                            onBlur={this.handleChange} />
-                          <div className="invalid-feedback">Please enter phone number.</div>
+                          <div className="invalid-feedback">Please enter city.</div>
                         </div>
                       </div>
-
                     </div>
                   </div>
 

@@ -43,9 +43,6 @@ public class AuthorizeController {
     private EmployeeRepos employeeRepos;
 
     @Autowired
-    private DoctorRepos doctorRepos;
-
-    @Autowired
     private PasswordEncoder encoder;
 
     @Autowired
@@ -102,8 +99,6 @@ public class AuthorizeController {
 
         // Create new user's account
         Patient patient;
-        Employee employee;
-        Doctor doctor;
 
         User user = new User(registerRequest.getUsername(),
                 encoder.encode(registerRequest.getPassword())
@@ -116,58 +111,15 @@ public class AuthorizeController {
                     .ok()
                     .body(new MessageResponse("Role is not found.",false));
         } else {
-            switch (strRoles.toLowerCase()) {
-                case "admin":
-                    user.setRole("ADMIN");
-                    userRepos.save(user);
-                    break;
-                case "doctor":
-                    user.setRole("AIRLINE");
+            user.setRole("USER");
 
-                    employee = new Employee();
-                    employee.setFirstName(registerRequest.getUserFirstName());
-                    employee.setLastName(registerRequest.getUserLastName());
-                    employee.setEmail(registerRequest.getEmail());
-                    employee.setUser(user);
+            patient = new Patient();
+            patient.setFirstName(registerRequest.getUserFirstName());
+            patient.setLastName(registerRequest.getUserLastName());
+            patient.setEmail(registerRequest.getEmail());
 
-                    doctor = new Doctor();
-                    doctor.setEmployee(employee);
-
-                    userRepos.save(user);
-                    employeeRepos.save(employee);
-                    doctorRepos.save(doctor);
-
-                    break;
-                case "employee":
-                    user.setRole("EMPLOYEE");
-
-                    employee = new Employee();
-                    employee.setFirstName(registerRequest.getUserFirstName());
-                    employee.setLastName(registerRequest.getUserLastName());
-                    employee.setEmail(registerRequest.getEmail());
-                    employee.setUser(user);
-
-                    userRepos.save(user);
-                    employeeRepos.save(employee);
-
-                    break;
-                case "user":
-                    user.setRole("USER");
-
-                    patient = new Patient();
-                    patient.setFirstName(registerRequest.getUserFirstName());
-                    patient.setLastName(registerRequest.getUserLastName());
-                    patient.setEmail(registerRequest.getEmail());
-
-                    userRepos.save(user);
-                    patientRepos.save(patient);
-
-                    break;
-                default:
-                    return ResponseEntity
-                            .ok()
-                            .body(new MessageResponse("Role is not found.",false));
-            }
+            userRepos.save(user);
+            patientRepos.save(patient);
         }
 
 //        StringBuilder linkReset = new StringBuilder();
