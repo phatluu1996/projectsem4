@@ -13,7 +13,6 @@ class EditPatient extends Component {
     super(props);
     this.state = {
       loading: false,
-      
       crrValue: "",
       countries: countries,
       countrySelect: null,
@@ -31,7 +30,13 @@ class EditPatient extends Component {
           line: null,
           country: null,
           city: null
-        }
+        },
+        user: {
+          username: null,
+          password: null,
+          role: "patient"
+        },
+        appointments:[]
       },
     };
     this.fetchData = this.fetchData.bind(this);
@@ -40,7 +45,7 @@ class EditPatient extends Component {
     this.onSelectCountry = this.onSelectCountry.bind(this);
     this.onChangeDate = this.onChangeDate.bind(this);
   }
-  
+
 
   componentDidMount() {
     this.setState({
@@ -52,7 +57,7 @@ class EditPatient extends Component {
   componentWillUnmount() {
   }
 
-  
+
 
   fetchData = () => {
     axiosAction("/patients/" + this.id, GET, res => {
@@ -92,10 +97,10 @@ class EditPatient extends Component {
     const tmp = { ...this.state.data }
     console.log(tmp);
     if (!isFormValid(e)) return;
-    axiosAction("/patients/"+this.id,UPDATE, res => {
-      notify('success', '','Success')
+    axiosAction("/patients/"+ this.id, UPDATE, res => {
+      notify('success', '', 'Success')
       this.props.history.push("/admin/patients");
-    },(err) => notify('error', "Error"),tmp);
+    }, (err) => notify('error', "Error"), tmp);
   }
 
   onChange = (e) => {
@@ -128,6 +133,12 @@ class EditPatient extends Component {
         break;
       case 'line':
         tmp.address.line = value;
+        break;
+      case 'username':
+        tmp.user.username = value;
+        break;
+      case 'password':
+        tmp.user.password = value;
         break;
     }
     this.setState({ data: tmp });
@@ -171,6 +182,20 @@ class EditPatient extends Component {
                 </div>
                 <div className="col-sm-6">
                   <div className="form-group">
+                    <label>Username<span className="text-danger">*</span></label>
+                    <input className={isValid(this.state.data?.user?.username)} name='username' defaultValue={this.state.data?.user?.username} type="text" onChange={(e) => this.onChange(e)} />
+                    <div className="invalid-feedback">Username cannot be empty</div>
+                  </div>
+                </div>
+                <div className="col-sm-6">
+                  <div className="form-group">
+                    <label>Password<span className="text-danger">*</span></label>
+                    <input className={isValid(this.state.data?.user?.password)} type="password" defaultValue={this.state.data?.user?.password} name='password' onChange={(e) => this.onChange(e)} />
+                    <div className="invalid-feedback">Password name cannot be empty</div>
+                  </div>
+                </div>
+                <div className="col-sm-6">
+                  <div className="form-group">
                     <label>Email <span className="text-danger">*</span></label>
                     <input className={isValid(this.state.data?.email)} name='email' type="email" onChange={(e) => this.onChange(e)} defaultValue={this.state.data?.email} />
                     <div className="invalid-feedback"> Email cannot be empty</div>
@@ -179,11 +204,16 @@ class EditPatient extends Component {
                 <div className="col-sm-6">
                   <div className="form-group">
                     <label>Date of Birth <span className="text-danger">*</span></label>
-                    <DatePicker name='dateOfBirth' className={isValid(this.state.data?.dateOfBirth)} aria-required
-                      showTime={true} format="YYYY-MM-DD" clearIcon={true}
+                    <DatePicker name='dateOfBirth'
+                      className={isValid(this.state.data?.dateOfBirth)} aria-required
+                      showTime={false}
+                      format="YYYY-MM-DD"
+                      clearIcon={true}
                       defaultOpen
                       value={toMoment(this.state.data?.dateOfBirth)}
-                      allowClear={true} onChange={this.onChangeDate} onSelect={this.onChangeDate}></DatePicker>
+                      allowClear={true}
+                      onChange={this.onChangeDate}
+                      onSelect={this.onChangeDate}></DatePicker>
                   </div>
                 </div>
                 <div className="col-sm-6">
@@ -196,7 +226,7 @@ class EditPatient extends Component {
                     </div>
                     <div className="form-check-inline">
                       <label className="form-check-label">
-                        <input type="radio" name="gender" value={false} defaultChecked={!this.state.data?.gender}  className="form-check-input" onChange={(e) => this.onChange(e)} />Female
+                        <input type="radio" name="gender" value={false} defaultChecked={!this.state.data?.gender} className="form-check-input" onChange={(e) => this.onChange(e)} />Female
                       </label>
                     </div>
                   </div>
@@ -235,7 +265,7 @@ class EditPatient extends Component {
                       <div className="form-group">
                         <label>State/Province <span className="text-danger">*</span></label>
                         <Select
-                          disabled={this.state.data?.address?.province != ""||this.state.countrySelect?.states.length > 0 ?false:true}
+                          disabled={this.state.data?.address?.province != "" || this.state.countrySelect?.states.length > 0 ? false : true}
                           defaultValue={this.state.data?.address?.province}
                           bordered={false}
                           value={this.state.data?.address?.province}

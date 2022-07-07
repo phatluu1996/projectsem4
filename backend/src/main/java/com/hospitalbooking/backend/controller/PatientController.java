@@ -1,8 +1,10 @@
 package com.hospitalbooking.backend.controller;
 
 import com.hospitalbooking.backend.models.Patient;
+import com.hospitalbooking.backend.models.User;
 import com.hospitalbooking.backend.repository.AddressRepos;
 import com.hospitalbooking.backend.repository.PatientRepos;
+import com.hospitalbooking.backend.repository.UserRepos;
 import com.hospitalbooking.backend.specification.DBSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
@@ -21,6 +23,8 @@ public class PatientController {
     private PatientRepos patientRepos;
     @Autowired
     private AddressRepos addressRepos;
+    @Autowired
+    private UserRepos userRepos;
 
     @GetMapping("/patients/{id}")
     public ResponseEntity<Patient> one(@PathVariable Long id){
@@ -37,14 +41,17 @@ public class PatientController {
     @PostMapping("/patients")
     public ResponseEntity<Patient> add(@RequestBody Patient patient){
         addressRepos.save(patient.getAddress());
+        User user = userRepos.save(patient.getUser());
+        patient.setUser(user);
         return new ResponseEntity<>(patientRepos.save(patient), HttpStatus.OK);
     }
 
     @PutMapping("/patients/{id}")
     public ResponseEntity<Patient> update(@RequestBody Patient patient, @PathVariable Long id){
-        Optional<Patient> optional = patientRepos.findById(id);
-        return optional.map(model -> {
+        Optional<Patient> patientById = patientRepos.findById(id);
+        return patientById.map(model -> {
             patient.setId(model.getId());
+            userRepos.save(model.getUser());
             addressRepos.save(patient.getAddress());
             return new ResponseEntity<>(patientRepos.save(patient), HttpStatus.OK);
         }).orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));

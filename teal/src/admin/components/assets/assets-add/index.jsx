@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { axiosAction, isValid, isFormValid, GET } from "../../../../actions";
+import { axiosAction, isValid, isFormValid, GET , ADD } from "../../../../actions";
 import OpenChat from "../../sidebar/openchatheader";
 import { DatePicker, Select } from 'antd';
 
@@ -66,11 +66,11 @@ class AssetsAdd extends Component {
     e.preventDefault();
     const tmp = { ...this.state.data }
     console.log(tmp);
-    // if (!isFormValid(e)) return;
-    // axiosAction("/patients",ADD, res => {
-    //   notify('success', '','Success')
-    //   this.props.history.push("/admin/patients");
-    // },(err) => notify('error', "Error"),tmp);
+    if (!isFormValid(e)) return;
+    axiosAction("/assets",UPDA, res => {
+      notify('success', '','Success')
+      this.props.history.push("/admin/assets");
+    },(err) => notify('error', "Error"),tmp);
   }
 
   onChange = (e, feild) => {
@@ -126,7 +126,7 @@ class AssetsAdd extends Component {
         <div className="content">
           <div className="row">
             <div className="col-md-8 offset-md-2">
-              <h4 className="page-title">Edit Asset</h4>
+              <h4 className="page-title">Add Asset</h4>
             </div>
           </div>
           <div className="row">
@@ -135,16 +135,17 @@ class AssetsAdd extends Component {
                 <div className="row">
                   <div className="col-md-6">
                     <div className="form-group">
-                      <label>Asset Name</label>
-                      <input className="form-control" onChange={(e) => this.onChange(e, "assetName")} type="text" />
+                      <label>Asset Name<span className="text-danger">*</span></label>
+                      <input className={isValid(this.state.data?.assetName)} onChange={(e) => this.onChange(e, "assetName")} type="text" />
+                      <div className="invalid-feedback">Asset name cannot be empty</div>
                     </div>
                   </div>
                   <div className="col-md-6">
                     <div className="form-group">
-                      <label className="focus-label">Purchase Date</label>
+                      <label className="focus-label">Purchase Date <span className="text-danger">*</span></label>
                       <div className="cal-icon">
                         <DatePicker
-                          className={isValid(this.state.data.purchaseDate)} aria-required
+                          className={isValid(this.state.data.purchaseDate != null)} aria-required
                           showTime={false}
                           format="YYYY-MM-DD"
                           clearIcon={true}
@@ -153,8 +154,7 @@ class AssetsAdd extends Component {
                           onSelect={this.onChangeDate}
                         ></DatePicker>
                       </div>
-                      {/* <label>Purchase Date</label>
-                      <input className="form-control" type="text" /> */}
+                      <div className="invalid-feedback">Please choise assets purchase date !</div>
                     </div>
                   </div>
                 </div>
@@ -175,40 +175,46 @@ class AssetsAdd extends Component {
                 <div className="row">
                   <div className="col-md-6">
                     <div className="form-group">
-                      <label>Manufacturer</label>
-                      <input className="form-control" onChange={(e) => this.onChange(e, "manufacturer")} type="text" />
+                      <label>Manufacturer <span className="text-danger">*</span></label>
+                      <input className={isValid(this.state.data?.manufacturer)} onChange={(e) => this.onChange(e, "manufacturer")} type="text" />
+                      <div className="invalid-feedback">Manufacturer cannot be empty</div>
                     </div>
                   </div>
                   <div className="col-md-6">
                     <div className="form-group">
-                      <label>Model</label>
-                      <input className="form-control" onChange={(e) => this.onChange(e, "model")} type="text" />
+                      <label>Model <span className="text-danger">*</span></label>
+                      <input  className={isValid(this.state.data?.model)} onChange={(e) => this.onChange(e, "model")} type="text" />
+                      <div className="invalid-feedback">Model cannot be empty</div>
                     </div>
                   </div>
                 </div>
                 <div className="row">
                   <div className="col-md-6">
                     <div className="form-group">
-                      <label>Serial Number</label>
-                      <input className="form-control" onChange={(e) => this.onChange(e, "serialNumber")} type="text" />
+                      <label>Serial Number <span className="text-danger">*</span></label>
+                      <input className={isValid(this.state.data?.serialNumber)} onChange={(e) => this.onChange(e, "serialNumber")} type="text" />
+                      <div className="invalid-feedback">Serial number cannot be empty</div>
                     </div>
                   </div>
                   <div className="col-md-6">
                     <div className="form-group">
-                      <label>Supplier</label>
-                      <input className="form-control" onChange={(e) => this.onChange(e, "supplier")} type="text" />
+                      <label>Supplier <span className="text-danger">*</span></label>
+                      <input className={isValid(this.state.data?.supplier)} onChange={(e) => this.onChange(e, "supplier")} type="text" />
+                      <div className="invalid-feedback">Supplier cannot be empty</div>
                     </div>
                   </div>
                   <div className="col-md-6">
                     <div className="form-group">
-                      <label>Warranty</label>
-                      <input className="form-control" onChange={(e) => this.onChange(e, "warranty")} type="text" />
+                      <label>Warranty <span className="text-danger">*</span></label>
+                      <input className={isValid(this.state.data?.warranty)} onChange={(e) => this.onChange(e, "warranty")} type="text" />
+                      <div className="invalid-feedback">Warranty cannot be empty</div>
                     </div>
                   </div>
                   <div className="col-md-6">
                     <div className="form-group">
                       <label>Cost</label>
-                      <input className="form-control" placeholder="$" onChange={(e) => this.onChange(e, "description")} type="text" />
+                      <input className={isValid(this.state.data?.cost)}  placeholder="$" onChange={(e) => this.onChange(e, "cost")} type="text" />
+                      <div className="invalid-feedback">Cost cannot be empty</div>
                     </div>
                   </div>
                 </div>
@@ -220,11 +226,12 @@ class AssetsAdd extends Component {
                         bordered={false}
                         style={{ width: '100%' }}
                         name='status'
-                        className={isValid(this.state.data.status != null)}
+                        className={isValid(this.state.data?.status != null)}
                         onChange={this.onSelectStt}>
-                        <Select.Option key={0}>Available</Select.Option>
-                        <Select.Option key={1}>Unavailable</Select.Option>
+                        <Select.Option key="Available">Available</Select.Option>
+                        <Select.Option key="Unavailable">Unavailable</Select.Option>
                       </Select>
+                      <div className="invalid-feedback">Please select statu for asset !</div>
                     </div>
                   </div>
                   <div className="col-md-6">
@@ -234,18 +241,20 @@ class AssetsAdd extends Component {
                         bordered={false}
                         style={{ width: '100%' }}
                         name='status'
-                        className={isValid(this.state.employees != null)}
+                        className={isValid(this.state.employees.length > 0)}
                         onChange={this.onSelectEmp}>
                         {this.state.employees?.map((employee, index) =>
-                          <Select.Option key={index}>{employee.firstName + " " + employee.lastName}</Select.Option>
+                          <Select.Option key={index}>{employee?.firstName + " " + employee?.lastName}</Select.Option>
                         )}
                       </Select>
+                      <div className="invalid-feedback">Please select employee for asset !</div>
                     </div>
                   </div>
                   <div className="col-md-12">
                     <div className="form-group">
                       <label>Description</label>
-                      <textarea className="form-control" onChange={(e) => this.onChange(e, "cost")} defaultValue={""} />
+                      <textarea className={isValid(this.state.data?.description)} onChange={(e) => this.onChange(e, "description")} defaultValue={""} />
+                      <div className="invalid-feedback">Please input description !</div>
                     </div>
                   </div>
                 </div>
