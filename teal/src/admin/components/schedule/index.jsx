@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import OpenChat from "../sidebar/openchatheader"
 import { itemRender, onShowSizeChange, } from "../../components/paginationfunction";
 import { User_img, Sent_img } from "../imagepath"
-import { axiosAction, axiosActions, notify } from '../../../actions';
+import { axiosAction, axiosActions, dateSort, notify, stringSort } from '../../../actions';
 import "../../../constants";
 import { DELETE, GET, DayOptions } from "../../../constants";
 import { toMoment } from "../../../utils";
@@ -70,7 +70,7 @@ class Schedule extends Component {
         daysDisplay.push(DayOptions.filter(day => day.value === rec)[0].label)
       });
       return daysDisplay.join(", ")
-    } 
+    }
     return DayOptions.filter(day => day.value === days)[0]?.label;
   }
 
@@ -78,6 +78,12 @@ class Schedule extends Component {
     const { data } = this.state;
 
     const columns = [
+      {
+        title: "ID",
+        dataIndex: "id",
+        render: (text, record) => <div>{`SCH-${record.id}`}</div>,
+        sorter: (a, b) => numberSort(a.id, b.id)
+      },
       {
         title: "Doctor Name",
         render: (text, record) => (
@@ -88,6 +94,7 @@ class Schedule extends Component {
             {record.doctor?.employee.lastName + " " + record.doctor?.employee.firstName}
           </div>
         ),
+        sorter: (a, b) => stringSort(a.doctor?.employee.lastName + " " + a.doctor?.employee.firstName, b.doctor?.employee.lastName + " " + b.doctor?.employee.firstName)
       },
 
       {
@@ -96,8 +103,8 @@ class Schedule extends Component {
           <div>
             {record.doctor?.department?.name}
           </div>
-        )
-
+        ),
+        sorter: (a, b) => stringSort(a.doctor?.department?.name, b.doctor?.department?.name)
       },
       {
         title: "Available Days",
@@ -107,19 +114,32 @@ class Schedule extends Component {
               this.availableDaysDisplay(record.availableDays)
             }
           </div>
-        )
-
+        ),
+        sorter: (a, b) => a.availableDays.length - b.availableDays.length
       },
       {
-        title: "Available Time",
+        title: "Start From",
         render: (text, record) =>
-          (
-            <div>
-              {
-                toMoment(record.start).format("LT") + "-" + toMoment(record.end).format("LT")
-              }
-            </div>
-          )
+        (
+          <div>
+            {
+              toMoment(record.start).format("LT")
+            }
+          </div>
+        ),
+        sorter: (a, b) => dateSort(toMoment(a.start), toMoment(b.start))
+      },
+      {
+        title: "End at",
+        render: (text, record) =>
+        (
+          <div>
+            {
+              toMoment(record.end).format("LT")
+            }
+          </div>
+        ),
+        sorter: (a, b) => dateSort(toMoment(a.end), toMoment(b.end))
       },
       {
         title: "Action",

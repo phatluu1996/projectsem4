@@ -4,7 +4,7 @@ import { User_img, Sent_img } from "../../imagepath"
 import { Tag } from 'antd';
 import { Link } from 'react-router-dom';
 import OpenChat from "../../sidebar/openchatheader"
-import { axiosAction, axiosActions, notify } from '../../../../actions';
+import { axiosAction, axiosActions, dateSort, notify, numberSort, stringSort } from '../../../../actions';
 import { DELETE, GET, employeeRoles } from "../../../../constants";
 import { toMoment } from "../../../../utils";
 
@@ -108,6 +108,7 @@ class EmployeeList extends Component {
             {"EMP-" + record.id}
           </div>
         ),
+        sorter: (a, b) => numberSort(a.id, b.id)
       },
       {
         title: "Employee Name",
@@ -119,7 +120,7 @@ class EmployeeList extends Component {
             {record.lastName + " " + record.firstName}
           </div>
         ),
-
+        sorter: (a, b) => stringSort((a.lastName + " " + a.firstName), (b.lastName + " " + b.firstName)),
       },
       {
         title: "Gender",
@@ -128,6 +129,7 @@ class EmployeeList extends Component {
             {record.gender}
           </div>
         ),
+        sorter: (a, b) => stringSort(a.gender, b.gender)
       },
       {
         title: "BirthDay",
@@ -136,6 +138,7 @@ class EmployeeList extends Component {
             {toMoment(record.dateOfBirth).format("DD-MM-YYYY")}
           </div>
         ),
+        sorter: (a, b) => dateSort(a.dateOfBirth, b.dateOfBirth),
       },
       {
         title: "Email",
@@ -144,6 +147,7 @@ class EmployeeList extends Component {
             {record.email}
           </div>
         ),
+        sorter: (a, b) => stringSort(a.email, b.email),
       },
       {
         title: "Phone",
@@ -152,6 +156,7 @@ class EmployeeList extends Component {
             {record.phoneNumber}
           </div>
         ),
+        sorter: (a, b) => stringSort(a.phoneNumber, b.phoneNumber)
       },
       {
         title: "Role",
@@ -160,16 +165,7 @@ class EmployeeList extends Component {
             {record.employeeRole}
           </div>
         ),
-      },
-      {
-        title: "Status",
-        render: (text, record) => (
-          <span>
-            <Tag color={record.status ? "green" : "red"} className="custom-badge">
-              {record.status ? "Active" : "Inactive"}
-            </Tag>
-          </span>
-        ),
+        sorter: (a, b) => stringSort(a.employeeRole, b.employeeRole)
       },
       {
         title: "Action",

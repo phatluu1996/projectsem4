@@ -40,6 +40,7 @@ public class AppointmentController {
 
     @PostMapping("/appointments")
     public ResponseEntity<Appointment> add(@RequestBody Appointment appointment){
+
         return new ResponseEntity<>(appointmentRepos.save(appointment), HttpStatus.OK);
     }
 

@@ -57,7 +57,7 @@ import AdminEditAppointment from './admin/components/appointments/editappointmen
 //Schedule
 import AdminSchedules from './admin/components/schedule';
 import AdminAddSchedule from './admin/components/schedule/addschedule';
-import AdminEditSchedule from './admin/components/schedule/editshedule';
+import AdminEditSchedule from './admin/components/schedule/editschedule';
 //Departments
 import AdminDepartments from './admin/components/departments';
 import AdminAddDepartment from './admin/components/departments/adddepartments';

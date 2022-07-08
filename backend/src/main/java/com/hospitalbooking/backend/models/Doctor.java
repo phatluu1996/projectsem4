@@ -27,21 +27,21 @@ public class Doctor{
 //    @JoinColumn(name = "employee_id", referencedColumnName = "id")
 //    private Employee employee;
 
-    @OneToOne(fetch = FetchType.EAGER, optional = false)
-    @JsonIgnoreProperties("doctor")
+    @OneToOne
+    @JsonIgnoreProperties(value = "doctor", allowSetters = true)
     private Employee employee;
 
     @OneToMany
     @JoinColumn(name = "doctor_id", referencedColumnName = "id")
-    @JsonIgnoreProperties("doctor")
+    @JsonIgnoreProperties({"doctor", "employee"})
     private List<DoctorSchedule> doctorSchedules;
     @OneToMany
     @JoinColumn(name = "doctor_id", referencedColumnName = "id")
-    @JsonIgnoreProperties("doctor")
+    @JsonIgnoreProperties({"doctor", "employee"})
     private List<Appointment> appointments;
     @OneToMany
     @JoinColumn(name = "doctor_id", referencedColumnName = "id")
-    @JsonIgnoreProperties("doctor")
+    @JsonIgnoreProperties({"doctor", "employee"})
     private List<DoctorEducationDetail> educationDetails;
     @OneToMany
     @JoinColumn(name = "doctor_id", referencedColumnName = "id")

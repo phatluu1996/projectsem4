@@ -35,7 +35,6 @@ class EditDoctor extends Component {
           "email": null,
           "phoneNumber": null,
           "status": true,
-          "doctor": null,
           "remainingLeave": 0,
           "leaves": null,
           "address": {

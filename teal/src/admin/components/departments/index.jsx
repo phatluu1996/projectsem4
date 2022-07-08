@@ -5,8 +5,9 @@ import { Sent_img } from "../imagepath"
 import { Tag } from 'antd';
 import { Link } from 'react-router-dom';
 import { itemRender, onShowSizeChange, } from "../../components/paginationfunction";
-import { axiosAction,notify } from '../../../actions';
+import { axiosAction,notify, numberSort, stringSort } from '../../../actions';
 import { GET,DELETE } from "../../../constants";
+import { buildQueries } from "@testing-library/react";
  
 class Departments extends Component {
 
@@ -73,25 +74,27 @@ class Departments extends Component {
 
     const columns = [
       {
-        title: "#",
+        title: "ID",
         dataIndex: "id",
+        render: (text, record) => <div>{`DEP-${record.id}`}</div>,
+        sorter: (a, b) => numberSort(a.id, b.id)
       },
       {
         title: "Department Name",
         dataIndex: "name",
-        render: (text, record) => <div>{text}</div>,
-        sorter: (a, b) => a.Department.length - b.Department.length,
+        render: (text, record) => <div>{record.name}</div>,
+        sorter: (a, b) => stringSort(a.name, b.name)
         
       },
       {
         title: "Status",
         dataIndex: "status",
         render: (text, record) => (
-          <Tag color={text ? "green" : "red"} key={text} className="custom-badge">
-            {text ? "Active" : "InActive"}
+          <Tag color={text ? "green" : "red"} key={record.status} className="custom-badge">
+            {record.status ? "Active" : "InActive"}
           </Tag>
         ),
-        sorter: (a, b) => a.tags.length - b.tags.length,
+        sorter: (a, b) => stringSort(a.status ? "Active" : "InActive", buildQueries.status ? "Active" : "InActive")
 
       },
       {

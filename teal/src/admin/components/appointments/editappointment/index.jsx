@@ -14,7 +14,16 @@ class EditAppointment extends Component {
     super(props);
     this.state = {
       loading: true,
-      data: {},
+      data: {
+        id: null,
+        department: null,
+        patient: null,
+        doctor: null,
+        date: null,
+        status: true,
+        message: null,
+        retired: false
+      },
       patients: [],
       doctors: [],
       departments: []
@@ -26,6 +35,18 @@ class EditAppointment extends Component {
     this.onChangePatient = this.onChangePatient.bind(this);
     this.onChangeDate = this.onChangeDate.bind(this);
     this.onChange = this.onChange.bind(this);
+    this.disabledHours = this.disabledHours.bind(this);
+    this.disabledMinutes = this.disabledMinutes.bind(this);
+
+  }
+
+  disabledHours() {
+    return [0, 1, 2, 3, 4, 5, 6, 7, 19, 20, 21, 22, 23, 24];
+  }
+
+  disabledMinutes(selectHour) {
+    if (selectHour == 18)
+      return [0, 15, 30, 45];
   }
 
   componentDidMount() {
@@ -82,6 +103,8 @@ class EditAppointment extends Component {
   onSubmit(e) {
     e.preventDefault();
     if (!isFormValid(e)) return;
+    // const updateData = { ...this.state.data };
+    // updateData.doctor = {id : updateData.doctor.id}
     axiosAction("/appointments/" + this.id, UPDATE, (res) => {
       notify('success', '', 'Success')
       this.props.history.push("/admin/appointments");
@@ -105,6 +128,7 @@ class EditAppointment extends Component {
 
   onChangeDoctor(value) {
     const tmp = { ...this.state.data };
+    // tmp.doctor = { id: value }
     tmp.doctor = this.state.doctors.filter(elt => elt.id === value)[0];
     this.setState({ data: tmp });
   }
@@ -203,7 +227,8 @@ class EditAppointment extends Component {
                       <label>Date</label>
                       <DatePicker name='date' className={this.state.data.date ? "form-control is-valid" : "form-control is-invalid"}
                         showTime={true} minuteStep={15} showSecond={false} format="YYYY-MM-DD HH:mm" clearIcon={true}
-                        allowClear={true} value={toMoment(this.state.data.date)} onChange={this.onChangeDate} onSelect={this.onChangeDate} inputReadOnly={true}>
+                        allowClear={true} value={toMoment(this.state.data.date)} onChange={this.onChangeDate} onSelect={this.onChangeDate} inputReadOnly={true}
+                        disabledHours={this.disabledHours} disabledMinutes={this.disabledMinutes}>
                       </DatePicker>
                       <div className="invalid-feedback">Date cannot be empty</div>
                     </div>

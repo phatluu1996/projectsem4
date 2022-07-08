@@ -15,7 +15,7 @@ public class DoctorSchedule {
     private Long id;
     @ManyToOne
     @JoinColumn(name = "doctor_id", referencedColumnName = "id")
-    @JsonIgnoreProperties("doctorSchedules")
+    @JsonIgnoreProperties(value = {"doctorSchedules"})
     private Doctor doctor;
     @Column(name = "start_time")
     private String start;

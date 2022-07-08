@@ -21,15 +21,14 @@ public class Employee  extends UserProfile{
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date joiningDate;
 
-    @OneToOne(fetch = FetchType.LAZY,
-            cascade =  CascadeType.ALL,
+    @OneToOne(cascade =  CascadeType.ALL,
             mappedBy = "employee")
     @JoinColumn(name = "doctor_id", nullable = true)
-    @JsonIgnoreProperties("employee")
+    @JsonIgnoreProperties({"employee", "appointments"})
     private Doctor doctor;
 
-    @OneToOne(fetch = FetchType.EAGER, optional = false)
-    @JsonIgnoreProperties({"employee", "patient"})
+    @OneToOne
+    @JsonIgnoreProperties(value = {"employee", "patient"}, allowSetters = true)
     private User user;
 
     @OneToMany

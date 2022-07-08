@@ -99,10 +99,10 @@ export const axiosActions = (params = [{
 export const notify = (type, message, title = '', timeOut = 2000, callback = () => { }) => {
     notification[type]({
         message: title,
-        description:message,
-        duration:timeOut/1000,
-        placement:"bottomRight"
-      });      
+        description: message,
+        duration: timeOut / 1000,
+        placement: "bottomRight"
+    });
 };
 
 export const isFormValid = (e) => {
@@ -130,9 +130,27 @@ export const isValid = (condition) => {
     return condition ? "form-control is-valid" : "form-control is-invalid";
 }
 
-export const countAge = (text) =>{
+export const countAge = (text) => {
     // if(moment(text).yearformat('YYYY') === moment().format('YYYY')) return 0
     // const age = moment(text).fromNow().split(" ");
     // return age[0];
     return moment(text).year === moment().year;
-  }
+}
+
+export const stringSort = (value1, value2) => {
+    return ('' + value1).localeCompare(value2);
+}
+
+export const numberSort = (value1, value2) => {
+    return value1 - value2;
+}
+
+export const dateSort = (value1, value2) => {    
+    // return moment.utc(value1.timeStamp).diff(moment.utc(value2.timeStamp));
+    return moment(value1).diff(moment(value2))
+}
+
+export const momentSort = (value1, value2) => {
+    // return moment.utc(value1.timeStamp).diff(moment.utc(value2.timeStamp));
+    return value1.diff(value2)
+}

@@ -36,6 +36,17 @@ class AddAppointment extends Component {
     this.onChangeDate = this.onChangeDate.bind(this);
     this.onChange = this.onChange.bind(this);
     this.showNotify = this.showNotify.bind(this);
+    this.disabledHours = this.disabledHours.bind(this);
+    this.disabledMinutes = this.disabledMinutes.bind(this);
+  }
+
+  disabledHours() {
+    return [0, 1, 2, 3, 4, 5, 6, 7, 19, 20, 21, 22, 23, 24];
+  }
+
+  disabledMinutes(selectHour) {
+    if (selectHour == 18)
+      return [0, 15, 30, 45];
   }
 
 
@@ -105,6 +116,7 @@ class AddAppointment extends Component {
 
   onChangeDoctor(value) {
     const tmp = { ...this.state.data };
+    // tmp.doctor =  { id : value};
     tmp.doctor = this.state.doctors.filter(elt => elt.id === value)[0];
     this.setState({ data: tmp });
   }
@@ -191,7 +203,8 @@ class AddAppointment extends Component {
                       <label>Date</label>
                       <DatePicker name='date' className={isValid(this.state.data.date != null)}
                         showTime={true} minuteStep={15} showSecond={false} format="YYYY-MM-DD HH:mm" clearIcon={true}
-                        allowClear={true} onChange={this.onChangeDate} onSelect={this.onChangeDate} inputReadOnly={true}></DatePicker>
+                        allowClear={true} onChange={this.onChangeDate} onSelect={this.onChangeDate} inputReadOnly={true} 
+                        disabledHours={this.disabledHours} disabledMinutes={this.disabledMinutes}></DatePicker>
                       <div className="invalid-feedback">Date cannot be empty</div>
                     </div>
                   </div>

@@ -33,7 +33,6 @@ class AddDoctor extends Component {
             "retired": false
           },
           "status": true,
-          "doctor": null,
           "remainingLeave": 0,
           "leaves": null,
           "address": {

@@ -2,10 +2,10 @@ import React, { Component } from "react";
 import { Table } from "antd";
 import { Link } from "react-router-dom";
 import OpenChat from "../sidebar/openchatheader"
-import { axiosAction,notify,countAge } from '../../../actions';
-import { GET,DELETE } from "../../../constants";
+import { axiosAction, notify, countAge, numberSort, stringSort } from '../../../actions';
+import { GET, DELETE } from "../../../constants";
 import { itemRender, onShowSizeChange, } from "../../components/paginationfunction";
-import { User_img,Sent_img } from "../imagepath";
+import { User_img, Sent_img } from "../imagepath";
 import moment from "moment";
 class Patients extends Component {
 
@@ -14,14 +14,14 @@ class Patients extends Component {
     super(props);
     this.state = {
       show: null,
-      idDtl:null,
-      loading:false,
+      idDtl: null,
+      loading: false,
       data: []
     };
     this.fetchData = this.fetchData.bind(this);
     this.onClickDlt = this.onClickDlt.bind(this);
     this.handleDel = this.handleDel.bind(this);
- }
+  }
 
 
 
@@ -34,21 +34,21 @@ class Patients extends Component {
     this.isComponentWillUnMount = false
   }
 
-  fetchData = () =>{
-    axiosAction("/patients",GET, res => {
+  fetchData = () => {
+    axiosAction("/patients", GET, res => {
       console.log(res);
       this.setState({
         data: res.data,
         loading: false,
       });
-    },(err) => notify('error', "Error"));
+    }, (err) => notify('error', "Error"));
   }
 
   onClickDlt = () => {
-    axiosAction("/patients/"+this.state.idDtl,DELETE, res => {
-      notify('success', '','Success')
+    axiosAction("/patients/" + this.state.idDtl, DELETE, res => {
+      notify('success', '', 'Success')
       this.fetchData();
-    },(err) => notify('error', "Error"));
+    }, (err) => notify('error', "Error"));
   }
 
   handleClose = () => {
@@ -69,12 +69,18 @@ class Patients extends Component {
     });
   };
 
-  
+
 
   render() {
     const { data } = this.state;
 
     const columns = [
+      {
+        title: "ID",
+        dataIndex: "id",
+        render: (text, record) => <div>{`PAT-${record.id}`}</div>,
+        sorter: (a, b) => numberSort(a.id, b.id)
+      },
       {
         title: "Patient Name",
         render: (text, record) => (
@@ -89,27 +95,28 @@ class Patients extends Component {
       {
         title: "Age",
         dataIndex: "dateOfBirth",
-        render: (text, record) => <div className="text-center">{countAge(text)}</div>,
-        sorter: (a, b) => a.Age.length - b.Age.length,
+        render: (text, record) => <div className="text-center">{countAge(record.dateOfBirth)}</div>,
+        sorter: (a, b) => numberSort(countAge(a.dateOfBirth), countAge(b.dateOfBirth)),
       },
       {
         title: "Address",
         dataIndex: "address",
         render: (text, record) => (
           <div>
-            {record.address?.line + " " + record.address?.city +" "+record.address?.province+" "+record.address?.country}
+            {record.address?.line + " " + record.address?.city + " " + record.address?.province + " " + record.address?.country}
           </div>
         ),
+        sorter: (a, b) => stringSort(a.address?.line + " " + a.address?.city + " " + a.address?.province + " " + a.address?.country, b.address?.line + " " + b.address?.city + " " + b.address?.province + " " + b.address?.country),
       },
       {
         title: "Phone",
         dataIndex: "phoneNumber",
-        sorter: (a, b) => a.Phone.length - b.Phone.length,
+        sorter: (a, b) => numberSort(a.phoneNumber, b.phoneNumber),
       },
       {
         title: "Email",
         dataIndex: "email",
-        sorter: (a, b) => a.Email.length - b.Email.length,
+        sorter: (a, b) => stringSort(a.email, b.email)
       },
 
       {
@@ -120,17 +127,17 @@ class Patients extends Component {
             <a href="#" className="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
               <i className="fas fa-ellipsis-v" /></a>
             <div className="dropdown-menu dropdown-menu-right">
-              <Link className="dropdown-item" to={"/admin/patients/update/"+record.id}><i className="fas fa-pencil-alt m-r-5" /> Edit</Link>
+              <Link className="dropdown-item" to={"/admin/patients/update/" + record.id}><i className="fas fa-pencil-alt m-r-5" /> Edit</Link>
               <a className="dropdown-item" onClick={() => this.handleDel(record.id)} href="#" data-toggle="modal" data-target="#delete_patient">
                 <i className="fas fa-trash m-r-5" /> Delete</a>
             </div>
           </div>
         ),
-        
+
       },
     ];
 
-    return (!this.state.loading && 
+    return (!this.state.loading &&
       <div className="page-wrapper">
         <div className="content">
           <div className="row">
@@ -147,7 +154,7 @@ class Patients extends Component {
             <div className="col-md-12">
               <div className="table-responsive">
                 <Table
-                  loading = {this.state.loading}
+                  loading={this.state.loading}
                   className="table-striped"
                   style={{ overflowX: "scroll" }}
                   columns={columns}
@@ -168,21 +175,21 @@ class Patients extends Component {
             </div>
           </div>
         </div>
-        <OpenChat/>
+        <OpenChat />
         <div id="delete_patient" className="modal fade delete-modal" role="dialog">
-        <div className="modal-dialog modal-dialog-centered">
-          <div className="modal-content">
-            <div className="modal-body text-center">
-              <img src={Sent_img} alt="" width={50} height={46} />
-              <h3>Are you sure want to delete this Patient?</h3>
-             <div className="m-t-20"> 
-                  <a  className="btn btn-white mr-0" data-dismiss="modal">Close</a>
-                  <a  className="btn btn-danger" onClick={this.onClickDlt} data-dismiss="modal">Delete</a>
+          <div className="modal-dialog modal-dialog-centered">
+            <div className="modal-content">
+              <div className="modal-body text-center">
+                <img src={Sent_img} alt="" width={50} height={46} />
+                <h3>Are you sure want to delete this Patient?</h3>
+                <div className="m-t-20">
+                  <a className="btn btn-white mr-0" data-dismiss="modal">Close</a>
+                  <a className="btn btn-danger" onClick={this.onClickDlt} data-dismiss="modal">Delete</a>
                 </div>
+              </div>
             </div>
           </div>
         </div>
-      </div>
       </div>
     );
   }

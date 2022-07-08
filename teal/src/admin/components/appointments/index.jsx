@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import { User_img, Sent_img } from "../imagepath"
 import { itemRender, onShowSizeChange, } from "../../components/paginationfunction";
 import OpenChat from "../sidebar/openchatheader";
-import { axiosAction, axiosActions, notify } from '../../../actions';
+import { axiosAction, axiosActions, dateSort, notify, numberSort, stringSort } from '../../../actions';
 import "../../../constants";
 import { DELETE, GET } from "../../../constants";
 import { toMoment } from "../../../utils";
@@ -21,7 +21,7 @@ class Appointments extends Component {
     };
     this.fetchData = this.fetchData.bind(this);
     this.deleteData = this.deleteData.bind(this);
-  }  
+  }
 
   fetchData() {
     axiosAction("/appointments", GET, res => {
@@ -29,7 +29,7 @@ class Appointments extends Component {
         data: res.data,
         loading: false,
       });
-    }, ()=>{});
+    }, () => { });
   }
 
   deleteData() {
@@ -38,7 +38,7 @@ class Appointments extends Component {
       url: "/appointments/" + this.state.selectdId,
       method: DELETE,
       callback: (res) => {
-        axiosActions([fetchReq]);        
+        axiosActions([fetchReq]);
       },
       data: {}
     }
@@ -47,16 +47,16 @@ class Appointments extends Component {
       url: "/appointments",
       method: GET,
       callback: (res) => {
-        notify('success', '','Success');
+        notify('success', '', 'Success');
         this.setState({
           data: res.data,
           loading: false,
           selectdId: 0
-        });        
+        });
       },
       data: {}
     }
-    axiosActions([deleteReq]);    
+    axiosActions([deleteReq]);
   }
 
   componentDidMount() {
@@ -74,6 +74,7 @@ class Appointments extends Component {
             {"APM-" + record.id}
           </div>
         ),
+        sorter: (a, b) => numberSort(a.id, b.id)
       },
       {
         title: "Patient Name",
@@ -82,16 +83,7 @@ class Appointments extends Component {
             {record.patient?.lastName + " " + record.patient?.firstName}
           </div>
         ),
-
-      },
-      {
-        title: "BirthDay",
-        render: (text, record) => (
-          <div>
-            {record.patient?.dateOfBirth ? toMoment(record.patient?.dateOfBirth).format("DD-MM-YYYY") : ""}
-          </div>
-        ),
-
+        sorter: (a, b) => stringSort(a.doctor?.employee.lastName + " " + a.doctor?.employee.firstName, b.doctor?.employee.lastName + " " + b.doctor?.employee.firstName)
       },
       {
         title: "Doctor Name",
@@ -100,15 +92,7 @@ class Appointments extends Component {
             {record.doctor?.employee.lastName + " " + record.doctor?.employee.firstName}
           </div>
         ),
-
-      },
-      {
-        title: "Department",
-        render: (text, record) => (
-          <div>
-            {record.department?.name}
-          </div>
-        ),
+        sorter: (a, b) => stringSort(a.doctor?.employee.lastName + " " + a.doctor?.employee.firstName, b.doctor?.employee.lastName + " " + b.doctor?.employee.firstName)
       },
       {
         title: "Appointment Date",
@@ -118,6 +102,7 @@ class Appointments extends Component {
 
           </div>
         ),
+        sorter: (a, b) => dateSort(a.date, b.date)
       },
       {
         title: "Status",
@@ -128,7 +113,7 @@ class Appointments extends Component {
             </Tag>
           </span>
         ),
-
+        sorter: (a, b) => stringSort(a.status ? "Active" : "Inactive", b.status ? "Active" : "Inactive")
       },
       {
         title: "Action",
@@ -188,7 +173,7 @@ class Appointments extends Component {
                 <img src={Sent_img} alt="" width={50} height={46} />
                 <h3>Are you sure want to delete this Appointment?</h3>
                 <div className="m-t-20">
-                  <a href="#" className="btn btn-white mr-0" data-dismiss="modal">Close</a>                  
+                  <a href="#" className="btn btn-white mr-0" data-dismiss="modal">Close</a>
                   <a href="#" className="btn btn-danger" data-dismiss="modal" onClick={this.deleteData}>Delete</a>
                 </div>
               </div>

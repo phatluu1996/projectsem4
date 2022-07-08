@@ -33,11 +33,23 @@ class EditSchedule extends Component {
     this.onChangeMessage = this.onChangeMessage.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
     this.availableDaysDisplay = this.availableDaysDisplay.bind(this);
+    this.disabledHours = this.disabledHours.bind(this);
+    this.disabledMinutes = this.disabledMinutes.bind(this);
+  }
+
+  disabledHours() {
+    return [0, 1, 2, 3, 4, 5, 6, 7, 19, 20, 21, 22, 23, 24];
+  }
+
+  disabledMinutes(selectHour) {
+    if (selectHour == 18)
+      return [0, 15, 30, 45];
   }
 
   onChangeDoctor(val) {
     const tmp = { ...this.state.data };
     tmp.doctor = this.state.doctors.filter(doc => doc.id === val)[0];
+    // tmp.doctor = {id : val}
     this.setState({ data: tmp });
   }
 
@@ -92,7 +104,8 @@ class EditSchedule extends Component {
   onSubmit(e) {
     e.preventDefault();
     if (!isFormValid(e)) return;
-
+    // const updateData = {...this.state.data};
+    // updateData.doctor = {id : updateData.doctor.id}
     axiosAction(`/schedules/${this.id}`, UPDATE, (res) => {
       notify('success', '', 'Success')
       this.props.history.push("/admin/schedules");
@@ -179,7 +192,8 @@ class EditSchedule extends Component {
                     <div className="form-group">
                       <label>End Time</label>
                       <TimePicker name='end' showSecond={false} format={"HH:mm"} disabledHours={this.disabledHours} disabledMinutes={this.disabledMinutes} className={this.state.data.end ? "form-control is-valid" : "form-control is-invalid"}
-                        minuteStep={15} onChange={this.onChangeEndTime} onSelect={this.onChangeEndTime} value={toMoment(this.state.data.end)}></TimePicker>
+                        minuteStep={15} onChange={this.onChangeEndTime} onSelect={this.onChangeEndTime} value={toMoment(this.state.data.end)} 
+                        ></TimePicker>
                       <div className="invalid-feedback">End time cannot be empty</div>
                     </div>
                   </div>

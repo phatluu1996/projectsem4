@@ -35,6 +35,7 @@ class AddSchedule extends Component {
   onChangeDoctor(val) {
     const tmp = { ...this.state.data };
     tmp.doctor = this.state.doctors.filter(doc => doc.id === val)[0];
+    // tmp.doctor = {id : val}
     this.setState({ data: tmp });
   }
 

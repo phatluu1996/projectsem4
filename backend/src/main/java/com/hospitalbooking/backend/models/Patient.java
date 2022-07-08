@@ -17,8 +17,8 @@ public class Patient extends UserProfile{
 //            mappedBy = "patient")
 //    @JoinColumn(name = "doctor_id", nullable = true)
 //    @JsonIgnoreProperties("patient")
-    @OneToOne(fetch = FetchType.EAGER, optional = false)
-    @JsonIgnoreProperties("patient")
+    @OneToOne
+    @JsonIgnoreProperties(value = "patient", allowSetters = true)
     private User user;
 
     @OneToMany
