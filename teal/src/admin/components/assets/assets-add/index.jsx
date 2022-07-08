@@ -1,5 +1,6 @@
 import React, { Component } from "react";
-import { axiosAction, isValid, isFormValid, GET , ADD , notify  } from "../../../../actions";
+import { axiosAction, isValid, isFormValid , notify } from "../../../../actions";
+import { GET , ADD} from "../../../../constants";
 import OpenChat from "../../sidebar/openchatheader";
 import { DatePicker, Select } from 'antd';
 
@@ -12,7 +13,7 @@ class AssetsAdd extends Component {
       data: {
         assetName: null, // 
         purchaseDate: null, //
-        manufacturer: null,
+        manufacture: null,
         model: null,
         serialNumber: null, //
         supplier: null,
@@ -47,7 +48,7 @@ class AssetsAdd extends Component {
 
   onSelectEmp = (value) => {
     const tmp = { ...this.state.data };
-    tmp.employee = value
+    tmp.employee = this.state.employees[value];
     this.setState({
       data: tmp
     })
@@ -68,6 +69,7 @@ class AssetsAdd extends Component {
     console.log(tmp);
     if (!isFormValid(e)) return;
     axiosAction("/assets", ADD , res => {
+      console.log(res);
       notify('success', '','Success')
       this.props.history.push("/admin/assets");
     },(err) => notify('error', "Error"),tmp);
@@ -83,8 +85,8 @@ class AssetsAdd extends Component {
       case 'purchaseDate':
         tmp.purchaseDate = value;
         break;
-      case 'manufacturer':
-        tmp.manufacturer = value;
+      case 'manufacture':
+        tmp.manufacture = value;
         break;
       case 'employee':
         tmp.employee = value;
@@ -175,9 +177,9 @@ class AssetsAdd extends Component {
                 <div className="row">
                   <div className="col-md-6">
                     <div className="form-group">
-                      <label>Manufacturer <span className="text-danger">*</span></label>
-                      <input className={isValid(this.state.data?.manufacturer)} onChange={(e) => this.onChange(e, "manufacturer")} type="text" />
-                      <div className="invalid-feedback">Manufacturer cannot be empty</div>
+                      <label>Manufacture <span className="text-danger">*</span></label>
+                      <input className={isValid(this.state.data?.manufacture)} onChange={(e) => this.onChange(e, "manufacture")} type="text" />
+                      <div className="invalid-feedback">Manufacture cannot be empty</div>
                     </div>
                   </div>
                   <div className="col-md-6">
@@ -224,6 +226,7 @@ class AssetsAdd extends Component {
                       <label>Status</label>
                       <Select
                         bordered={false}
+                        value={this.state.data?.status}
                         style={{ width: '100%' }}
                         name='status'
                         className={isValid(this.state.data?.status != null)}

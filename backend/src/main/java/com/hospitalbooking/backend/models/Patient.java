@@ -2,6 +2,7 @@ package com.hospitalbooking.backend.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -34,8 +35,8 @@ public class Patient extends UserProfile{
         this.appointments = appointments;
     }
 
-    public Patient(Long id, String cId, String firstName, String lastName, String gender, Date dateOfBirth, String email, String phoneNumber, Address address, boolean retired, List<Appointment> appointments) {
-        super(id, cId, firstName, lastName, gender, dateOfBirth, email, phoneNumber, address, retired);
+    public Patient(Long id, String cId, String firstName, String lastName, String gender, Date dateOfBirth, String email, String phoneNumber , String image, Address address, boolean retired, List<Appointment> appointments) {
+        super(id, cId, firstName, lastName, gender, dateOfBirth, email, phoneNumber,image, address, retired);
         this.appointments = appointments;
     }
 

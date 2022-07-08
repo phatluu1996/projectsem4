@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import OpenChat from "../../sidebar/openchatheader";
-import { User_img } from "../../imagepath";
+import { User_image } from "../../imagepath";
 import { axiosAction, isFormValid, isValid, notify } from '../../../../actions';
 import { GET, ADD } from "../../../../constants";
 import { DatePicker, Select } from 'antd';
@@ -23,6 +23,7 @@ class AddPatient extends Component {
         email: null,
         phoneNumber: null,
         cId: null,
+        image: null,
         address: {
           postalCode: null,
           province: null,
@@ -40,6 +41,7 @@ class AddPatient extends Component {
     this.onChange = this.onChange.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
     this.onSelectCountry = this.onSelectCountry.bind(this);
+    this.onSelectImage = this.onSelectImage.bind(this);
     this.onChangeDate = this.onChangeDate.bind(this);
   }
 
@@ -71,6 +73,16 @@ class AddPatient extends Component {
       data: tmp
     })
   }
+
+  onSelectImage = (e) => {
+    const tmp = { ...this.state.data };
+    var file = e.target.files[0];
+    tmp.image = URL.createObjectURL(file);
+    this.setState({
+      data: tmp
+    })
+  }
+
 
   onSubmit = (e) => {
     e.preventDefault();
@@ -183,13 +195,13 @@ class AddPatient extends Component {
                   <div className="col-sm-6">
                     <div className="form-group">
                       <label>Date of Birth<span className="text-danger">*</span></label>
-                      <DatePicker name='dateOfBirth' 
+                      <DatePicker name='dateOfBirth'
                         className={isValid(this.state.data.dateOfBirth)} aria-required
-                        showTime={false} 
-                        format="YYYY-MM-DD" 
+                        showTime={false}
+                        format="YYYY-MM-DD"
                         clearIcon={true}
-                        allowClear={true} 
-                        onChange={this.onChangeDate} 
+                        allowClear={true}
+                        onChange={this.onChangeDate}
                         onSelect={this.onChangeDate}></DatePicker>
                       <div className="invalid-feedback">Date of birth cannot be empty</div>
                     </div>
@@ -288,10 +300,15 @@ class AddPatient extends Component {
                       <label>Avatar</label>
                       <div className="profile-upload">
                         <div className="upload-img">
-                          <img alt="" src={User_img} />
+                          <img alt="" src={this.state.data?.image} />
                         </div>
                         <div className="upload-input">
-                          <input type="file" className="form-control" />
+                          <input
+                            ref="file"
+                            type="file"
+                            multiple="true"
+                            onChange={this.onSelectImage}
+                            className="form-control" />
                         </div>
                       </div>
                     </div>
