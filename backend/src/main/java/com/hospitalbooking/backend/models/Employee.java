@@ -3,6 +3,7 @@ package com.hospitalbooking.backend.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -48,8 +49,8 @@ public class Employee  extends UserProfile{
         this.leaves = leaves;
     }
 
-    public Employee(Long id, String cId, String firstName, String lastName, String gender, Date dateOfBirth, String email, String phoneNumber, Address address, boolean retired, String employeeRole, boolean status, int remainingLeave, Date joiningDate, List<EmployeeLeave> leaves) {
-        super(id, cId, firstName, lastName, gender, dateOfBirth, email, phoneNumber, address, retired);
+    public Employee(Long id, String cId, String firstName, String lastName, String gender, Date dateOfBirth, String email, String phoneNumber, String image, Address address, boolean retired, String employeeRole, boolean status, int remainingLeave, Date joiningDate, List<EmployeeLeave> leaves) {
+        super(id, cId, firstName, lastName, gender, dateOfBirth, email, phoneNumber,image, address, retired);
         this.employeeRole = employeeRole;
         this.status = status;
         this.remainingLeave = remainingLeave;

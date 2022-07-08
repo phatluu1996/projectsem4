@@ -26,6 +26,8 @@ public class UserProfile {
     private String email;
     @Column(name = "phone_number", length = 15, columnDefinition = "nvarchar(15)")
     private String phoneNumber;
+    @Column(name = "image", length = 250, columnDefinition = "nvarchar(250)")
+    private String image;
     @ManyToOne
     @JoinColumn(name = "address_id", referencedColumnName = "id")
     private Address address;
@@ -35,7 +37,7 @@ public class UserProfile {
     public UserProfile() {
     }
 
-    public UserProfile(Long id, String cId, String firstName, String lastName, String gender, Date dateOfBirth, String email, String phoneNumber, Address address, boolean retired) {
+    public UserProfile(Long id, String cId, String firstName, String lastName, String gender, Date dateOfBirth, String email, String phoneNumber, String image, Address address, boolean retired) {
         this.id = id;
         this.cId = cId;
         this.firstName = firstName;
@@ -44,6 +46,7 @@ public class UserProfile {
         this.dateOfBirth = dateOfBirth;
         this.email = email;
         this.phoneNumber = phoneNumber;
+        this.image = image;
         this.address = address;
         this.retired = retired;
     }
@@ -112,6 +115,14 @@ public class UserProfile {
         this.phoneNumber = phoneNumber;
     }
 
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
     public Address getAddress() {
         return address;
     }
@@ -127,4 +138,5 @@ public class UserProfile {
     public void setRetired(boolean retired) {
         this.retired = retired;
     }
+
 }

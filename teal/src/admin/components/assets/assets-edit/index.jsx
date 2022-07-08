@@ -1,7 +1,9 @@
 import React, { Component } from "react";
+import { axiosActions, axiosAction, isValid, isFormValid , notify } from "../../../../actions";
+import { GET , UPDATE } from "../../../../constants";
 import OpenChat from "../../sidebar/openchatheader";
-import { axiosActions, isValid, isFormValid, GET , UPDATE } from "../../../../actions";
 import { DatePicker, Select } from 'antd';
+import { toMoment } from '../../../../utils';
 
 class EditAssets extends Component {
   id = this.props.match.params.id;
@@ -14,12 +16,12 @@ class EditAssets extends Component {
       data: {
         assetName: null, // 
         purchaseDate: null, //
-        manufacturer: null,
+        manufacture: null,
         model: null,
         serialNumber: null, //
         supplier: null,
-        warranty: 0, //
-        cost: 0,
+        warranty: null, //
+        cost: null,
         status: null,
         description: null,
         employee: null //
@@ -37,6 +39,7 @@ class EditAssets extends Component {
       url: "/assets/"+this.id,
       method: GET,
       callback: (res) => {
+        console.log(res)
         this.setState({
           data: res.data,
           loading: false
@@ -71,7 +74,7 @@ class EditAssets extends Component {
 
   onSelectEmp = (value) => {
     const tmp = { ...this.state.data };
-    tmp.employee = value
+    tmp.employee = this.state.employees[value];
     this.setState({
       data: tmp
     })
@@ -84,7 +87,7 @@ class EditAssets extends Component {
     const tmp = { ...this.state.data }
     console.log(tmp);
     if (!isFormValid(e)) return;
-    axiosAction("/assets",UPDATE, res => {
+    axiosAction("/assets/"+this.id,UPDATE, res => {
       notify('success', '','Success')
       this.props.history.push("/admin/assets");
     },(err) => notify('error', "Error"),tmp);
@@ -100,8 +103,8 @@ class EditAssets extends Component {
       case 'purchaseDate':
         tmp.purchaseDate = value;
         break;
-      case 'manufacturer':
-        tmp.manufacturer = value;
+      case 'manufacture':
+        tmp.manufacture = value;
         break;
       case 'employee':
         tmp.employee = value;
@@ -164,13 +167,13 @@ class EditAssets extends Component {
                         <DatePicker
                           defaultOpen
                           className={isValid(this.state.data?.purchaseDate != null)} aria-required
-                          value={toMoment(this.state.data?.dateOfBirth)}
+                          value={toMoment(this.state.data?.purchaseDate)}
                           showTime={false}
                           format="YYYY-MM-DD"
                           clearIcon={true}
                           allowClear={true}
-                          onChange={this.onChangeDate}
-                          onSelect={this.onChangeDate}
+                          onChange={(e)=>this.onChangeDate(e)}
+                          onSelect={(e)=>this.onChangeDate(e)}
                         ></DatePicker>
                       </div>
                       <div className="invalid-feedback">Please choise assets purchase date !</div>
@@ -194,9 +197,9 @@ class EditAssets extends Component {
                 <div className="row">
                   <div className="col-md-6">
                     <div className="form-group">
-                      <label>Manufacturer <span className="text-danger">*</span></label>
-                      <input className={isValid(this.state.data?.manufacturer)} defaultValue={this.state.data?.manufacturer} onChange={(e) => this.onChange(e, "manufacturer")} type="text" />
-                      <div className="invalid-feedback">Manufacturer cannot be empty</div>
+                      <label>Manufacture <span className="text-danger">*</span></label>
+                      <input className={isValid(this.state.data?.manufacture)} defaultValue={this.state.data?.manufacture} onChange={(e) => this.onChange(e, "manufacture")} type="text" />
+                      <div className="invalid-feedback">Manufacture cannot be empty</div>
                     </div>
                   </div>
                   <div className="col-md-6">
@@ -242,7 +245,7 @@ class EditAssets extends Component {
                     <div className="form-group">
                       <label>Status</label>
                       <Select
-                        defaultValue={this.state.data?.status}
+                        value={this.state.data?.status}
                         bordered={false}
                         style={{ width: '100%' }}
                         name='status'
@@ -258,7 +261,7 @@ class EditAssets extends Component {
                     <div className="form-group">
                       <label>Asset User</label>
                       <Select
-                        defaultValue={this.state.data?.employee}
+                        value={this.state.data?.employee?.firstName +" "+ this.state.data?.employee?.lastName}
                         bordered={false}
                         style={{ width: '100%' }}
                         name='status'
