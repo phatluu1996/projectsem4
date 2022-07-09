@@ -266,8 +266,8 @@ class AppUniversal extends Component {
             <AdminRoute component={AdminAddEmployee} path="/admin/employees/add" exact />
             <AdminRoute component={AdminEditEmployee} path="/admin/employees/update/:id" exact />
             <AdminRoute component={AdminLeave} path="/admin/leaves" exact />
-            <AdminRoute component={AdminLeaveAdd} path="/admin/leaves/add" exact />
-            <AdminRoute component={AdminLeaveEdit} path="/admin/leaves/update/:id" exact />
+            <AdminRoute component={AdminAddLeave} path="/admin/leaves/add" exact />
+            <AdminRoute component={AdminEditLeave} path="/admin/leaves/update/:id" exact />
           </Switch>
         </div>
         

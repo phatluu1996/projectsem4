@@ -52,14 +52,12 @@ public class PatientController {
 
     @PostMapping(value = "/patients")
     public ResponseEntity<Patient> add(@RequestBody Patient patient) throws IOException {
-
-        if(patient.getImage() != null){
+        if(patient.getImage() != null && !patient.getImage().isEmpty()){
             String fileName =patient.getFirstName()+patient.getLastName()+patient.getcId()+".png";
             String filePath = FileUploadUtil.UPLOAD_DIR + fileName;
             FileUploadUtil.saveFile(patient.getImage(),fileName);
             patient.setImageByteArr(patient.getImage());
             patient.setImage(filePath);
-
         }
         addressRepos.save(patient.getAddress());
         User user = patient.getUser();

@@ -21,7 +21,7 @@ public class Appointment {
 
     @ManyToOne
     @JoinColumn(name = "patient_id", referencedColumnName = "id")
-    @JsonIgnoreProperties("appointments")
+    @JsonIgnoreProperties(value = "appointments", allowSetters = true)
     private Patient patient;
     @ManyToOne
     @JoinColumn(name = "doctor_id", referencedColumnName = "id")

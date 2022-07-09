@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Table } from "antd";
+import { DatePicker, Table } from "antd";
 import { Tag } from 'antd';
 import { Link } from 'react-router-dom';
 import { User_img, Sent_img } from "../imagepath"
@@ -17,23 +17,76 @@ class Appointments extends Component {
     this.state = {
       loading: true,
       data: [],
-      selectdId: 0
+      filterData: [],
+      selectdId: 0,
+      from: null,
+      to: null
     };
     this.fetchData = this.fetchData.bind(this);
     this.deleteData = this.deleteData.bind(this);
+    this.filterData = this.filterData.bind(this);
+    this.resetFilter = this.resetFilter.bind(this);
+    this.disabledHours = this.disabledHours.bind(this);
+    this.disabledMinutes = this.disabledMinutes.bind(this);
+  }
+
+  disabledHours() {
+    return [0, 1, 2, 3, 4, 5, 6, 7, 19, 20, 21, 22, 23, 24];
+  }
+
+  disabledMinutes(selectHour) {
+    if (selectHour == 18)
+      return [0, 15, 30, 45];
+  }
+
+  filterData(e) {
+    e.preventDefault();
+    let form = e.target;
+    let tmp = [...this.state.data];
+    if (form.id.value) {
+      tmp = tmp.filter(e => ("APM-" + e.id).includes(form.id.value));
+    }
+
+    if (form.doctorName.value) {
+      tmp = tmp.filter(e => (e.doctor.employee.firstName.trim() + " " + e.doctor.employee.lastName.trim()).includes(form.doctorName.value));
+    }
+
+    if (form.patientName.value) {
+      tmp = tmp.filter(e => (e.patient.firstName.trim() + " " + e.patient.lastName.trim()).includes(form.patientName.value));
+    }
+
+    if (form.from.value) {
+      const formStart = this.state.from;
+      tmp = tmp.filter(e => moment(e.date).isAfter(formStart));
+    }
+
+    if (form.to.value) {
+      const formEnd = this.state.to;
+      tmp = tmp.filter(e => moment(e.date).isBefore(formEnd));
+    }
+
+    this.setState({ filterData: tmp });
+  }
+
+  resetFilter(e) {
+    let form = e.target;
+    form.id.value = '';
+    form.doctorName.value = '';
+    form.patientName.value = '';
+    this.setState({ from: null, to: null });
   }
 
   fetchData() {
     axiosAction("/appointments", GET, res => {
       this.setState({
         data: res.data,
+        filterData: res.data,
         loading: false,
       });
     }, () => { });
   }
 
   deleteData() {
-
     const deleteReq = {
       url: "/appointments/" + this.state.selectdId,
       method: DELETE,
@@ -61,6 +114,11 @@ class Appointments extends Component {
 
   componentDidMount() {
     this.fetchData();
+    if ($('.floating').length > 0) {
+      $('.floating').on('focus blur', function (e) {
+        $(this).parents('.form-focus').toggleClass('focused', (e.type === 'focus' || this.value.length > 0));
+      }).trigger('blur');
+    }
   }
 
   render() {
@@ -141,6 +199,48 @@ class Appointments extends Component {
               </Link>
             </div>
           </div>
+          <form className="row filter-row" noValidate onSubmit={this.filterData} onReset={this.resetFilter}>
+            <div className="col-sm-2">
+              <div className="form-group form-focus">
+                <label className="focus-label" >Appointment ID</label>
+                <input type="text" className="form-control floating" name="id" />
+              </div>
+            </div>
+            <div className="col-sm-2">
+              <div className="form-group form-focus">
+                <label className="focus-label">Patient Name</label>
+                <input type="text" className="form-control floating" name="patientName" />
+              </div>
+            </div>
+            <div className="col-sm-2">
+              <div className="form-group form-focus">
+                <label className="focus-label">Doctor Name</label>
+                <input type="text" className="form-control floating" name="doctorName" />
+              </div>
+            </div>            
+            <div className="col-sm-2">
+              <div className="form-group form-focus focused">
+                <label className="focus-label">From</label>
+                <DatePicker name='from' showSecond={false} format={"YYYY-MM-DD HH:mm"} showHour={true} showMinute={true} showTime={true} 
+                  className="form-control" minuteStep={15} onChange={(val) => this.setState({ from: val })} 
+                  onSelect={(val) => this.setState({ from: val })} value={this.state.from}></DatePicker>
+              </div>
+            </div>
+            <div className="col-sm-2">
+              <div className="form-group form-focus focused">
+                <label className="focus-label">To</label>
+                <DatePicker name='to' showSecond={false} format={"YYYY-MM-DD HH:mm"} showHour={true} showMinute={true} showTime={true} 
+                  className="form-control" minuteStep={15} onChange={(val) => this.setState({ to: val })} 
+                  onSelect={(val) => this.setState({ to: val })} value={this.state.to}></DatePicker>
+              </div>
+            </div>
+            <div className="col-sm-1">
+              <button className="btn btn-success btn-block" type='submit'> Search </button>
+            </div>
+            <div className="col-sm-1">
+              <button className="btn btn-danger btn-block" type='reset'> Reset </button>
+            </div>
+          </form>
           <div className="row">
             <div className="col-md-12">
               <Table
@@ -150,11 +250,11 @@ class Appointments extends Component {
                 style={{ overflowX: "scroll" }}
                 columns={columns}
                 // bordered
-                dataSource={data}
+                dataSource={this.state.filterData}
                 rowKey={(record) => record.id}
                 showSizeChanger={true}
                 pagination={{
-                  total: data.length,
+                  total: this.state.filterData.length,
                   showTotal: (total, range) =>
                     `Showing ${range[0]} to ${range[1]} of ${total} entries`,
                   showSizeChanger: true,

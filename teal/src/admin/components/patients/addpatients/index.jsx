@@ -56,23 +56,21 @@ class AddPatient extends Component {
 
   onSelectCountry = (value) => {
     const tmp = { ...this.state.data };
-    if (!this.state.countries[value].states.find(state => tmp.address.province == state.name)) {
-      tmp.address.province = "";
+    tmp.address.country = value;
+    if (tmp.address.province && !countries.find(ctr => ctr.name == value)?.states.find(st => st.name == tmp.address.province)) {
+      tmp.address.province = '';
     }
-    tmp.address.country = this.state.countries[value].name
     this.setState({
       crrValue: null,
-      countrySelect: this.state.countries[value],
+      countrySelect: countries.find(ctr => ctr.name == value),
       data: tmp
     });
   }
-
+ 
   onSelectState = (value) => {
     const tmp = { ...this.state.data };
-    tmp.address.province = this.state.countrySelect.states[value].name
-    this.setState({
-      data: tmp
-    })
+    tmp.address.province = value;
+    this.setState({ data: tmp });
   }
 
   onSelectImage = (e) => {
@@ -246,14 +244,14 @@ class AddPatient extends Component {
                           <label>Country<span className="text-danger">*</span></label>
                           <Select
                             showSearch={true}
-                            defaultValue={""}
                             bordered={false}
+                            value={this.state.data.address.country}
                             style={{ width: '100%' }}
                             name='country'
-                            className={isValid(this.state.data.address.country != null)}
+                            className={isValid(this.state.data.address.country)}
                             onChange={this.onSelectCountry}>
                             {this.state.countries?.map((country, index) => {
-                              return (<Select.Option key={index}>{country.name}</Select.Option>)
+                              return (<Select.Option key={index} value={country.name}>{country.name}</Select.Option>)
                             })}
                           </Select>
                           <div className="invalid-feedback">Please select country cannot be empty</div>
@@ -264,15 +262,14 @@ class AddPatient extends Component {
                           <label>State/Province<span className="text-danger">*</span></label>
                           <Select
                             showSearch={true}
-                            defaultValue={""}
                             bordered={false}
                             value={this.state.data.address.province}
                             style={{ width: '100%' }}
                             name='state'
-                            className={isValid(this.state.data.address.province != null)}
+                            className={isValid(this.state.data.address.province)}
                             onChange={this.onSelectState}>
                             {this.state.countrySelect?.states?.map((state, index) => {
-                              return (<Select.Option key={index}>{state.name}</Select.Option>)
+                              return (<Select.Option key={index} value={state.name}>{state.name}</Select.Option>)
                             })}
                           </Select>
                         </div>}

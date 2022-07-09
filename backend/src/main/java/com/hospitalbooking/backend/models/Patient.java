@@ -24,7 +24,7 @@ public class Patient extends UserProfile{
 
     @OneToMany
     @JoinColumn(name = "patient_id", referencedColumnName = "id")
-    @JsonIgnoreProperties("patient")
+    @JsonIgnoreProperties(value = "patient", allowSetters = true)
     private List<Appointment> appointments;
 
     public Patient() {

@@ -8,7 +8,7 @@ import {
   onShowSizeChange,
 } from "../../paginationfunction";
 import { Link } from 'react-router-dom';
-import { axiosAction, axiosActions, notify } from "../../../../actions";
+import { axiosAction, axiosActions, notify, numberSort } from "../../../../actions";
 import { DELETE, GET, leave_type, leave_status } from "../../../../constants";
 
 class Leave extends Component {
@@ -19,8 +19,8 @@ class Leave extends Component {
       data: [],
       filterData: [],
       selectdId: 0,
-      from:'',
-      to:''
+      from: '',
+      to: ''
     };
     this.fetchData = this.fetchData.bind(this);
     this.deleteData = this.deleteData.bind(this);
@@ -70,6 +70,10 @@ class Leave extends Component {
     let form = e.target;
     let tmp = [...this.state.data];
 
+    if (form.id.value) {
+
+    }
+
     if (form.name.value) {
       tmp = tmp.filter(e => (e.firstName.trim() + " " + e.lastName.trim()).includes(form.name.value));
     }
@@ -98,7 +102,7 @@ class Leave extends Component {
     // e.target.to.value = '';
     e.target.status.value = '';
     e.target.type.value = '';
-    this.setState({from : '', to : ''})
+    this.setState({ from: '', to: '' })
   }
 
   componentDidMount() {
@@ -111,17 +115,17 @@ class Leave extends Component {
   }
   render() {
     const { data } = this.state;
-    const leave_Type = [
-      { value: 'select', label: 'select' },
-      { value: 'Casual Leave', label: 'Casual Leave' },
-      { value: 'Medical Leave', label: 'Medical Leave' }
-    ]
-    const leave_status = [
-      { value: 'Pending', label: 'Pending' },
-      { value: 'Approved', label: 'Approved' },
-      { value: 'Rejected', label: 'Rejected' }
-    ]
+
     const columns = [
+      {
+        title: "Leave ID",
+        render: (text, record) => (
+          <div>
+            {"LEA-" + record.id}
+          </div>
+        ),
+        sorter: (a, b) => numberSort(a.id, b.id)
+      },
       {
         title: "Name",
         dataIndex: "Name",
@@ -178,7 +182,7 @@ class Leave extends Component {
           <div className="dropdown dropdown-action">
             <a href="#" className="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i className="fas fa-ellipsis-v" /></a>
             <div className="dropdown-menu dropdown-menu-right">
-              <Link className="dropdown-item" to="/edit-leave"><i className="fas fa-pencil-alt m-r-5" /> Edit</Link>
+              <Link className="dropdown-item" to={"/admin/leaves/update/"}><i className="fas fa-pencil-alt m-r-5" /> Edit</Link>
               <a className="dropdown-item" href="#" title="Decline" data-toggle="modal" data-target="#delete_approve"><i className="fas fa-trash m-r-5" /> Delete</a>
             </div>
           </div>
@@ -195,17 +199,24 @@ class Leave extends Component {
               <h4 className="page-title">Leave Request</h4>
             </div>
             <div className="col-sm-4 col-6 text-right m-b-30">
-              <Link to="/add-leave" className="btn btn-primary btn-rounded float-right"><i className="fas fa-plus" /> Add Leave</Link>
+              <Link to="/admin/leaves/add" className="btn btn-primary btn-rounded float-right"><i className="fas fa-plus" /> Add Leave</Link>
             </div>
           </div>
           <form className="row filter-row" onSubmit={this.filterData} onReset={this.resetFilter}>
-            <div className="col-sm-2">
+            <div className="col-sm-1">
+              <div className="form-group form-focus">
+                <label className="focus-label">Leave ID</label>
+                <input type="text" name="id" className="form-control floating" />
+              </div>
+            </div>
+            <div className="col-sm-3">
               <div className="form-group form-focus">
                 <label className="focus-label">Employee Name</label>
                 <input type="text" name="name" className="form-control floating" />
               </div>
             </div>
-            <div className="col-sm-2">
+
+            <div className="col-sm-1">
               <div className="form-group form-focus select-focus">
                 <label className="focus-label">Leave Type</label>
                 <select name="type" className="form-control floating">
@@ -216,7 +227,7 @@ class Leave extends Component {
                 </select>
               </div>
             </div>
-            <div className="col-sm-2">
+            <div className="col-sm-1">
               <div className="form-group form-focus select-focus">
                 <label className="focus-label">Leave Status</label>
                 <select name="status" className="form-control floating">
@@ -232,7 +243,7 @@ class Leave extends Component {
                 <label className="focus-label">From</label>
                 <DatePicker name='from' className="form-control" disabledTime={true}
                   showTime={false} format="YYYY-MM-DD" clearIcon={true}
-                  allowClear={true} value={this.state.from} onChange={(val) => this.setState({from : val})}></DatePicker>
+                  allowClear={true} value={this.state.from} onChange={(val) => this.setState({ from: val })}></DatePicker>
               </div>
             </div>
             <div className="col-sm-2">
@@ -240,9 +251,10 @@ class Leave extends Component {
                 <label className="focus-label">To</label>
                 <DatePicker name='to' className="form-control" disabledTime={true}
                   showTime={false} format="YYYY-MM-DD" clearIcon={true}
-                  allowClear={true} value={this.state.to} onChange={(val) => this.setState({to : val})}></DatePicker>
+                  allowClear={true} value={this.state.to} onChange={(val) => this.setState({ to: val })}></DatePicker>
               </div>
             </div>
+
             <div className="col-sm-1">
               <button className="btn btn-success btn-block" type='submit'> Search </button>
             </div>

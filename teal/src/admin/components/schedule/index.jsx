@@ -27,6 +27,17 @@ class Schedule extends Component {
     this.availableDaysDisplay = this.availableDaysDisplay.bind(this);
     this.filterData = this.filterData.bind(this);
     this.resetFilter = this.resetFilter.bind(this);
+    this.disabledHours = this.disabledHours.bind(this);
+    this.disabledMinutes = this.disabledMinutes.bind(this);
+  }
+
+  disabledHours() {
+    return [0, 1, 2, 3, 4, 5, 6, 7, 19, 20, 21, 22, 23, 24];
+  }
+
+  disabledMinutes(selectHour) {
+    if (selectHour == 18)
+      return [0, 15, 30, 45];
   }
 
   filterData(e) {
@@ -51,10 +62,10 @@ class Schedule extends Component {
       tmp = tmp.filter(e => moment().set({hour:start(e).hour(),minute:start(e).minute(),second:0,millisecond:0}).isAfter(moment().set({hour:formStart.hour(),minute:formStart.minute(),second:0,millisecond:0})));
     }
 
-    if(form.from.value){
+    if(form.to.value){
       const end = (e) => {return moment(e.end)};      
       const formEnd = this.state.to;
-      tmp = tmp.filter(e => moment().set({hour:start(e).hour(),minute:start(e).minute(),second:0,millisecond:0}).isBefore(moment().set({hour:formEnd.hour(),minute:formEnd.minute(),second:0,millisecond:0})));
+      tmp = tmp.filter(e => moment().set({hour:end(e).hour(),minute:end(e).minute(),second:0,millisecond:0}).isBefore(moment().set({hour:formEnd.hour(),minute:formEnd.minute(),second:0,millisecond:0})));
     }
 
     this.setState({ filterData: tmp });
@@ -82,7 +93,6 @@ class Schedule extends Component {
       url: "/schedules",
       method: GET,
       callback: (res) => {
-        notify('success', '', 'Success');
         this.setState({
           data: res.data,
           filterData : res.data,

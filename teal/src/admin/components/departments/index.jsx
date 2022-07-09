@@ -7,7 +7,6 @@ import { Link } from 'react-router-dom';
 import { itemRender, onShowSizeChange, } from "../../components/paginationfunction";
 import { axiosAction,notify, numberSort, stringSort } from '../../../actions';
 import { GET,DELETE } from "../../../constants";
-import { buildQueries } from "@testing-library/react";
  
 class Departments extends Component {
 
@@ -17,11 +16,35 @@ class Departments extends Component {
       isComponentWillUnMount: false,
       loading: true,
       data: [],
+      filterData: [],
       idDtl:""
     };
     this.handleDel = this.handleDel.bind(this);
     this.onClickDlt = this.onClickDlt.bind(this);
     this.fetchData = this.fetchData.bind(this);
+    this.filterData = this.filterData.bind(this);
+    this.resetFilter = this.resetFilter.bind(this);
+  }
+
+  filterData(e) {
+    e.preventDefault();
+    let form = e.target;
+    let tmp = [...this.state.data];
+    if (form.id.value) {
+      tmp = tmp.filter(e => ("DEP-" + e.id).includes(form.id.value));
+    }
+
+    if (form.name.value) {
+      tmp = tmp.filter(e => e.name.includes(form.name.value));
+    }
+
+    this.setState({ filterData: tmp });
+  }
+
+  resetFilter(e) {
+    let form = e.target;
+    form.id.value = '';
+    form.name.value = '';   
   }
    
 
@@ -36,9 +59,9 @@ class Departments extends Component {
 
   fetchData = () =>{
     axiosAction("/departments",GET, res => {
-      console.log(res);
       this.setState({
         data: res.data,
+        filterData: res.data,
         loading: false,
       });
     },(err) => notify('error', "Error"));
@@ -94,7 +117,7 @@ class Departments extends Component {
             {record.status ? "Active" : "InActive"}
           </Tag>
         ),
-        sorter: (a, b) => stringSort(a.status ? "Active" : "InActive", buildQueries.status ? "Active" : "InActive")
+        sorter: (a, b) => stringSort(a.status ? "Active" : "InActive", b.status ? "Active" : "InActive")
 
       },
       {
@@ -129,6 +152,26 @@ class Departments extends Component {
               </Link>
             </div>
           </div>
+          <form className="row filter-row" noValidate onSubmit={this.filterData} onReset={this.resetFilter}>
+            <div className="col-sm-4">
+              <div className="form-group form-focus">
+                <label className="focus-label" >Department ID</label>
+                <input type="text" className="form-control floating" name="id" />
+              </div>
+            </div>
+            <div className="col-sm-4">
+              <div className="form-group form-focus">
+                <label className="focus-label">Department Name</label>
+                <input type="text" className="form-control floating" name="name" />
+              </div>
+            </div>
+            <div className="col-sm-2">
+              <button className="btn btn-success btn-block" type='submit'> Search </button>
+            </div>
+            <div className="col-sm-2">
+              <button className="btn btn-danger btn-block" type='reset'> Reset </button>
+            </div>
+          </form>
           <div className="row">
             <div className="col-md-12">
               <div className="table-responsive">
@@ -138,12 +181,11 @@ class Departments extends Component {
                   style={{ overflowX: "auto" }}
                   columns={columns}
                   // bordered
-                  dataSource={data}
+                  dataSource={this.state.filterData}
                   rowKey={(record) => record.id}
                   showSizeChanger={true}
-                  onChange={(e)=>handleProceed(e)}
                   pagination={{
-                    total: data.length,
+                    total: this.state.filterData.length,
                     showTotal: (total, range) =>
                       `Showing ${range[0]} to ${range[1]} of ${total} entries`,
                     showSizeChanger: true,
