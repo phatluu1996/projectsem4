@@ -156,3 +156,14 @@ export const momentSort = (value1, value2) => {
     // return moment.utc(value1.timeStamp).diff(moment.utc(value2.timeStamp));
     return value1.diff(value2)
 }
+
+export const encodeBase64 = (file,callback) =>{
+      // Encode the file using the FileReader API
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        callback(reader.result);
+        // console.log(reader.result);
+        // Logs data:<type>;base64,wL2dvYWwgbW9yZ...
+      };
+      reader.readAsDataURL(file);
+}

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import OpenChat from "../../sidebar/openchatheader";
 import { User_image } from "../../imagepath";
-import { axiosAction, isFormValid, isValid, notify } from '../../../../actions';
+import { axiosAction, encodeBase64, isFormValid, isValid, notify } from '../../../../actions';
 import { GET, ADD } from "../../../../constants";
 import { DatePicker, Select } from 'antd';
 import { countries } from '../../../../address/index';
@@ -15,6 +15,7 @@ class AddPatient extends Component {
       crrValue: "",
       countries: countries,
       countrySelect: null,
+      img:null,
       data: {
         firstName: null,
         lastName: null,
@@ -77,9 +78,12 @@ class AddPatient extends Component {
   onSelectImage = (e) => {
     const tmp = { ...this.state.data };
     var file = e.target.files[0];
-    tmp.image = URL.createObjectURL(file);
-    this.setState({
-      data: tmp
+    encodeBase64(file, (res) => {
+      tmp.image = res;
+      this.setState({
+        data: tmp,
+        img:URL.createObjectURL(file)
+      })
     })
   }
 
