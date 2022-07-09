@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import OpenChat from "../../sidebar/openchatheader"
 import { User_img } from "../../imagepath"
-import { axiosAction, isFormValid, isValid, notify } from '../../../../actions';
+import { axiosAction, encodeBase64, isFormValid, isValid, notify } from '../../../../actions';
 import { GET, UPDATE } from "../../../../constants";
 import { countries } from '../../../../address';
 import { DatePicker, Select } from 'antd';
@@ -16,6 +16,7 @@ class EditPatient extends Component {
       crrValue: "",
       countries: countries,
       countrySelect: null,
+      img:null,
       data: {
         firstName: null,
         lastName: null,
@@ -23,6 +24,7 @@ class EditPatient extends Component {
         dateOfBirth: null,
         email: null,
         phoneNumber: null,
+        image:null,
         cId: null,
         address: {
           postalCode: null,
@@ -63,6 +65,7 @@ class EditPatient extends Component {
       console.log(res.data);
       this.setState({
         data: res.data,
+        img:URL.createObjectURL(res.data.image), 
         loading: false,
       });
     }, (err) => notify('error', "Error"));
@@ -88,6 +91,18 @@ class EditPatient extends Component {
     tmp.address.province = this.state.countrySelect.states[value].name
     this.setState({
       data: tmp
+    })
+  }
+  
+  onSelectImage = (e) => {
+    const tmp = { ...this.state.data };
+    var file = e.target.files[0];
+    encodeBase64(file, (res) => {
+      tmp.image = res;
+      this.setState({
+        data: tmp,
+        img:URL.createObjectURL(file)
+      })
     })
   }
 
@@ -307,13 +322,18 @@ class EditPatient extends Component {
                   <div className="form-group">
                     <label>Avatar <span className="text-danger">*</span></label>
                     <div className="profile-upload">
-                      <div className="upload-img">
-                        <img alt="" src={User_img} />
+                        <div className="upload-img">
+                          <img alt="" src={this.state.img} />
+                        </div>
+                        <div className="upload-input">
+                          <input
+                            ref="file"
+                            type="file"
+                            multiple="false"
+                            onChange={this.onSelectImage}
+                            className="form-control" />
+                        </div>
                       </div>
-                      <div className="upload-input">
-                        <input type="file" className="form-control" />
-                      </div>
-                    </div>
                   </div>
                 </div>
               </div>

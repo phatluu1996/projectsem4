@@ -26,8 +26,11 @@ public class UserProfile {
     private String email;
     @Column(name = "phone_number", length = 15, columnDefinition = "nvarchar(15)")
     private String phoneNumber;
-    @Column(name = "image", length = 250, columnDefinition = "nvarchar(250)")
+//    @Column(name = "image", columnDefinition = "nvarchar(250)")
+    @Lob
     private String image;
+    @Lob
+    private String imageByteArr;
     @ManyToOne
     @JoinColumn(name = "address_id", referencedColumnName = "id")
     private Address address;
@@ -139,4 +142,11 @@ public class UserProfile {
         this.retired = retired;
     }
 
+    public String getImageByteArr() {
+        return imageByteArr;
+    }
+
+    public void setImageByteArr(String imageByteArr) {
+        this.imageByteArr = imageByteArr;
+    }
 }
