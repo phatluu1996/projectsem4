@@ -55,6 +55,8 @@ class Register extends Component {
     this.handleChange = this.handleChange.bind(this);
     this.inputBorder = this.inputBorder.bind(this);
     this.inputClassname = this.inputClassname.bind(this);
+    this.onChangeCountry = this.onChangeCountry.bind(this);
+    this.onChangeProvince = this.onChangeProvince.bind(this);
 
   }
 
@@ -64,9 +66,9 @@ class Register extends Component {
     let data = { ...this.state.data };
     let statusChange = { ...this.state.statusChange };
 
-    var addressField = ["line", "country", "province", "city", "postalCode"];
+    var addressField = ["line", "city", "postalCode"];
 
-    if (addressField.indexOf(e.target.name) == -1) {
+    if (addressField.findIndex(field => field === e.target.name) == -1) {
 
       data[e.target.name] = e.target.value;
 
@@ -96,6 +98,32 @@ class Register extends Component {
     this.setState({ statusChange: statusChange });
   }
 
+  onChangeCountry(val) {
+    let data = { ...this.state.data };
+    let statusChange = { ...this.state.statusChange };
+
+    data.address.country = val;
+
+    if (data.address.province && !countries.filter(ctr => ctr.name == val)[0].states.find(st => st.name == data.address.province)) {
+      data.address.province = '';
+    }
+    statusChange.address.country = !(val === "");
+
+    this.setState({ data: data });
+    this.setState({ statusChange: statusChange });
+  }
+
+  onChangeProvince(val) {
+    const data = { ...this.state.data };
+    let statusChange = { ...this.state.statusChange };
+
+    data.address.province = val;
+    statusChange.address.province = !(val === "");
+
+    this.setState({ data: data });
+    this.setState({ statusChange: statusChange });
+  }
+
   handleSubmit = (e) => {
     e.preventDefault();
     var isAllValid = false;
@@ -118,28 +146,28 @@ class Register extends Component {
     isAllValid = this.state.statusChange.firstName && this.state.statusChange.lastName && this.state.statusChange.email
       && this.state.statusChange.password && this.state.statusChange.confirmPassword && this.state.statusChange.phone
       && this.state.statusChange.cid && this.state.statusChange.username && this.state.statusChange.address.line
-      // && this.state.statusChange.address.country && this.state.statusChange.address.province
+      && this.state.statusChange.address.country && this.state.statusChange.address.province
       && this.state.statusChange.address.city && this.state.statusChange.address.postalCode;
 
     if (!isAllValid) {
       this.setState({ data: dataCheck });
     } else {
       let newPatient = {
-        firstName: dataCheck.username,
+        firstName: dataCheck.firstName,
         lastName: dataCheck.lastName,
         username: dataCheck.username,
         password: dataCheck.password,
         email: dataCheck.email,
         phone: dataCheck.phone,
-        cid: dataCheck.cid,
+        cId: dataCheck.cid,
         address: dataCheck.address,
         role: 'user'
       };
 
-      // axiosAction("/register", ADD, (res) => {
-      //   notify('success', "Success")
-      //   this.props.history.push("/");
-      // }, (err) => notify('error', 'Error'), newPatient);
+      axiosAction("/register", ADD, (res) => {
+        notify('success', "Success")
+        this.props.history.push("/");
+      }, (err) => notify('error', 'Error'), newPatient);
     }
   }
 
@@ -149,6 +177,10 @@ class Register extends Component {
 
   inputClassname = (c1, c2) => {
     return c1 ? (c2 ? "form-control is-valid" : "form-control is-invalid") : "form-control";
+  }
+
+  inputClassnameSelect = (c1, c2) => {
+    return c1 ? (c2 ? "is-valid" : "is-invalid") : "";
   }
 
   render() {
@@ -277,48 +309,35 @@ class Register extends Component {
                       <div className="row">
                         <div className="form-group col-sm-4">
                           <label>Country</label>
-                          {/* <input
-                            type="text"
-                            style={this.inputBorder(this.state.data.phone != null, this.state.data.phone && this.state.statusChange.phone)}
-                            className={this.inputClassname(this.state.data.phone != null, this.state.data.phone && this.state.statusChange.phone)}
-                            name="state"
-                            onBlur={this.handleChange} /> */}
                           <Select
                             aria-autocomplete='none'
+                            border='1'
                             showSearch={true} bordered={false} size={"small"} style={{ width: '100%' }}
                             name='country'
                             className={this.inputClassname(this.state.data.address.country != null, this.state.data.address.country && this.state.statusChange.address.country)}
-                          // className={isValid(this.state.data.address?.province)} 
-                          onChange={(arg) => this.onChange(arg, "province")} 
+                            onChange={this.onChangeCountry} 
                           >
-                            {this.state.initCountries?.filter(ctr => ctr.name === this.state.data.address?.country)[0]?.states?.map((st, idx) => {
-                                  return (<Option key={idx} value={st.name}>{st.name}</Option>)
-                                })}
+                            {this.state.initCountries?.map((ctr, idx) => {
+                              return (<Option key={idx} value={ctr.name}>{ctr.name}</Option>)
+                            })}
                           </Select>
-                          <div className="invalid-feedback">Please enter phone number.</div>
+                          <div className="invalid-feedback">Please enter country.</div>
                         </div>
                         <div className="form-group col-sm-4">
                           <label>State</label>
-                          {/* <input
-                            type="text"
-                            style={this.inputBorder(this.state.data.phone != null, this.state.data.phone && this.state.statusChange.phone)}
-                            className={this.inputClassname(this.state.data.phone != null, this.state.data.phone && this.state.statusChange.phone)}
-                            name="country"
-                            onBlur={this.handleChange} /> */}
                           <Select
                             aria-autocomplete='none'
                             showSearch={true} bordered={false} size={"small"} style={{ width: '100%' }}
                             name='province'
                             className={this.inputClassname(this.state.data.address.province != null, this.state.data.address.province && this.state.statusChange.address.province)}
-                          // className={isValid(this.state.data.address?.province)} 
-                          onChange={(arg) => this.onChange(arg, "province")} 
-                          value={this.state.data.address.province}
+                            onChange={this.onChangeProvince} 
+                            value={this.state.data.address.province}
                           >
                             {this.state.initCountries?.filter(ctr => ctr.name === this.state.data.address?.country)[0]?.states?.map((st, idx) => {
-                                  return (<Option key={idx} value={st.name}>{st.name}</Option>)
-                                })}
+                              return (<Option key={idx} value={st.name}>{st.name}</Option>)
+                            })}
                           </Select>
-                          <div className="invalid-feedback">Please enter phone number.</div>
+                          <div className="invalid-feedback">Please enter province.</div>
                         </div>
                         <div className="form-group col-sm-4">
                           <label>City</label>

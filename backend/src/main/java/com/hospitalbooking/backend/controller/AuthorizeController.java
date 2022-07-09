@@ -1,13 +1,7 @@
 package com.hospitalbooking.backend.controller;
 
-import com.hospitalbooking.backend.models.Doctor;
-import com.hospitalbooking.backend.models.Employee;
-import com.hospitalbooking.backend.models.Patient;
-import com.hospitalbooking.backend.models.User;
-import com.hospitalbooking.backend.repository.DoctorRepos;
-import com.hospitalbooking.backend.repository.EmployeeRepos;
-import com.hospitalbooking.backend.repository.PatientRepos;
-import com.hospitalbooking.backend.repository.UserRepos;
+import com.hospitalbooking.backend.models.*;
+import com.hospitalbooking.backend.repository.*;
 import com.hospitalbooking.backend.security.jwt.JwtUtils;
 import com.hospitalbooking.backend.security.payload.request.LoginRequest;
 import com.hospitalbooking.backend.security.payload.request.RegisterRequest;
@@ -41,6 +35,9 @@ public class AuthorizeController {
 
     @Autowired
     private EmployeeRepos employeeRepos;
+
+    @Autowired
+    private AddressRepos addressRepos;
 
     @Autowired
     private PasswordEncoder encoder;
@@ -101,7 +98,7 @@ public class AuthorizeController {
         Patient patient;
 
         User user = new User(registerRequest.getUsername(),
-                encoder.encode(registerRequest.getPassword())
+            encoder.encode(registerRequest.getPassword())
         );
         user.setRetired(false);
 
@@ -114,12 +111,18 @@ public class AuthorizeController {
             user.setRole("USER");
 
             patient = new Patient();
-            patient.setFirstName(registerRequest.getUserFirstName());
-            patient.setLastName(registerRequest.getUserLastName());
+            patient.setFirstName(registerRequest.getFirstName());
+            patient.setLastName(registerRequest.getLastName());
+            patient.setcId(registerRequest.getcId());
             patient.setEmail(registerRequest.getEmail());
+            patient.setAddress(registerRequest.getAddress());
+            patient.setPhoneNumber(registerRequest.getPhone());
+            patient.setUser(user);
 
-            userRepos.save(user);
+            addressRepos.save(patient.getAddress());
+            userRepos.save(patient.getUser());
             patientRepos.save(patient);
+
         }
 
 //        StringBuilder linkReset = new StringBuilder();
