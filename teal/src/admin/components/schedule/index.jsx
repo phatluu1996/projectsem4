@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Table } from "antd";
+import { DatePicker, Table, TimePicker } from "antd";
 import { Tag } from 'antd';
 import { Link } from 'react-router-dom';
 import OpenChat from "../sidebar/openchatheader"
@@ -16,25 +16,95 @@ class Schedule extends Component {
     super(props);
     this.state = {
       loading: true,
+      filterData : [],
       data: [],
-      selectdId: 0
+      selectdId: 0,
+      from : null,
+      to : null
     };
     this.fetchData = this.fetchData.bind(this);
     this.deleteData = this.deleteData.bind(this);
     this.availableDaysDisplay = this.availableDaysDisplay.bind(this);
+    this.filterData = this.filterData.bind(this);
+    this.resetFilter = this.resetFilter.bind(this);
+  }
+
+  filterData(e) {
+    e.preventDefault();
+    let form = e.target;
+    let tmp = [...this.state.data];
+    if (form.id.value) {
+      tmp = tmp.filter(e => ("SCH-" + e.id).includes(form.id.value));
+    }
+
+    if (form.name.value) {
+      tmp = tmp.filter(e => (e.doctor.employee.firstName.trim() + " " + e.doctor.employee.lastName.trim()).includes(form.name.value));
+    }
+
+    if (form.department.value) {
+      tmp = tmp.filter(e => e.doctor.department.id == form.department.value);
+    }
+
+    if(form.from.value){
+      const start = (e) => {return moment(e.start)};      
+      const formStart = this.state.from;
+      tmp = tmp.filter(e => moment().set({hour:start(e).hour(),minute:start(e).minute(),second:0,millisecond:0}).isAfter(moment().set({hour:formStart.hour(),minute:formStart.minute(),second:0,millisecond:0})));
+    }
+
+    if(form.from.value){
+      const end = (e) => {return moment(e.end)};      
+      const formEnd = this.state.to;
+      tmp = tmp.filter(e => moment().set({hour:start(e).hour(),minute:start(e).minute(),second:0,millisecond:0}).isBefore(moment().set({hour:formEnd.hour(),minute:formEnd.minute(),second:0,millisecond:0})));
+    }
+
+    this.setState({ filterData: tmp });
+  }
+
+  resetFilter(e) {
+    let form = e.target;
+    form.id.value = '';
+    form.name.value = '';
+    form.department.value = '';
+    this.setState({from : null, to : null});
   }
 
   componentDidMount() {
     this.fetchData();
+    if ($('.floating').length > 0) {
+      $('.floating').on('focus blur', function (e) {
+        $(this).parents('.form-focus').toggleClass('focused', (e.type === 'focus' || this.value.length > 0));
+      }).trigger('blur');
+    }
   }
 
   fetchData() {
-    axiosAction("/schedules", GET, res => {
-      this.setState({
-        data: res.data,
-        loading: false,
-      });
-    }, () => { });
+    const fetchReq = {
+      url: "/schedules",
+      method: GET,
+      callback: (res) => {
+        notify('success', '', 'Success');
+        this.setState({
+          data: res.data,
+          filterData : res.data,
+          loading: false,
+          selectdId: 0
+        });
+      },
+      data: {}
+    }
+
+    const fetchDepartment = {
+      url: "/departments",
+      method: GET,
+      callback: (res) => {
+        this.setState({
+          departments: res.data,
+          loading: false
+        });
+      },
+      data: {}
+    }
+    axiosActions([fetchReq, fetchDepartment]);
   }
 
   deleteData() {
@@ -42,7 +112,7 @@ class Schedule extends Component {
       url: "/schedules/" + this.state.selectdId,
       method: DELETE,
       callback: (res) => {
-        axiosActions([fetchReq]);
+        axiosActions([fetchReq, fetchDepartment]);
       },
       data: {}
     }
@@ -54,12 +124,26 @@ class Schedule extends Component {
         notify('success', '', 'Success');
         this.setState({
           data: res.data,
+          filterData : res.data,
           loading: false,
           selectdId: 0
         });
       },
       data: {}
     }
+
+    const fetchDepartment = {
+      url: "/departments",
+      method: GET,
+      callback: (res) => {
+        this.setState({
+          departments: res.data,
+          loading: false
+        });
+      },
+      data: {}
+    }
+
     axiosActions([deleteReq]);
   }
 
@@ -173,6 +257,54 @@ class Schedule extends Component {
               </Link>
             </div>
           </div>
+          <form className="row filter-row" noValidate onSubmit={this.filterData} onReset={this.resetFilter}>
+            <div className="col-sm-2">
+              <div className="form-group form-focus">
+                <label className="focus-label" >Schedule ID</label>
+                <input type="text" className="form-control floating" name="id" />
+              </div>
+            </div>
+            <div className="col-sm-2">
+              <div className="form-group form-focus">
+                <label className="focus-label">Doctor Name</label>
+                <input type="text" className="form-control floating" name="name" />
+              </div>
+            </div>
+            <div className="col-sm-2">
+              <div className="form-group form-focus select-focus">
+                <label className="focus-label">Department</label>
+                <select className="form-control floating" name="department">
+                  <option value={''}>None</option>
+                  {this.state.departments?.map((dep, idx) => {
+                    return (<option key={idx} value={dep.id}>{dep.name}</option>)
+                  })}
+                </select>
+              </div>
+            </div>
+            <div className="col-sm-2">
+              <div className="form-group form-focus focused">
+                <label className="focus-label">From</label>
+                {/* <DatePicker name='from' className="form-control"
+                  showTime={true} format="YYYY-MM-DD" clearIcon={true} disabledDate={true}
+                  allowClear={true} value={this.state.from} onChange={(val) => this.setState({ from: val })}></DatePicker> */}
+                <TimePicker name='from' showSecond={false} format={"HH:mm"} disabledHours={this.disabledHours} disabledMinutes={this.disabledMinutes} className="form-control"
+                        minuteStep={15} onChange={(val) => this.setState({ from: val })} onSelect={(val) => this.setState({ from: val })} value={this.state.from}></TimePicker>
+              </div>
+            </div>
+            <div className="col-sm-2">
+              <div className="form-group form-focus focused">
+                <label className="focus-label">To</label>
+                <TimePicker name='to' showSecond={false} format={"HH:mm"} disabledHours={this.disabledHours} disabledMinutes={this.disabledMinutes} className="form-control"
+                        minuteStep={15} onChange={(val) => this.setState({ to: val })} onSelect={(val) => this.setState({ to: val })} value={this.state.to}></TimePicker>
+              </div>
+            </div>
+            <div className="col-sm-1">
+              <button className="btn btn-success btn-block" type='submit'> Search </button>
+            </div>
+            <div className="col-sm-1">
+              <button className="btn btn-danger btn-block" type='reset'> Reset </button>
+            </div>
+          </form>
           <div className="row">
             <div className="col-md-12">
               <div className="table-responsive">
@@ -182,11 +314,11 @@ class Schedule extends Component {
                   style={{ overflowX: "auto" }}
                   columns={columns}
                   // bordered
-                  dataSource={data}
+                  dataSource={this.state.filterData}
                   rowKey={(record) => record.id}
                   showSizeChanger={true}
                   pagination={{
-                    total: data.length,
+                    total: this.state.filterData.length,
                     showTotal: (total, range) =>
                       `Showing ${range[0]} to ${range[1]} of ${total} entries`,
                     showSizeChanger: true,

@@ -96,7 +96,7 @@ class EditPatient extends Component {
     const tmp = { ...this.state.data }
     console.log(tmp);
     if (!isFormValid(e)) return;
-    axiosAction("/patients/"+ this.id, UPDATE, res => {
+    axiosAction("/patients/" + this.id, UPDATE, res => {
       notify('success', '', 'Success')
       this.props.history.push("/admin/patients");
     }, (err) => notify('error', "Error"), tmp);
@@ -248,6 +248,7 @@ class EditPatient extends Component {
                       <div className="form-group">
                         <label>Country<span className="text-danger">*</span></label>
                         <Select
+                          showSearch={true}
                           defaultValue={this.state.data?.address?.country}
                           bordered={false}
                           style={{ width: '100%' }}
@@ -261,10 +262,11 @@ class EditPatient extends Component {
                       </div>
                     </div>
                     <div className="col-sm-6 col-md-6 col-lg-3">
-                      <div className="form-group">
+                      {this.state.countrySelect?.states.length > 0 && <div className="form-group">
                         <label>State/Province <span className="text-danger">*</span></label>
                         <Select
-                          disabled={this.state.data?.address?.province != "" || this.state.countrySelect?.states.length > 0 ? false : true}
+                          showSearch={true}
+                          // disabled={this.state.data?.address?.province != "" || this.state.countrySelect?.states.length > 0 ? false : true}
                           defaultValue={this.state.data?.address?.province}
                           bordered={false}
                           value={this.state.data?.address?.province}
@@ -276,7 +278,7 @@ class EditPatient extends Component {
                             return (<Select.Option key={index}>{state.name}</Select.Option>)
                           })}
                         </Select>
-                      </div>
+                      </div>}
                     </div>
                     <div className="col-sm-6 col-md-6 col-lg-3">
                       <div className="form-group">

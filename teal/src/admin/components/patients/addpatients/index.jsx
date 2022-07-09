@@ -241,6 +241,7 @@ class AddPatient extends Component {
                         <div className="form-group">
                           <label>Country<span className="text-danger">*</span></label>
                           <Select
+                            showSearch={true}
                             defaultValue={""}
                             bordered={false}
                             style={{ width: '100%' }}
@@ -258,6 +259,7 @@ class AddPatient extends Component {
                         {this.state.countrySelect?.states.length > 0 && <div className="form-group">
                           <label>State/Province<span className="text-danger">*</span></label>
                           <Select
+                            showSearch={true}
                             defaultValue={""}
                             bordered={false}
                             value={this.state.data.address.province}

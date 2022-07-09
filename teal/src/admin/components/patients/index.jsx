@@ -16,18 +16,56 @@ class Patients extends Component {
       show: null,
       idDtl: null,
       loading: false,
-      data: []
+      data: [],
+      filterData: []
     };
     this.fetchData = this.fetchData.bind(this);
     this.onClickDlt = this.onClickDlt.bind(this);
     this.handleDel = this.handleDel.bind(this);
+    this.filterData = this.filterData.bind(this);
+    this.resetFilter = this.resetFilter.bind(this);
+    
   }
 
+  filterData(e) {
+    e.preventDefault();
+    let form = e.target;
+    let tmp = [...this.state.data];
+    if (form.id.value) {
+      tmp = tmp.filter(e => ("PAT-" + e.id).includes(form.id.value));
+    }
 
+    if (form.name.value) {
+      tmp = tmp.filter(e => (e.firstName.trim() + " " + e.lastName.trim()).includes(form.name.value));
+    }
+
+    if (form.email.value) {
+      tmp = tmp.filter(e => e.email.includes(form.email.value));
+    }
+
+    if (form.phone.value) {
+      tmp = tmp.filter(e => e.phoneNumber.includes(form.phone.value));
+    }
+
+    this.setState({ filterData: tmp });
+  }
+
+  resetFilter(e) {
+    let form = e.target;
+    form.id.value = '';
+    form.name.value = '';
+    form.email.value = '';
+    form.phone.value = '';
+  }
 
   componentDidMount() {
     this.isComponentWillUnMount = true;
     this.fetchData();
+    if ($('.floating').length > 0) {
+      $('.floating').on('focus blur', function (e) {
+        $(this).parents('.form-focus').toggleClass('focused', (e.type === 'focus' || this.value.length > 0));
+      }).trigger('blur');
+    }
   }
 
   componentWillUnmount() {
@@ -39,6 +77,7 @@ class Patients extends Component {
       console.log(res);
       this.setState({
         data: res.data,
+        filterData: res.data,
         loading: false,
       });
     }, (err) => notify('error', "Error"));
@@ -150,6 +189,38 @@ class Patients extends Component {
               </Link>
             </div>
           </div>
+          <form className="row filter-row" noValidate onSubmit={this.filterData} onReset={this.resetFilter}>
+            <div className="col-sm-2">
+              <div className="form-group form-focus">
+                <label className="focus-label" >Patient ID</label>
+                <input type="text" className="form-control floating" name="id" />
+              </div>
+            </div>
+            <div className="col-sm-3">
+              <div className="form-group form-focus">
+                <label className="focus-label">Patient Name</label>
+                <input type="text" className="form-control floating" name="name" />
+              </div>
+            </div>
+            <div className="col-sm-3">
+              <div className="form-group form-focus">
+                <label className="focus-label">Patient Email</label>
+                <input type="text" className="form-control floating" name="email" />
+              </div>
+            </div>
+            <div className="col-sm-2">
+              <div className="form-group form-focus">
+                <label className="focus-label">Patient Phone</label>
+                <input type="text" className="form-control floating" name="phone" />
+              </div>
+            </div>
+            <div className="col-sm-1">
+              <button className="btn btn-success btn-block" type='submit'> Search </button>
+            </div>
+            <div className="col-sm-1">
+              <button className="btn btn-danger btn-block" type='reset'> Reset </button>
+            </div>
+          </form>
           <div className="row">
             <div className="col-md-12">
               <div className="table-responsive">
@@ -159,11 +230,11 @@ class Patients extends Component {
                   style={{ overflowX: "scroll" }}
                   columns={columns}
                   // bordered
-                  dataSource={data}
+                  dataSource={this.state.filterData}
                   rowKey={(record) => record.id}
                   showSizeChanger={true}
                   pagination={{
-                    total: data.length,
+                    total: this.state.filterData.length,
                     showTotal: (total, range) =>
                       `Showing ${range[0]} to ${range[1]} of ${total} entries`,
                     showSizeChanger: true,

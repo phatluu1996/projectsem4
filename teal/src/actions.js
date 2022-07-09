@@ -134,7 +134,9 @@ export const countAge = (text) => {
     // if(moment(text).yearformat('YYYY') === moment().format('YYYY')) return 0
     // const age = moment(text).fromNow().split(" ");
     // return age[0];
-    return moment(text).year === moment().year;
+    const current = moment().year();
+    const birthday = moment(text).year();
+    return current - birthday;
 }
 
 export const stringSort = (value1, value2) => {
