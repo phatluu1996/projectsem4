@@ -53,7 +53,7 @@ public class PatientController {
     @PostMapping(value = "/patients")
     public ResponseEntity<Patient> add(@RequestBody Patient patient) throws IOException {
 
-        if(!patient.getImage().isEmpty()){
+        if(patient.getImage() != null){
             String fileName =patient.getFirstName()+patient.getLastName()+patient.getcId()+".png";
             String filePath = FileUploadUtil.UPLOAD_DIR + fileName;
             FileUploadUtil.saveFile(patient.getImage(),fileName);
@@ -66,6 +66,7 @@ public class PatientController {
         user.setPassword(encoder.encode(user.getPassword()));
         User savedUser = userRepos.save(user);
         patient.setUser(savedUser);
+
         return new ResponseEntity<>(patientRepos.save(patient), HttpStatus.OK);
     }
 
@@ -74,7 +75,24 @@ public class PatientController {
         Optional<Patient> patientById = patientRepos.findById(id);
         return patientById.map(model -> {
             patient.setId(model.getId());
-            userRepos.save(model.getUser());
+            //img update
+            if(patient.getImage() != null){
+                try {
+                    String fileName =patient.getFirstName()+patient.getLastName()+patient.getcId()+".png";
+                    String filePath = FileUploadUtil.UPLOAD_DIR + fileName;
+                    FileUploadUtil.saveFile(patient.getImage(),fileName);
+                    patient.setImageByteArr(patient.getImage());
+                    patient.setImage(filePath);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+            //user update
+            User user = patient.getUser();
+            user.setPassword(encoder.encode(user.getPassword()));
+            User savedUser = userRepos.save(user);
+            patient.setUser(savedUser);
+            //address update
             addressRepos.save(patient.getAddress());
             return new ResponseEntity<>(patientRepos.save(patient), HttpStatus.OK);
         }).orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));

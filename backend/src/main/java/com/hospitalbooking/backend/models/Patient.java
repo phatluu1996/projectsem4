@@ -35,8 +35,8 @@ public class Patient extends UserProfile{
         this.appointments = appointments;
     }
 
-    public Patient(Long id, String cId, String firstName, String lastName, String gender, Date dateOfBirth, String email, String phoneNumber , String image, Address address, boolean retired, List<Appointment> appointments) {
-        super(id, cId, firstName, lastName, gender, dateOfBirth, email, phoneNumber,image, address, retired);
+    public Patient(Long id, String cId, String firstName, String lastName, String gender, Date dateOfBirth, String email, String phoneNumber , String image,String imageByteArr, Address address, boolean retired, List<Appointment> appointments) {
+        super(id, cId, firstName, lastName, gender, dateOfBirth, email, phoneNumber,image,imageByteArr, address, retired);
         this.appointments = appointments;
     }
 
