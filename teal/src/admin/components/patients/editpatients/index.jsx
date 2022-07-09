@@ -63,9 +63,12 @@ class EditPatient extends Component {
   fetchData = () => {
     axiosAction("/patients/" + this.id, GET, res => {
       console.log(res.data);
+      // const blob = new Blob([res.data.imageByteArr], { type: "image/jpeg" });
+      // const imageUrl = URL.createObjectURL(blob);
+      // console.log(imageUrl);
       this.setState({
         data: res.data,
-        img:URL.createObjectURL(res.data.image), 
+        img:res.data.imageByteArr, 
         loading: false,
       });
     }, (err) => notify('error', "Error"));
@@ -277,11 +280,12 @@ class EditPatient extends Component {
                       </div>
                     </div>
                     <div className="col-sm-6 col-md-6 col-lg-3">
-                      {this.state.countrySelect?.states.length > 0 && <div className="form-group">
+                      {/* {this.state.countrySelect?.states.length > 0 && */}
+                       <div className="form-group">
                         <label>State/Province <span className="text-danger">*</span></label>
                         <Select
                           showSearch={true}
-                          // disabled={this.state.data?.address?.province != "" || this.state.countrySelect?.states.length > 0 ? false : true}
+                          disabled={this.state.data?.address?.province|| this.state.countrySelect?.states.length > 0 ? false : true}
                           defaultValue={this.state.data?.address?.province}
                           bordered={false}
                           value={this.state.data?.address?.province}
@@ -293,7 +297,8 @@ class EditPatient extends Component {
                             return (<Select.Option key={index}>{state.name}</Select.Option>)
                           })}
                         </Select>
-                      </div>}
+                      </div>
+                      {/* } */}
                     </div>
                     <div className="col-sm-6 col-md-6 col-lg-3">
                       <div className="form-group">
@@ -323,13 +328,13 @@ class EditPatient extends Component {
                     <label>Avatar <span className="text-danger">*</span></label>
                     <div className="profile-upload">
                         <div className="upload-img">
-                          <img alt="" src={this.state.img} />
+                          <img alt="" src={this.state.img?this.state.img:""} />
                         </div>
                         <div className="upload-input">
                           <input
                             ref="file"
                             type="file"
-                            multiple="false"
+                            multiple={false}
                             onChange={this.onSelectImage}
                             className="form-control" />
                         </div>

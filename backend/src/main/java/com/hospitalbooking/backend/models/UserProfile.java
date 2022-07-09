@@ -28,8 +28,10 @@ public class UserProfile {
     private String phoneNumber;
 //    @Column(name = "image", columnDefinition = "nvarchar(250)")
     @Lob
+    @Column(nullable = true)
     private String image;
     @Lob
+    @Column(nullable = true)
     private String imageByteArr;
     @ManyToOne
     @JoinColumn(name = "address_id", referencedColumnName = "id")
@@ -40,7 +42,7 @@ public class UserProfile {
     public UserProfile() {
     }
 
-    public UserProfile(Long id, String cId, String firstName, String lastName, String gender, Date dateOfBirth, String email, String phoneNumber, String image, Address address, boolean retired) {
+    public UserProfile(Long id, String cId, String firstName, String lastName, String gender, Date dateOfBirth, String email, String phoneNumber, String image,String imageByteArr, Address address, boolean retired) {
         this.id = id;
         this.cId = cId;
         this.firstName = firstName;
@@ -50,6 +52,7 @@ public class UserProfile {
         this.email = email;
         this.phoneNumber = phoneNumber;
         this.image = image;
+        this.imageByteArr = imageByteArr;
         this.address = address;
         this.retired = retired;
     }

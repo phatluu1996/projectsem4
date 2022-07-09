@@ -49,8 +49,8 @@ public class Employee  extends UserProfile{
         this.leaves = leaves;
     }
 
-    public Employee(Long id, String cId, String firstName, String lastName, String gender, Date dateOfBirth, String email, String phoneNumber, String image, Address address, boolean retired, String employeeRole, boolean status, int remainingLeave, Date joiningDate, List<EmployeeLeave> leaves) {
-        super(id, cId, firstName, lastName, gender, dateOfBirth, email, phoneNumber,image, address, retired);
+    public Employee(Long id, String cId, String firstName, String lastName, String gender, Date dateOfBirth, String email, String phoneNumber, String image,String imageByteArr, Address address, boolean retired, String employeeRole, boolean status, int remainingLeave, Date joiningDate, List<EmployeeLeave> leaves) {
+        super(id, cId, firstName, lastName, gender, dateOfBirth, email, phoneNumber,image,imageByteArr, address, retired);
         this.employeeRole = employeeRole;
         this.status = status;
         this.remainingLeave = remainingLeave;
