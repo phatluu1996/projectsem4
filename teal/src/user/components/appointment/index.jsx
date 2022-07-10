@@ -1,7 +1,29 @@
 import React, { Component } from "react";
+import { GET } from '../../../constants';
+import { axiosAction, notify } from '../../../actions';
 
 class Appointment extends Component {
 
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      data:{
+        username : null,
+        password : null
+      },
+      statusChange:{
+        username : false,
+        password : false
+      }
+    }
+  }
+
+  componentDidMount(){
+    axiosAction("/doctors", GET, (res) => {
+      notify('success', "Success")
+      }, (err) => notify('error', 'Error'));
+  }
   
   render() {
     
@@ -11,7 +33,7 @@ class Appointment extends Component {
       <div className="main-content account-content">
         <div className="content">
           <div className="container">
-            <div className="account-box">
+            <div id="appointment-box" className="account-box">
               <div className="appointment">
                 <ul className="nav nav-tabs nav-justified">
                   <li className="nav-item"> 
@@ -81,18 +103,15 @@ class Appointment extends Component {
                       <div className="form-group">
                         <label className="m-b-20">Choose your Convenient Time</label>
                         <ul className="appoint-time">
+                          <li>08:00am - 09:00am</li>
+                          <li>09:00am - 10:00am</li>
                           <li>10:00am - 11:00am</li>
                           <li>11:00am - 12:00pm</li>
-                          <li className="selected">12:00pm - 01:00pm</li>
                           <li>01:00pm - 02:00pm</li>
                           <li>02:00pm - 03:00pm</li>
                           <li>03:00pm - 04:00pm</li>
                           <li>04:00pm - 05:00pm</li>
-                          <li>05:00pm - 06:00pm</li>
                         </ul>
-                        <div className="text-center"> 
-                          <a href="#" className="btn btn-primary more-btn">Show me more times</a>
-                        </div>
                       </div>
                       <div className="form-group">
                         <label>Select the Treatment Name</label>

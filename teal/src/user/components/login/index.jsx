@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import { ADD, GET, UPDATE } from '../../../constants';
-import { axiosAction, axiosActions, notify } from '../../../actions';
+import { ADD } from '../../../constants';
+import { axiosAction, notify } from '../../../actions';
 
 class Login extends Component {
   
@@ -55,10 +55,10 @@ class Login extends Component {
         username : dataCheck.username,
         password : dataCheck.password
       };
-       console.log(dataLogin);
-        axiosAction("/login", ADD, (res) => {
-        notify('success', "Success")
-        this.props.history.push("/");
+
+      axiosAction("/login", ADD, (res) => {
+      notify('success', "Success")
+      this.props.history.push("/");
       }, (err) => notify('error', 'Error'), dataLogin);
     }
   }
