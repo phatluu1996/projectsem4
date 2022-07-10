@@ -16,6 +16,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -68,6 +69,7 @@ public class EmployeeController {
         user.setPassword(encoder.encode(user.getPassword()));
         User savedUser = userRepos.save(user);
         employee.setUser(savedUser);
+        employee.setJoiningDate(new Date());
         Employee savedEmployee = employeeRepos.save(employee);
         return new ResponseEntity<>(savedEmployee, HttpStatus.OK);
     }

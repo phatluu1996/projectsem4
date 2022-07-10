@@ -254,7 +254,7 @@ class EditAssets extends Component {
                         <Select.Option key="Available">Available</Select.Option>
                         <Select.Option key="Unavailable">Unavailable</Select.Option>
                       </Select>
-                      <div className="invalid-feedback">Please select statu for asset !</div>
+                      <div className="invalid-feedback">Please select status for asset !</div>
                     </div>
                   </div>
                   <div className="col-md-6">

@@ -236,11 +236,11 @@ class AppUniversal extends Component {
             
             <BusinessRoute restricted={false} path="/login" exact component={Login} />
             <BusinessRoute restricted={true} component={Register} path="/register" exact />
-            <BusinessRoute component={AboutUs} path="/user/aboutus" exact />
-            <BusinessRoute component={Departments} path="/user/departments" exact />
-            <BusinessRoute component={Doctor} path="/user/doctors" exact />
-            <BusinessRoute component={DoctorDetails} path="/user/doctordetails" exact />
-            <BusinessRoute component={ContactUs} path="/user/contact-us" exact />
+            <BusinessRoute component={AboutUs} path="/aboutus" exact />
+            <BusinessRoute component={Departments} path="/departments" exact />
+            <BusinessRoute component={Doctor} path="/doctors" exact />
+            <BusinessRoute component={DoctorDetails} path="/doctordetails" exact />
+            <BusinessRoute component={ContactUs} path="/contact-us" exact />
             <BusinessRoute component={ForgotPassword} path="/forgot-password" exact />
 
             <AdminRoute component={AdminDashboard} path="/admin" exact />
@@ -268,6 +268,10 @@ class AppUniversal extends Component {
             <AdminRoute component={AdminLeave} path="/admin/leaves" exact />
             <AdminRoute component={AdminAddLeave} path="/admin/leaves/add" exact />
             <AdminRoute component={AdminEditLeave} path="/admin/leaves/update/:id" exact />
+            <AdminRoute component={AdminSalary} path="/admin/salaries" exact />
+            <AdminRoute component={AdminAddSalary} path="/admin/salaries/add" exact />
+            <AdminRoute component={AdminEditSalary} path="/admin/salaries/update/:id" exact />
+
           </Switch>
         </div>
         

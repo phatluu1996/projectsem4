@@ -52,20 +52,20 @@ class SidebarNav extends Component {
             <ul>
               <li className="menu-title">Main</li>
               <MenuItem to="/admin" icon="fas fa-tachometer-alt" title="Dashboard" />
-              <MenuItem to="/admin/patients" icon="fas fa-wheelchair" title="Patients" />
+              <MenuItem to="/admin/patients" icon="fas fa-bed" title="Patients" />
               <MenuItem to="/admin/doctors" icon="fas fa-user-md" title="Doctors" />
               <MenuItem to="/admin/schedules" icon="far fa-calendar-check" title="Schedules" />
               <MenuItem to="/admin/appointments" icon="far fa-calendar-alt" title="Appointments" />
               <MenuItem to="/admin/departments" icon="far fa-hospital" title="Departments" />
-              {/* <MenuItem to="/admin/employees" icon="fas fa-user" title="Employees" /> */}
               <li className="submenu">
                 <a href="#"><i className="fas fa-user" /> <span> Employees </span> <span className="menu-arrow" /></a>
                 <ul style={{ display: 'none' }}>
-                  <li><MenuItem to="/admin/employees" icon="" title="List" /></li>
-                  <li><MenuItem to="/admin/leaves" icon="" title="Leaves" /></li>
+                  <li><MenuItem to="/admin/employees" icon="fas fa-list" title="List" /></li>
+                  <li><MenuItem to="/admin/leaves" icon="fas fa-user-times" title="Leaves" /></li>
+                  <li><MenuItem to="/admin/salaries" icon="far fa-money-bill-alt" title="Salaries" /></li>
                 </ul>
               </li>
-              <MenuItem to="/admin/assets" icon="fas fa-cube" title="Assets" />
+              <MenuItem to="/admin/assets" icon="fas fa-cubes" title="Assets" />
 
               {/* <li className={`${url === "patients" || url === "add-patients" || url === "edit-patient" ? "active" : ""}`}>
                 <Link to="/admin/patients"><i className="fas fa-wheelchair" /> Patients</Link>
@@ -224,8 +224,8 @@ class SidebarNav extends Component {
           </li> */}
             </ul>
           </div>
-        </div>
-      </div>
+        </div >
+      </div >
     );
   }
 }

@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import { Logo_Hospital,User_img } from '../imagepath';
+import { Logo_Hospital,User_img } from './../imagepath.jsx';
 import $ from "jquery"
 
 class Header extends Component {
