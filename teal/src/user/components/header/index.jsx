@@ -96,7 +96,7 @@ class Header extends Component {
                           <Link to="/user/contact-us" className="nav-link">Contact Us</Link>
                         </li>
                         <li className={`${pathname === "/" ||pathname === "appointments" ? "active" : ""} nav-item`}>
-                          <Link to="/user/appointments" className="nav-link">Appointment</Link>
+                          <Link to="/appointment" className="nav-link">Appointment</Link>
                         </li>
                         <li className="dropdown nav-item"> 
                           <a className="dropdown-toggle settings-icon nav-link" data-toggle="dropdown"><i className="fas fa-cog" /></a>

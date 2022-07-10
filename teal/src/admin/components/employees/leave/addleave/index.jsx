@@ -101,7 +101,7 @@ class AddLeave extends Component {
                                     <div className="col-md-6">
                                         <div className="form-group">
                                             <label>Employee Name</label>
-                                            <Select bordered={false} size={"small"} style={{ width: '100%' }} name='employee'
+                                            <Select bordered={false} size={"small"} style={{ width: '100%' }} name='employee' value={this.state.data.employee?.id}
                                                 className={isValid(this.state.data.employee != null)} onChange={(e) => this.onChange(e, "employee")}>
                                                 {this.state.employees?.map(employee => {
                                                     return (<Option key={employee.id} value={employee.id}>{employee.firstName + " " + employee.lastName}</Option>)

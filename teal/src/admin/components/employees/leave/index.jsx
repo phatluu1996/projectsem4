@@ -8,8 +8,10 @@ import {
   onShowSizeChange,
 } from "../../paginationfunction";
 import { Link } from 'react-router-dom';
-import { axiosAction, axiosActions, notify, numberSort } from "../../../../actions";
+import { axiosAction, axiosActions, dateSort, notify, numberSort, stringSort } from "../../../../actions";
 import { DELETE, GET, leave_type, leave_status } from "../../../../constants";
+import { toMoment } from "../../../../utils";
+import moment from "moment";
 
 class Leave extends Component {
   constructor(props) {
@@ -127,52 +129,67 @@ class Leave extends Component {
         sorter: (a, b) => numberSort(a.id, b.id)
       },
       {
-        title: "Name",
+        title: "Employee Name",
         dataIndex: "Name",
         render: (text, record) => (
           <div className="table-avatar">
             <a href="#0" className="avatar avatar-sm mr-2">
               {/* <img alt="" src={record.image} /> */}
             </a>
-            {text}
+            {record.employee.firstName + " " + record.employee.lastName}
           </div>
         ),
-        sorter: (a, b) => a.Name.length - b.Name.length,
+        sorter: (a, b) => stringSort(a.employee.firstName + " " + a.employee.lastName, b.employee.firstName + " " + b.employee.lastName),
       },
       {
         title: "Leave Type",
         dataIndex: "Leave",
-        sorter: (a, b) => a.Leave.length - b.Leave.length,
+        render: (text, record) => (
+          <div>
+            {leave_type.find(e => e.value == record.leaveType).label}
+          </div>
+        ),
+        sorter: (a, b) => stringSort(leave_type.find(e => e.value == a.leaveType).label, leave_type.find(e => e.value == b.leaveType).label),
       },
       {
         title: "From",
         dataIndex: "From",
-        sorter: (a, b) => a.From.length - b.From.length,
+        render: (text, record) => (
+          <div>
+            {toMoment(record.startFrom).format("YYYY-MM-DD")}
+          </div>
+        ),
+        sorter: (a, b) => dateSort(a.startFrom, b.startFrom),
       },
       {
         title: "To",
         dataIndex: "To",
-        sorter: (a, b) => a.To.length - b.To.length,
+        render: (text, record) => (
+          <div>
+            {moment(record.startFrom).add(record.leaveDay, "days").format("YYYY-MM-DD")}
+          </div>
+        ),
+        sorter: (a, b) => dateSort(moment(a.startFrom).add(a.leaveDay, "days").format("YYYY-MM-DD"), moment(b.startFrom).add(b.leaveDay, "days").format("YYYY-MM-DD")),
       },
       {
-        title: "No of Days",
+        title: "Leave days",
         dataIndex: "Days",
-        sorter: (a, b) => a.Days.length - b.Days.length,
-      },
-      {
-        title: "Reason",
-        dataIndex: "Reason",
-        sorter: (a, b) => a.Reason.length - b.Reason.length,
+        render: (text, record) => (
+          <div>
+            {record.leaveDay}
+          </div>
+        ),
+        sorter: (a, b) => numberSort(a.leaveDay, b.leaveDay),
       },
       {
         title: "Status",
         dataIndex: "tags",
         render: (text, record) => (
-          <Tag color={text === 'Approved' ? "green" : text === 'Declined' ? "red" : "purple"} key={text} className="custom-badge">
-            {text}
+          <Tag color={leave_status.find(e => e.value == record.status).color} key={text} className="custom-badge">
+            {leave_status.find(e => e.value == record.status).label}
           </Tag>
         ),
-        sorter: (a, b) => a.tags.length - b.tags.length,
+        sorter: (a, b) => stringSort(leave_status.find(e => e.value == a.status).label, leave_status.find(e => e.value == b.status).label),
 
       },
       {
@@ -182,8 +199,8 @@ class Leave extends Component {
           <div className="dropdown dropdown-action">
             <a href="#" className="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i className="fas fa-ellipsis-v" /></a>
             <div className="dropdown-menu dropdown-menu-right">
-              <Link className="dropdown-item" to={"/admin/leaves/update/"}><i className="fas fa-pencil-alt m-r-5" /> Edit</Link>
-              <a className="dropdown-item" href="#" title="Decline" data-toggle="modal" data-target="#delete_approve"><i className="fas fa-trash m-r-5" /> Delete</a>
+              <Link className="dropdown-item" to={`/admin/leaves/update/${record.id}`}><i className="fas fa-pencil-alt m-r-5" /> Edit</Link>
+              <a className="dropdown-item" href="#" title="Decline" data-toggle="modal" data-target="#delete_approve" onClick={() => this.setState({ selectdId: record.id })}><i className="fas fa-trash m-r-5" /> Delete</a>
             </div>
           </div>
         ),
@@ -293,8 +310,9 @@ class Leave extends Component {
               <div className="modal-body text-center">
                 <img src={Sent_img} alt="" width={50} height={46} />
                 <h3>Are you sure want to delete this Leave Request?</h3>
-                <div className="m-t-20"> <a href="#" className="btn btn-white mr-0" data-dismiss="modal">Close</a>
-                  <button type="submit" className="btn btn-danger">Delete</button>
+                <div className="m-t-20">
+                  <a href="#" className="btn btn-white mr-0" data-dismiss="modal">Close</a>
+                  <a href="#" className="btn btn-danger mr-0" data-dismiss="modal" onClick={this.deleteData}>Delete</a>
                 </div>
               </div>
             </div>

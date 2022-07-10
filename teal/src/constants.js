@@ -82,8 +82,8 @@ export const leave_type = [
     { value: 'unpaid', label: 'Loss of Pay' },
 ]
 export const leave_status = [
-    { value: 'pending', label: 'Pending' },
-    { value: 'approved', label: 'Approved' },
-    { value: 'rejected', label: 'Rejected' }
+    { value: 'pending', label: 'Pending', color: "purple" },
+    { value: 'approved', label: 'Approved', color: "green" },
+    { value: 'rejected', label: 'Rejected', color: "red" }
 ]
 
