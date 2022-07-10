@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import OpenChat from "../../sidebar/openchatheader"
 import { countries } from '../../../../address';
-import { axiosAction, axiosActions, isFormValid, isValid, notify } from '../../../../actions';
+import { axiosAction, axiosActions, encodeBase64, isFormValid, isValid, notify } from '../../../../actions';
 import { ADD, GET, UPDATE } from '../../../../constants';
 import { DatePicker, Select, Timeline, Modal, Tabs, Button, Table, Input, Popconfirm } from 'antd';
 import { toMoment } from '../../../../utils';
@@ -18,7 +18,7 @@ class EditDoctor extends Component {
       loading: true,
       data: {
         "shortBiography": '',
-        "department": null,        
+        "department": null,
         "employee": {
           "cId": null,
           "user": {
@@ -33,6 +33,8 @@ class EditDoctor extends Component {
           "gender": null,
           "dateOfBirth": null,
           "email": null,
+          "image" : null,
+          "imageByteArr" : null,
           "phoneNumber": null,
           "status": true,
           "remainingLeave": 0,
@@ -71,6 +73,19 @@ class EditDoctor extends Component {
     this.onDeleteExp = this.onDeleteExp.bind(this);
     this.onChangeEducation = this.onChangeEducation.bind(this);
     this.onChangeExperience = this.onChangeExperience.bind(this);
+    this.onSelectImage = this.onSelectImage.bind(this);
+  }
+
+  onSelectImage(e) {
+    const tmp = { ...this.state.data };
+    var file = e.target.files[0];
+    encodeBase64(file, (res) => {
+      tmp.employee.image = res;
+      tmp.employee.imageByteArr = res;
+      this.setState({
+        data: tmp
+      })
+    })
   }
 
   onChangeEducation(record, arg, fieldName) {
@@ -485,13 +500,30 @@ class EditDoctor extends Component {
         <div className="content">
           <div className="row">
             <div className="col-md-12">
-              <h4 className="page-title">Add Doctor</h4>
+              <h4 className="page-title">Edit Doctor</h4>
             </div>
           </div>
           <div className="row">
             <div className="col-md-12">
               <form onSubmit={this.onSubmit} className="needs-validation" noValidate>
                 <div className="row">
+                  <div className="col-sm-12">
+                    <div className="form-group">
+                      <label>Avatar</label>
+                      <div className="profile-upload">
+                        <div className="upload-img">
+                          <img alt="" src={this.state.data?.employee?.imageByteArr ? this.state.data?.employee.imageByteArr : ""} />
+                        </div>
+                        <div className="upload-input">
+                          <input
+                            ref="file"
+                            type="file"
+                            onChange={this.onSelectImage}
+                            className="form-control" />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                   <div className="col-sm-6">
                     <div className="form-group">
                       <label>First Name <span className="text-danger">*</span></label>

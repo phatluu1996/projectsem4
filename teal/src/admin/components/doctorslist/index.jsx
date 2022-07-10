@@ -4,7 +4,7 @@ import { Table, Tag, Select } from "antd";
 import { Sent_img } from "../imagepath"
 import { itemRender, onShowSizeChange } from "../../components/paginationfunction";
 import OpenChat from "../sidebar/openchatheader";
-import { axiosAction, axiosActions, notify } from '../../../actions';
+import { axiosAction, axiosActions, dateSort, notify, numberSort, stringSort } from '../../../actions';
 import { DELETE, GET } from "../../../constants";
 import { toMoment } from "../../../utils";
 const { Option } = Select;
@@ -143,18 +143,19 @@ class Doctors extends Component {
             {"DTR-" + record.id}
           </div>
         ),
+        sorter: (a, b) => numberSort(a.id, b.id)
       },
       {
         title: "Doctor Name",
         render: (text, record) => (
           <div className="table-avatar">
             <a href="#0" className="avatar avatar-sm mr-2">
-              {/* <img alt="" src={record.image} /> */}
+              {record.employee.imageByteArr && <img alt="" src={record.employee.imageByteArr} />}
             </a>
             {record.employee.lastName + " " + record.employee.firstName}
           </div>
         ),
-
+        sorter: (a, b) => stringSort(a.employee.lastName + " " + a.employee.firstName, b.employee.lastName + " " + b.employee.firstName)
       },
       {
         title: "Gender",
@@ -163,6 +164,7 @@ class Doctors extends Component {
             {record.employee.gender}
           </div>
         ),
+        sorter: (a, b) => stringSort(a.employee.gender, b.employee.gender)
       },
       {
         title: "BirthDay",
@@ -171,6 +173,7 @@ class Doctors extends Component {
             {toMoment(record.employee.dateOfBirth).format("DD-MM-YYYY")}
           </div>
         ),
+        sorter: (a, b) => dateSort(a.employee.dateOfBirth, b.employee.dateOfBirth)
       },
       {
         title: "Email",
@@ -179,6 +182,7 @@ class Doctors extends Component {
             {record.employee.email}
           </div>
         ),
+        sorter: (a, b) => stringSort(a.employee.email, b.employee.email)
       },
       {
         title: "Phone",
@@ -187,6 +191,7 @@ class Doctors extends Component {
             {record.employee.phoneNumber}
           </div>
         ),
+        sorter: (a, b) => stringSort(a.employee.phoneNumber, b.employee.phoneNumber)
       },
       {
         title: "Department",
@@ -195,6 +200,7 @@ class Doctors extends Component {
             {record.department?.name}
           </div>
         ),
+        sorter: (a, b) => stringSort(a.department?.name, b.department?.name)
       },
       {
         title: "Status",
@@ -205,6 +211,7 @@ class Doctors extends Component {
             </Tag>
           </span>
         ),
+        sorter: (a, b) => stringSort(a.employee.status ? "Active" : "Inactive", b.employee.status ? "Active" : "Inactive")
       },
       {
         title: "Action",

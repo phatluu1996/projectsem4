@@ -63,7 +63,7 @@ class AddLeave extends Component {
 
     componentDidMount() {
         const employeesParam = {
-            url: "/employees",
+            url: "/employees-doctors",
             method: GET,
             callback: (res) => {
                 this.setState({

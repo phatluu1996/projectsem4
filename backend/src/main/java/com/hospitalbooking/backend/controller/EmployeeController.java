@@ -7,6 +7,7 @@ import com.hospitalbooking.backend.repository.AddressRepos;
 import com.hospitalbooking.backend.repository.EmployeeRepos;
 import com.hospitalbooking.backend.repository.UserRepos;
 import com.hospitalbooking.backend.specification.DBSpecification;
+import com.hospitalbooking.backend.utils.FileUploadUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
@@ -14,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -41,13 +43,26 @@ public class EmployeeController {
     }
 
     @GetMapping("/employees")
-    public ResponseEntity<List<Employee>> all(){
+    public ResponseEntity<List<Employee>> allExceptDoctor(){
         Specification<?> spec = DBSpecification.createSpecification(Boolean.FALSE).and((root, cq, cb) -> cb.notEqual(root.get("employeeRole"), EmployeeRole.DOCTOR));
         return new ResponseEntity<>(employeeRepos.findAll(spec), HttpStatus.OK);
     }
 
+    @GetMapping("/employees-doctors")
+    public ResponseEntity<List<Employee>> all(){
+        Specification<?> spec = DBSpecification.createSpecification(Boolean.FALSE);
+        return new ResponseEntity<>(employeeRepos.findAll(spec), HttpStatus.OK);
+    }
+
     @PostMapping("/employees")
-    public ResponseEntity<Employee> add(@RequestBody Employee employee){
+    public ResponseEntity<Employee> add(@RequestBody Employee employee) throws IOException {
+        if(employee.getImage() != null && !employee.getImage().isEmpty()){
+            String fileName = employee.getFirstName()+employee.getLastName()+employee.getcId()+".png";
+            String filePath = FileUploadUtil.UPLOAD_DIR + fileName;
+            FileUploadUtil.saveFile(employee.getImage(),fileName);
+            employee.setImageByteArr(employee.getImage());
+            employee.setImage(filePath);
+        }
         addressRepos.save(employee.getAddress());
         User user = employee.getUser();
         user.setPassword(encoder.encode(user.getPassword()));
@@ -61,6 +76,17 @@ public class EmployeeController {
     public ResponseEntity<Employee> update(@RequestBody Employee employee, @PathVariable Long id){
         Optional<Employee> optional = employeeRepos.findById(id);
         return optional.map(model -> {
+            if(employee.getImage() != null && !employee.getImage().isEmpty()){
+                try {
+                    String fileName = employee.getFirstName()+employee.getLastName()+employee.getcId()+".png";
+                    String filePath = FileUploadUtil.UPLOAD_DIR + fileName;
+                    FileUploadUtil.saveFile(employee.getImage(),fileName);
+                    employee.setImageByteArr(employee.getImage());
+                    employee.setImage(filePath);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
             employee.setId(model.getId());
             addressRepos.save(employee.getAddress());
             User user = employee.getUser();

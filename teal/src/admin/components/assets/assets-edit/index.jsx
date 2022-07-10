@@ -49,7 +49,7 @@ class EditAssets extends Component {
     }
 
     const employeeParam = {
-      url: "/employees",
+      url: "/employees-doctors",
       method: GET,
       callback: (res) => {
         this.setState({
@@ -227,7 +227,7 @@ class EditAssets extends Component {
                   </div>
                   <div className="col-md-6">
                     <div className="form-group">
-                      <label>Warranty <span className="text-danger">*</span></label>
+                      <label>Warranty(month)<span className="text-danger">*</span></label>
                       <input className={isValid(this.state.data?.warranty)} defaultValue={this.state.data?.warranty} onChange={(e) => this.onChange(e, "warranty")} type="text" />
                       <div className="invalid-feedback">Warranty cannot be empty</div>
                     </div>
@@ -284,6 +284,7 @@ class EditAssets extends Component {
                 </div>
                 <div className="m-t-20 text-center">
                   <button type="submit" className="btn btn-primary submit-btn">Save</button>
+                  <button className="btn btn-danger submit-btn" onClick={() => this.props.history.push("/admin/assets")}>Back</button>
                 </div>
               </form>
             </div>

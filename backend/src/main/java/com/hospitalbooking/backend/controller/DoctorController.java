@@ -3,6 +3,7 @@ package com.hospitalbooking.backend.controller;
 import com.hospitalbooking.backend.models.*;
 import com.hospitalbooking.backend.repository.*;
 import com.hospitalbooking.backend.specification.DBSpecification;
+import com.hospitalbooking.backend.utils.FileUploadUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.print.Doc;
 import javax.xml.ws.Response;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -55,7 +57,14 @@ public class DoctorController {
     }
 
     @PostMapping("/doctors")
-    public ResponseEntity<Doctor> add(@RequestBody Doctor doctor){
+    public ResponseEntity<Doctor> add(@RequestBody Doctor doctor) throws IOException {
+        if(doctor.getEmployee().getImage() != null && !doctor.getEmployee().getImage().isEmpty()){
+            String fileName = doctor.getEmployee().getFirstName()+doctor.getEmployee().getLastName()+doctor.getEmployee().getcId()+".png";
+            String filePath = FileUploadUtil.UPLOAD_DIR + fileName;
+            FileUploadUtil.saveFile(doctor.getEmployee().getImage(),fileName);
+            doctor.getEmployee().setImageByteArr(doctor.getEmployee().getImage());
+            doctor.getEmployee().setImage(filePath);
+        }
         addressRepos.save(doctor.getEmployee().getAddress());
         User user = doctor.getEmployee().getUser();
         user.setPassword(encoder.encode(user.getPassword()));
@@ -76,6 +85,17 @@ public class DoctorController {
     public ResponseEntity<Doctor> update(@RequestBody Doctor doctor, @PathVariable Long id){
         Optional<Doctor> optional = doctorRepos.findById(id);
         return optional.map(model -> {
+            if(doctor.getEmployee().getImage() != null && !doctor.getEmployee().getImage().isEmpty()){
+                try {
+                    String fileName = doctor.getEmployee().getFirstName()+doctor.getEmployee().getLastName()+doctor.getEmployee().getcId()+".png";
+                    String filePath = FileUploadUtil.UPLOAD_DIR + fileName;
+                    FileUploadUtil.saveFile(doctor.getEmployee().getImage(),fileName);
+                    doctor.getEmployee().setImageByteArr(doctor.getEmployee().getImage());
+                    doctor.getEmployee().setImage(filePath);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
             addressRepos.save(doctor.getEmployee().getAddress());
             User user = doctor.getEmployee().getUser();
             user.setPassword(encoder.encode(user.getPassword()));

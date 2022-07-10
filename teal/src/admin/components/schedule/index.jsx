@@ -16,11 +16,11 @@ class Schedule extends Component {
     super(props);
     this.state = {
       loading: true,
-      filterData : [],
+      filterData: [],
       data: [],
       selectdId: 0,
-      from : null,
-      to : null
+      from: null,
+      to: null
     };
     this.fetchData = this.fetchData.bind(this);
     this.deleteData = this.deleteData.bind(this);
@@ -56,16 +56,16 @@ class Schedule extends Component {
       tmp = tmp.filter(e => e.doctor.department.id == form.department.value);
     }
 
-    if(form.from.value){
-      const start = (e) => {return moment(e.start)};      
+    if (form.from.value) {
+      const start = (e) => { return moment(e.start) };
       const formStart = this.state.from;
-      tmp = tmp.filter(e => moment().set({hour:start(e).hour(),minute:start(e).minute(),second:0,millisecond:0}).isAfter(moment().set({hour:formStart.hour(),minute:formStart.minute(),second:0,millisecond:0})));
+      tmp = tmp.filter(e => moment().set({ hour: start(e).hour(), minute: start(e).minute(), second: 0, millisecond: 0 }).isAfter(moment().set({ hour: formStart.hour(), minute: formStart.minute(), second: 0, millisecond: 0 })));
     }
 
-    if(form.to.value){
-      const end = (e) => {return moment(e.end)};      
+    if (form.to.value) {
+      const end = (e) => { return moment(e.end) };
       const formEnd = this.state.to;
-      tmp = tmp.filter(e => moment().set({hour:end(e).hour(),minute:end(e).minute(),second:0,millisecond:0}).isBefore(moment().set({hour:formEnd.hour(),minute:formEnd.minute(),second:0,millisecond:0})));
+      tmp = tmp.filter(e => moment().set({ hour: end(e).hour(), minute: end(e).minute(), second: 0, millisecond: 0 }).isBefore(moment().set({ hour: formEnd.hour(), minute: formEnd.minute(), second: 0, millisecond: 0 })));
     }
 
     this.setState({ filterData: tmp });
@@ -76,7 +76,7 @@ class Schedule extends Component {
     form.id.value = '';
     form.name.value = '';
     form.department.value = '';
-    this.setState({from : null, to : null});
+    this.setState({ from: null, to: null });
   }
 
   componentDidMount() {
@@ -95,7 +95,7 @@ class Schedule extends Component {
       callback: (res) => {
         this.setState({
           data: res.data,
-          filterData : res.data,
+          filterData: res.data,
           loading: false,
           selectdId: 0
         });
@@ -134,7 +134,7 @@ class Schedule extends Component {
         notify('success', '', 'Success');
         this.setState({
           data: res.data,
-          filterData : res.data,
+          filterData: res.data,
           loading: false,
           selectdId: 0
         });
@@ -183,7 +183,7 @@ class Schedule extends Component {
         render: (text, record) => (
           <div className="table-avatar">
             <a href="#0" className="avatar avatar-sm mr-2">
-              {/* <img alt="" src={record.image} /> */}
+              {record.doctor.employee.imageByteArr && <img alt="" src={record.doctor.employee.imageByteArr} />}
             </a>
             {record.doctor?.employee.lastName + " " + record.doctor?.employee.firstName}
           </div>
@@ -298,14 +298,14 @@ class Schedule extends Component {
                   showTime={true} format="YYYY-MM-DD" clearIcon={true} disabledDate={true}
                   allowClear={true} value={this.state.from} onChange={(val) => this.setState({ from: val })}></DatePicker> */}
                 <TimePicker name='from' showSecond={false} format={"HH:mm"} disabledHours={this.disabledHours} disabledMinutes={this.disabledMinutes} className="form-control"
-                        minuteStep={15} onChange={(val) => this.setState({ from: val })} onSelect={(val) => this.setState({ from: val })} value={this.state.from}></TimePicker>
+                  minuteStep={15} onChange={(val) => this.setState({ from: val })} onSelect={(val) => this.setState({ from: val })} value={this.state.from}></TimePicker>
               </div>
             </div>
             <div className="col-sm-2">
               <div className="form-group form-focus focused">
                 <label className="focus-label">To</label>
                 <TimePicker name='to' showSecond={false} format={"HH:mm"} disabledHours={this.disabledHours} disabledMinutes={this.disabledMinutes} className="form-control"
-                        minuteStep={15} onChange={(val) => this.setState({ to: val })} onSelect={(val) => this.setState({ to: val })} value={this.state.to}></TimePicker>
+                  minuteStep={15} onChange={(val) => this.setState({ to: val })} onSelect={(val) => this.setState({ to: val })} value={this.state.to}></TimePicker>
               </div>
             </div>
             <div className="col-sm-1">

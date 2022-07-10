@@ -73,7 +73,7 @@ class Leave extends Component {
     let tmp = [...this.state.data];
 
     if (form.id.value) {
-
+      tmp = tmp.filter(e => ("LEA-" + e.id).includes(form.id.value));
     }
 
     if (form.name.value) {
@@ -89,11 +89,13 @@ class Leave extends Component {
     }
 
     if (form.from.value) {
-
+      const formStart = this.state.from;
+      tmp = tmp.filter(e => moment(e.startFrom).isAfter(formStart));
     }
 
     if (form.to.value) {
-
+      const formEnd = this.state.to;
+      tmp = tmp.filter(e => moment(e.startFrom).add(e.leaveDay, "days").isBefore(formEnd));
     }
 
     this.setState({ filterData: tmp });
@@ -134,7 +136,7 @@ class Leave extends Component {
         render: (text, record) => (
           <div className="table-avatar">
             <a href="#0" className="avatar avatar-sm mr-2">
-              {/* <img alt="" src={record.image} /> */}
+            {record.employee.imageByteArr && <img alt="" src={record.employee.imageByteArr} />}
             </a>
             {record.employee.firstName + " " + record.employee.lastName}
           </div>

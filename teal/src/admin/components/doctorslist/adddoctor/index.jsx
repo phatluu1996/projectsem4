@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import OpenChat from "../../sidebar/openchatheader"
 import { countries } from '../../../../address';
-import { axiosAction, axiosActions, isFormValid, isValid, notify } from '../../../../actions';
+import { axiosAction, axiosActions, encodeBase64, isFormValid, isValid, notify } from '../../../../actions';
 import { ADD, GET } from '../../../../constants';
 import { DatePicker, Select, Timeline, Modal, Tabs, Button, Table, Input, Popconfirm } from 'antd';
 const { Option } = Select;
@@ -26,6 +26,8 @@ class AddDoctor extends Component {
           "gender": null,
           "dateOfBirth": null,
           "email": null,
+          "image": null,
+          "imageByteArr" : null,
           "phoneNumber": null,
           "user": {
             "username": null,
@@ -69,6 +71,19 @@ class AddDoctor extends Component {
     this.onDeleteExp = this.onDeleteExp.bind(this);
     this.onChangeEducation = this.onChangeEducation.bind(this);
     this.onChangeExperience = this.onChangeExperience.bind(this);
+    this.onSelectImage = this.onSelectImage.bind(this);
+  }
+
+  onSelectImage(e) {
+    const tmp = { ...this.state.data };
+    var file = e.target.files[0];
+    encodeBase64(file, (res) => {
+      tmp.employee.image = res;
+      tmp.employee.imageByteArr = res;
+      this.setState({
+        data: tmp
+      })
+    })
   }
 
   onChangeEducation(record, arg, fieldName) {
@@ -467,6 +482,23 @@ class AddDoctor extends Component {
             <div className="col-md-12">
               <form onSubmit={this.onSubmit} className="needs-validation" noValidate>
                 <div className="row">
+                  <div className="col-sm-12">
+                    <div className="form-group">
+                      <label>Avatar</label>
+                      <div className="profile-upload">
+                        <div className="upload-img">
+                          <img alt="" src={this.state.data?.employee?.imageByteArr ? this.state.data?.employee.imageByteArr : ""} />
+                        </div>
+                        <div className="upload-input">
+                          <input
+                            ref="file"
+                            type="file"
+                            onChange={this.onSelectImage}
+                            className="form-control" />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                   <div className="col-sm-6">
                     <div className="form-group">
                       <label>First Name <span className="text-danger">*</span></label>

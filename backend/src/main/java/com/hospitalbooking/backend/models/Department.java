@@ -13,6 +13,9 @@ public class Department {
     private String name;
     @Column(name = "department_desc", columnDefinition = "text")
     private String description;
+    @Lob
+    @Column(nullable = true)
+    private String imageByteArr;
     @Column(name = "status")
     private boolean status;
     @Column(name = "retired")
@@ -67,5 +70,13 @@ public class Department {
 
     public void setRetired(boolean retired) {
         this.retired = retired;
+    }
+
+    public String getImageByteArr() {
+        return imageByteArr;
+    }
+
+    public void setImageByteArr(String imageByteArr) {
+        this.imageByteArr = imageByteArr;
     }
 }

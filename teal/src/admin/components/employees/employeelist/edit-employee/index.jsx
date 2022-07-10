@@ -3,7 +3,7 @@ import OpenChat from "../../../sidebar/openchatheader"
 import $ from "jquery"
 import { countries } from '../../../../../address';
 import { DatePicker, Select } from 'antd';
-import { isValid, isFormValid, axiosAction, axiosActions, notify } from '../../../../../actions'
+import { isValid, isFormValid, axiosAction, axiosActions, notify, encodeBase64 } from '../../../../../actions'
 const { Option } = Select;
 import { ADD, GET, employeeRoles } from '../../../../../constants';
 import { toMoment } from '../../../../../utils';
@@ -23,6 +23,8 @@ class EditEmployee extends Component {
         "gender": null,
         "dateOfBirth": null,
         "email": null,
+        "image": null,
+        imageByteArr: null,
         "phoneNumber": null,
         "status": true,
         "doctor": null,
@@ -47,8 +49,21 @@ class EditEmployee extends Component {
     }
     this.onChange = this.onChange.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
-
+    this.onSelectImage = this.onSelectImage.bind(this);
   }
+
+  onSelectImage(e) {
+    const tmp = { ...this.state.data };
+    var file = e.target.files[0];
+    encodeBase64(file, (res) => {
+      tmp.image = res;
+      tmp.imageByteArr = res;
+      this.setState({
+        data: tmp
+      })
+    })
+  }
+
 
   onChange(arg, fieldName) {
     const tmp = { ...this.state.data };
@@ -157,6 +172,23 @@ class EditEmployee extends Component {
             <div className="col-md-8 offset-md-2">
               <form onSubmit={this.onSubmit} className="needs-validation" noValidate>
                 <div className="row">
+                  <div className="col-sm-12">
+                    <div className="form-group">
+                      <label>Avatar</label>
+                      <div className="profile-upload">
+                        <div className="upload-img">
+                          <img alt="" src={this.state.data?.imageByteArr ? this.state.data?.imageByteArr : ""} />
+                        </div>
+                        <div className="upload-input">
+                          <input
+                            ref="file"
+                            type="file"
+                            onChange={this.onSelectImage}
+                            className="form-control" />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                   <div className="col-sm-6">
                     <div className="form-group">
                       <label>First Name <span className="text-danger">*</span></label>

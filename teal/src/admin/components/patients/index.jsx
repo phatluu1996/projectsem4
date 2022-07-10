@@ -125,7 +125,7 @@ class Patients extends Component {
         render: (text, record) => (
           <div className="table-avatar">
             <a href="#0" className="avatar avatar-sm mr-2">
-              {/* <img alt="" src={record.image} /> */}
+              {record.imageByteArr && <img alt="" src={record.imageByteArr} />}
             </a>
             {record.lastName + " " + record.firstName}
           </div>

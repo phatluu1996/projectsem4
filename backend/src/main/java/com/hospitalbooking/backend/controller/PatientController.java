@@ -74,7 +74,7 @@ public class PatientController {
         return patientById.map(model -> {
             patient.setId(model.getId());
             //img update
-            if(patient.getImage() != null){
+            if(patient.getImage() != null && !patient.getImage().isEmpty()){
                 try {
                     String fileName =patient.getFirstName()+patient.getLastName()+patient.getcId()+".png";
                     String filePath = FileUploadUtil.UPLOAD_DIR + fileName;

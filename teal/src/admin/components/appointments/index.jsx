@@ -137,7 +137,10 @@ class Appointments extends Component {
       {
         title: "Patient Name",
         render: (text, record) => (
-          <div>
+          <div className="table-avatar">
+            <a href="#0" className="avatar avatar-sm mr-2">
+            {record.patient.imageByteArr && <img alt="" src={record.patient.imageByteArr} />}
+            </a>
             {record.patient?.lastName + " " + record.patient?.firstName}
           </div>
         ),
@@ -146,7 +149,10 @@ class Appointments extends Component {
       {
         title: "Doctor Name",
         render: (text, record) => (
-          <div>
+          <div className="table-avatar">
+            <a href="#0" className="avatar avatar-sm mr-2">
+            {record.doctor.employee.imageByteArr && <img alt="" src={record.doctor.employee.imageByteArr} />}
+            </a>
             {record.doctor?.employee.lastName + " " + record.doctor?.employee.firstName}
           </div>
         ),
@@ -157,7 +163,6 @@ class Appointments extends Component {
         render: (text, record) => (
           <div>
             {record.date ? toMoment(record.date).format('DD-MM-YYYY h:mm:ss') : ""}
-
           </div>
         ),
         sorter: (a, b) => dateSort(a.date, b.date)
