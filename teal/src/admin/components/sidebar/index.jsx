@@ -62,7 +62,7 @@ class SidebarNav extends Component {
                 <ul style={{ display: 'none' }}>
                   <li><MenuItem to="/admin/employees" icon="fas fa-list" title="List" /></li>
                   <li><MenuItem to="/admin/leaves" icon="fas fa-user-times" title="Leaves" /></li>
-                  <li><MenuItem to="/admin/salaries" icon="far fa-money-bill-alt" title="Salaries" /></li>
+                  <li><MenuItem to="/admin/salaries" icon="far fa-money-bill-alt" title="Salary" /></li>
                 </ul>
               </li>
               <MenuItem to="/admin/assets" icon="fas fa-cubes" title="Assets" />

@@ -37,11 +37,20 @@ public class EmployeeSalary {
     @Column(name = "conveyance")
     private double conveyance;
 
-    @Column(name = "otherAllowance")
+    @Column(name = "other_allowance")
     private double otherAllowance;
+
+    @Column(name = "other_deduction")
+    private double otherDeduction;
 
     @Column(name = "loan")
     private double loan;
+
+    @Column(name = "profession_tax")
+    private double professionTax;
+
+    @Column(name = "labour_welfare")
+    private double labourWelfare;
 
     @Column(name = "providentFund")
     private double providentFund;
@@ -56,7 +65,10 @@ public class EmployeeSalary {
     @Column(name = "retired")
     private boolean retired;
 
-    public EmployeeSalary(Long id, Date salaryMonth, Date createTime, double basicSalary, double netSalary, double tds, double hra, double conveyance, double otherAllowance, double loan, double providentFund, double esi, Employee employee, boolean retired) {
+    public EmployeeSalary() {
+    }
+
+    public EmployeeSalary(Long id, Date salaryMonth, Date createTime, double basicSalary, double netSalary, double tds, double hra, double conveyance, double otherAllowance, double otherDeduction, double loan, double professionTax, double providentFund, double esi, Employee employee, boolean retired) {
         Id = id;
         this.salaryMonth = salaryMonth;
         this.createTime = createTime;
@@ -66,7 +78,9 @@ public class EmployeeSalary {
         this.hra = hra;
         this.conveyance = conveyance;
         this.otherAllowance = otherAllowance;
+        this.otherDeduction = otherDeduction;
         this.loan = loan;
+        this.professionTax = professionTax;
         this.providentFund = providentFund;
         this.esi = esi;
         this.employee = employee;
@@ -184,4 +198,30 @@ public class EmployeeSalary {
     public void setEsi(double esi) {
         this.esi = esi;
     }
+
+    public double getOtherDeduction() {
+        return otherDeduction;
+    }
+
+    public void setOtherDeduction(double otherDeduction) {
+        this.otherDeduction = otherDeduction;
+    }
+
+    public double getProfessionTax() {
+        return professionTax;
+    }
+
+    public void setProfessionTax(double professionTax) {
+        this.professionTax = professionTax;
+    }
+
+    public double getLabourWelfare() {
+        return labourWelfare;
+    }
+
+    public void setLabourWelfare(double labourWelfare) {
+        this.labourWelfare = labourWelfare;
+    }
+
+
 }

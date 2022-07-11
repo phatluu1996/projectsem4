@@ -50,6 +50,9 @@ public class ModelViewerController {
             case "address":
                 return new ResponseEntity<>(new Address(), HttpStatus.OK);
 
+            case "salary":
+                return new ResponseEntity<>(new EmployeeSalary(), HttpStatus.OK);
+
             default:
                 return new ResponseEntity<>(null, HttpStatus.OK);
         }

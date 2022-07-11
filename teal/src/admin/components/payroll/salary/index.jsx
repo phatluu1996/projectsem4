@@ -166,7 +166,7 @@ class Salary extends Component {
       {
         title: "Export to Payslip",
         render: (text, record) => (
-          <Link className="btn btn-sm btn-primary generate" to="/salary-view">Generate Slip</Link>
+          <Link className="btn btn-sm btn-primary generate" to={`/admin/salaries/export/${record.id}`}>Generate Slip</Link>
         ),
       },
       {

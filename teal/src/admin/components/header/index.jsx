@@ -157,9 +157,8 @@ class Header extends Component {
             <span>Admin</span>
           </a>
           <div className="dropdown-menu">
-            <Link className="dropdown-item" to="/profile">My Profile</Link>
-            <Link className="dropdown-item" to="/edit-profile">Edit Profile</Link>
-            <a className="dropdown-item" href="/admin-template/settings">Settings</a>
+            <Link className="dropdown-item" to="/admin/profile">Profile</Link>
+            <a className="dropdown-item" href="/admin/settings">Settings</a>
             <Link className="dropdown-item" to="/login">Logout</Link>
           </div>
         </li>

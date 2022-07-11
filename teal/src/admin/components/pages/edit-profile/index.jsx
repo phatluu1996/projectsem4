@@ -5,11 +5,11 @@ import OpenChat from "../../sidebar/openchatheader";
 class EditProfile extends Component{
 
     componentDidMount(){
-        if ($('.datetimepicker').length > 0) {
-          $('.datetimepicker').datetimepicker({
-              format: 'DD/MM/YYYY'
-          });
-        }
+        // if ($('.datetimepicker').length > 0) {sidebar
+        //   $('.datetimepicker').datetimepicker({
+        //       format: 'DD/MM/YYYY'
+        //   });
+        // }
         if ($('.floating').length > 0) {
                 $('.floating').on('focus blur', function(e) {
                     $(this).parents('.form-focus').toggleClass('focused', (e.type === 'focus' || this.value.length > 0));
