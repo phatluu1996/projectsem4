@@ -11,24 +11,24 @@ class AddSalary extends Component {
         super(props);
         this.state = {
             data: {
-                "salaryMonth":null,
-                "createTime":null,
-                "basicSalary":0.0,
-                "netSalary":0.0,
-                "tds":0.0,
-                "hra":0.0,
-                "conveyance":0.0,
-                "otherAllowance":0.0,
-                "otherDeduction":0.0,
-                "loan":0.0,
-                "professionTax":0.0,
-                "labourWelfare":0.0,
-                "providentFund":0.0,
-                "esi":0.0,
-                "employee":null,
-                "retired":false,
-                "id":null
-             },
+                "salaryMonth": null,
+                "createTime": null,
+                "basicSalary": 0.0,
+                "netSalary": 0.0,
+                "tds": 0.0,
+                "hra": 0.0,
+                "conveyance": 0.0,
+                "otherAllowance": 0.0,
+                "otherDeduction": 0.0,
+                "loan": 0.0,
+                "professionTax": 0.0,
+                "labourWelfare": 0.0,
+                "providentFund": 0.0,
+                "esi": 0.0,
+                "employee": null,
+                "retired": false,
+                "id": null
+            },
             loading: true,
             employees: []
         }
@@ -71,7 +71,7 @@ class AddSalary extends Component {
         axiosActions([employeesParam]);
     }
 
-    onSubmit(e){
+    onSubmit(e) {
         e.preventDefault();
         if (!isFormValid(e)) return;
         axiosAction("/salaries", ADD, (res) => {
@@ -118,57 +118,94 @@ class AddSalary extends Component {
                                 <div className="row">
                                     <div className="col-sm-6">
                                         <h4 className="text-primary">Earnings</h4>
+                                    </div>
+                                    <div className="col-sm-6">
+                                        <h4 className="text-primary">Deductions</h4>
+                                    </div>
+                                </div>
+                                <div className="row">
+                                    <div className="col-sm-6">
                                         <div className="form-group">
                                             <label>Basic Salary</label>
-                                            <input className={isValid(this.state.data.basicSalary)} type="number" value={this.state.data.basicSalary} onChange={(e) => this.onChange(e, "basicSalary")}/>
+                                            <input className={isValid(this.state.data.basicSalary)} type="number" value={this.state.data.basicSalary} onChange={(e) => this.onChange(e, "basicSalary")} />
                                             <div className="invalid-feedback">Basic Salary cannot be empty</div>
                                         </div>
+                                    </div>
+                                    <div className="col-sm-3">
+                                        <div className="form-group">
+                                            <label>TDS</label>
+                                            <input className={isValid(this.state.data.tds)} type="number" value={this.state.data.tds} onChange={(e) => this.onChange(e, "tds")} />
+                                            <div className="invalid-feedback">TDS cannot be empty</div>
+                                        </div>
+
+                                    </div>
+                                    <div className="col-sm-3">
+                                        <div className="form-group">
+                                            <label>Provident Fund</label>
+                                            <input className={isValid(this.state.data.providentFund)} type="number" value={this.state.data.providentFund} onChange={(e) => this.onChange(e, "providentFund")} />
+                                            <div className="invalid-feedback">Provident Fund cannot be empty</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="row">
+                                    <div className="col-sm-6">
                                         <div className="form-group">
                                             <label>HRA(15%)</label>
-                                            <input className={isValid(this.state.data.hra)} type="number"  value={this.state.data.hra} onChange={(e) => this.onChange(e, "hra")}/>
+                                            <input className={isValid(this.state.data.hra)} type="number" value={this.state.data.hra} onChange={(e) => this.onChange(e, "hra")} />
                                             <div className="invalid-feedback">HRA cannot be empty</div>
                                         </div>
+                                    </div>
+                                    <div className="col-sm-3">
+                                        <div className="form-group">
+                                            <label>ESI</label>
+                                            <input className={isValid(this.state.data.esi)} type="number" value={this.state.data.esi} onChange={(e) => this.onChange(e, "esi")} />
+                                            <div className="invalid-feedback">ESI cannot be empty</div>
+                                        </div>
+                                    </div>
+                                    <div className="col-sm-3">
+                                        <div className="form-group">
+                                            <label>Prof. Tax</label>
+                                            <input className={isValid(this.state.data.professionTax)} type="number" value={this.state.data.professionTax} onChange={(e) => this.onChange(e, "professionTax")} />
+                                            <div className="invalid-feedback">Prof. Tax cannot be empty</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="row">
+                                    <div className="col-sm-6">
                                         <div className="form-group">
                                             <label>Conveyance</label>
-                                            <input className={isValid(this.state.data.conveyance)} type="number"  value={this.state.data.conveyance} onChange={(e) => this.onChange(e, "conveyance")}/>
+                                            <input className={isValid(this.state.data.conveyance)} type="number" value={this.state.data.conveyance} onChange={(e) => this.onChange(e, "conveyance")} />
                                             <div className="invalid-feedback">Conveyance cannot be empty</div>
                                         </div>
+                                    </div>
+                                    <div className="col-sm-3">
+                                        <div className="form-group">
+                                            <label>Labour Welfare</label>
+                                            <input className={isValid(this.state.data.labourWelfare)} type="number" value={this.state.data.labourWelfare} onChange={(e) => this.onChange(e, "labourWelfare")} />
+                                            <div className="invalid-feedback">Labour Welfare cannot be empty</div>
+                                        </div>
+
+                                    </div>
+                                    <div className="col-sm-3">
+                                        <div className="form-group">
+                                            <label>Loan</label>
+                                            <input className={isValid(this.state.data.loan)} type="number" value={this.state.data.loan} onChange={(e) => this.onChange(e, "loan")} />
+                                            <div className="invalid-feedback">Loan cannot be empty</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="row">
+                                    <div className="col-sm-6">
                                         <div className="form-group">
                                             <label>Others Allowance</label>
-                                            <input className={isValid(this.state.data.otherAllowance)} type="number"  value={this.state.data.otherAllowance} onChange={(e) => this.onChange(e, "otherAllowance")}/>
+                                            <input className={isValid(this.state.data.otherAllowance)} type="number" value={this.state.data.otherAllowance} onChange={(e) => this.onChange(e, "otherAllowance")} />
                                             <div className="invalid-feedback">Others Allowance cannot be empty</div>
                                         </div>
                                     </div>
                                     <div className="col-sm-6">
-                                        <h4 className="text-primary">Deductions</h4>
-                                        <div className="form-group">
-                                            <label>TDS</label>
-                                            <input className={isValid(this.state.data.tds)} type="number"  value={this.state.data.tds} onChange={(e) => this.onChange(e, "tds")}/>
-                                            <div className="invalid-feedback">TDS cannot be empty</div>
-                                        </div>
-                                        <div className="form-group">
-                                            <label>Provident Fund</label>
-                                            <input className={isValid(this.state.data.providentFund)} type="number"  value={this.state.data.providentFund} onChange={(e) => this.onChange(e, "providentFund")}/>
-                                            <div className="invalid-feedback">Provident Fund cannot be empty</div>
-                                        </div>
-                                        <div className="form-group">
-                                            <label>ESI</label>
-                                            <input className={isValid(this.state.data.esi)} type="number"  value={this.state.data.esi} onChange={(e) => this.onChange(e, "esi")}/>
-                                            <div className="invalid-feedback">ESI cannot be empty</div>
-                                        </div>
-                                        <div className="form-group">
-                                            <label>Prof. Tax</label>
-                                            <input className={isValid(this.state.data.professionTax)} type="number"  value={this.state.data.professionTax} onChange={(e) => this.onChange(e, "professionTax")}/>
-                                            <div className="invalid-feedback">Prof. Tax cannot be empty</div>
-                                        </div>
-                                        <div className="form-group">
-                                            <label>Labour Welfare</label>
-                                            <input className={isValid(this.state.data.labourWelfare)} type="number"  value={this.state.data.labourWelfare} onChange={(e) => this.onChange(e, "labourWelfare")}/>
-                                            <div className="invalid-feedback"> cannot be empty</div>
-                                        </div>
                                         <div className="form-group">
                                             <label>Others Deduction</label>
-                                            <input className={isValid(this.state.data.otherDeduction)} type="number"  value={this.state.data.otherDeduction} onChange={(e) => this.onChange(e, "otherDeduction")}/>
+                                            <input className={isValid(this.state.data.otherDeduction)} type="number" value={this.state.data.otherDeduction} onChange={(e) => this.onChange(e, "otherDeduction")} />
                                             <div className="invalid-feedback">Others Deduction cannot be empty</div>
                                         </div>
                                     </div>
@@ -181,7 +218,6 @@ class AddSalary extends Component {
                         </div>
                     </div>
                 </div>
-                <OpenChat />
             </div>
 
         );

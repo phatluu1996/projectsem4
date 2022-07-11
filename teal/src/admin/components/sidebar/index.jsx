@@ -50,7 +50,7 @@ class SidebarNav extends Component {
         <div className="sidebar-inner slimscroll">
           <div id="sidebar-menu" className="sidebar-menu">
             <ul>
-              <li className="menu-title">Main</li>
+              <li className="menu-title">ADMIN</li>
               <MenuItem to="/admin" icon="fas fa-tachometer-alt" title="Dashboard" />
               <MenuItem to="/admin/patients" icon="fas fa-bed" title="Patients" />
               <MenuItem to="/admin/doctors" icon="fas fa-user-md" title="Doctors" />
@@ -66,7 +66,9 @@ class SidebarNav extends Component {
                 </ul>
               </li>
               <MenuItem to="/admin/assets" icon="fas fa-cubes" title="Assets" />
-
+              <li className="menu-title">DOCTOR</li>
+              <MenuItem to="/doctor/schedules" icon="far fa-calendar-alt" title="Schedules" />
+              
               {/* <li className={`${url === "patients" || url === "add-patients" || url === "edit-patient" ? "active" : ""}`}>
                 <Link to="/admin/patients"><i className="fas fa-wheelchair" /> Patients</Link>
               </li>

@@ -71,28 +71,28 @@ class SalaryView extends Component {
 
   printPDF() {
     const input = document.getElementById("print-payslip");
+    // var print = document.getElementById("ifmcontentstoprint")
+    // print.innerHTML = input.innerHTML;
     html2canvas(input, {
-      scale:2
+      scale: 2
     }).then((canvas) => {
       const imgData = canvas.toDataURL('image/png');
-      const pdf = new jsPDF({ unit: 'in', format: 'a1', orientation: 'landscape' });
+      const pdf = new jsPDF({ unit: 'mm', format: 'a2', orientation: 'p' });
       pdf.addImage(imgData, 'JPEG', 0, 0);
-      // pdf.output('dataurlnewwindow');
       pdf.save("payslip.pdf");
     })
-
   }
 
   render() {
     return (!this.state.loading &&
       <>
-        <iframe id="ifmcontentstoprint" hidden></iframe>
+
         <div className="page-wrapper" >
           <div className="content">
             <div className="row">
-              <div className="col-sm-5 col-4">
+              {/* <div className="col-sm-5 col-4">
                 <h4 className="page-title">Payslip</h4>
-              </div>
+              </div> */}
               <div className="col-sm-7 col-8 text-right m-b-30">
                 <div className="btn-group btn-group-sm">
                   <button className="btn btn-white" onClick={this.printPDF}><i className="far fa-file-alt fa-lg" />PDF</button>
@@ -107,9 +107,12 @@ class SalaryView extends Component {
               </div>
             </div>
             {/* ref={el => (this.componentRef = el)}  */}
-            <div className="row" ref={el => (this.componentRef = el)} id="print-payslip">
-              <div className="col-md-12">
-                <div className="card-box">
+            {/* <div id="ifmcontentstoprint" className="row" style={{ height: "0px", width: "0px", position: "absolute" }}></div> */}
+            {/* <iframe id="ifmcontentstoprint" className="row" style={{height: "0px", width: "0px", position: "absolute"}}></iframe> */}
+            <div className="row" ref={el => (this.componentRef = el)} >
+              <div className="col-md-3"></div>
+              <div className="col-md-6">
+                <div className="card-box" id="print-payslip" style={{height: "210mm", width: "210mm"}}>
                   <h4 className="payslip-title">Payslip for the month of {toMoment(this.state.data.salaryMonth).format("MMMM YYYY")}</h4>
                   <div className="row">
                     <div className="col-sm-6 m-b-20">
@@ -120,7 +123,7 @@ class SalaryView extends Component {
                         <li>Ho chi Minh city, VietNam, 723564</li>
                       </ul>
                     </div>
-                    <div className="col-sm-6 m-b-20">
+                    <div className="col-sm-6 m-b-20" >
                       <div className="invoice-details">
                         <h3 className="text-uppercase">Payslip #{this.state.data.id}</h3>
                         <ul className="list-unstyled">
@@ -205,6 +208,7 @@ class SalaryView extends Component {
                   </div>
                 </div>
               </div>
+              <div className="col-md-3"></div>
             </div>
           </div>
         </div>

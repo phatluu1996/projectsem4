@@ -9,7 +9,7 @@ import {
 import { Link } from 'react-router-dom';
 import $ from "jquery"
 import { number, string } from "prop-types";
-import { axiosAction, axiosActions, dateSort, numberSort, stringSort } from "../../../../actions";
+import { axiosAction, axiosActions, dateSort, notify, numberSort, stringSort } from "../../../../actions";
 import { DELETE, employeeRoles, GET } from "../../../../constants";
 import { toMoment } from "../../../../utils";
 
@@ -17,7 +17,7 @@ class Salary extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      show: null,
+      loading: true,
       data: [],
       filterData: []
     };
@@ -36,7 +36,7 @@ class Salary extends Component {
     }
 
     if (form.name.value) {
-      tmp = tmp.filter(e => e.employee.name.includes(form.name.value));
+      tmp = tmp.filter(e => (e.employee.firstName + " " + e.employee.lastName).includes(form.name.value));
     }
 
     if (form.email.value) {
@@ -176,8 +176,8 @@ class Salary extends Component {
           <div className="dropdown dropdown-action">
             <a href="#" className="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i className="fas fa-ellipsis-v" /></a>
             <div className="dropdown-menu dropdown-menu-right">
-              <Link className="dropdown-item" to="/edit-salary"><i className="fas fa-pencil-alt m-r-5" /> Edit</Link>
-              <a className="dropdown-item" href="#" data-toggle="modal" data-target="#delete_salary"><i className="fas fa-trash m-r-5" /> Delete</a>
+              <Link className="dropdown-item" to={`/admin/salaries/update/${record.id}`}><i className="fas fa-pencil-alt m-r-5" /> Edit</Link>
+              <a className="dropdown-item" href="#" data-toggle="modal" data-target="#delete_salary" onClick={() => this.setState({ selectdId: record.id })}><i className="fas fa-trash m-r-5" /> Delete</a>
             </div>
           </div>
         ),
@@ -229,7 +229,7 @@ class Salary extends Component {
                   className="table-striped"
                   style={{ overflowX: "auto" }}
                   columns={columns}
-                  // bordered
+                  loading={this.state.loading}
                   dataSource={this.state.filterData}
                   rowKey={(record) => record.id}
                   showSizeChanger={true}
@@ -254,7 +254,7 @@ class Salary extends Component {
                 <img src={Sent_img} alt="" width={50} height={46} />
                 <h3>Are you sure want to delete this Salary?</h3>
                 <div className="m-t-20"> <a href="#" className="btn btn-white mr-0" data-dismiss="modal">Close</a>
-                  <button type="submit" className="btn btn-danger">Delete</button>
+                  <a href="#" className="btn btn-danger" data-dismiss="modal" onClick={this.deleteData}>Delete</a>
                 </div>
               </div>
             </div>
