@@ -57,8 +57,13 @@ class Login extends Component {
       };
 
       axiosAction("/login", ADD, (res) => {
-      notify('success', "Success")
-      this.props.history.push("/");
+        sessionStorage.setItem('userToken', res.data.accessToken);
+        sessionStorage.setItem('headerName', res.data.header);
+        sessionStorage.setItem('userName', res.data.username);
+        sessionStorage.setItem('userId', res.data.id);
+        sessionStorage.setItem('userRole', res.data.roles[0]);
+        notify('success', "Success")
+        this.props.history.push("/");
       }, (err) => notify('error', 'Error'), dataLogin);
     }
   }
