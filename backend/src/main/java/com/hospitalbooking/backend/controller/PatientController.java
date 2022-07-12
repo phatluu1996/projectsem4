@@ -36,7 +36,15 @@ public class PatientController {
     @Autowired
     private PasswordEncoder encoder;
 
-
+    @GetMapping("/get-patient/{username}")
+    public ResponseEntity<Patient> getByUserId(@PathVariable String username){
+        User user = userRepos.getUserByUsername(username);
+        if(!user.isRetired()){
+            Patient patient = patientRepos.getPatientByUser(user);
+            return new ResponseEntity<>(patient, HttpStatus.OK);
+        }else
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
 
     @GetMapping("/patients/{id}")
     public ResponseEntity<Patient> one(@PathVariable Long id){
