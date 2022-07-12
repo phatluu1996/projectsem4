@@ -38,6 +38,18 @@ public class AppointmentController {
         return new ResponseEntity<List<Appointment>>(appointmentRepos.findAll(spec), HttpStatus.OK);
     }
 
+    @GetMapping("/appointments-doctor/{id}")
+    public ResponseEntity<List<Appointment>> allByDoctor(@PathVariable Long id){
+        Specification<?> spec = DBSpecification.createSpecification(Boolean.FALSE).and((root, cq, cb) -> cb.equal(root.get("doctor").get("id"), id));
+        return new ResponseEntity<List<Appointment>>(appointmentRepos.findAll(spec), HttpStatus.OK);
+    }
+
+    @GetMapping("/appointments-patient/{id}")
+    public ResponseEntity<List<Appointment>> allByPatient(@PathVariable Long id){
+        Specification<?> spec = DBSpecification.createSpecification(Boolean.FALSE).and((root, cq, cb) -> cb.equal(root.join("patient").get("id"), id));;
+        return new ResponseEntity<List<Appointment>>(appointmentRepos.findAll(spec), HttpStatus.OK);
+    }
+
     @PostMapping("/appointments")
     public ResponseEntity<Appointment> add(@RequestBody Appointment appointment){
 

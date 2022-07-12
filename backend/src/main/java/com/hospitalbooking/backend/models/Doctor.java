@@ -23,10 +23,6 @@ public class Doctor{
     @JoinColumn(name = "department_id", referencedColumnName = "id")
     private Department department;
 
-//    @ManyToOne
-//    @JoinColumn(name = "employee_id", referencedColumnName = "id")
-//    private Employee employee;
-
     @OneToOne
     @JsonIgnoreProperties(value = "doctor", allowSetters = true)
     private Employee employee;
@@ -37,7 +33,7 @@ public class Doctor{
     private List<DoctorSchedule> doctorSchedules;
     @OneToMany
     @JoinColumn(name = "doctor_id", referencedColumnName = "id")
-    @JsonIgnoreProperties({"doctor", "employee"})
+    @JsonIgnoreProperties(value = {"doctor", "employee"}, allowSetters = true)
     private List<Appointment> appointments;
     @OneToMany
     @JoinColumn(name = "doctor_id", referencedColumnName = "id")

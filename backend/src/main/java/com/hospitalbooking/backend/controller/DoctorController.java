@@ -85,7 +85,7 @@ public class DoctorController {
     public ResponseEntity<Doctor> update(@RequestBody Doctor doctor, @PathVariable Long id){
         Optional<Doctor> optional = doctorRepos.findById(id);
         return optional.map(model -> {
-            if(doctor.getEmployee().getImage() != null && !doctor.getEmployee().getImage().isEmpty()){
+            if(doctor.getEmployee().getImage() != null && !doctor.getEmployee().getImage().isEmpty() && !model.getEmployee().getImage().equals(doctor.getEmployee().getImage())){
                 try {
                     String fileName = doctor.getEmployee().getFirstName()+doctor.getEmployee().getLastName()+doctor.getEmployee().getcId()+".png";
                     String filePath = FileUploadUtil.UPLOAD_DIR + fileName;

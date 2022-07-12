@@ -273,8 +273,8 @@ class AppUniversal extends Component {
             <AdminRoute component={AdminEditSalary} path="/admin/salaries/update/:id" exact />
             <AdminRoute component={AdminEditProfile} path="/admin/profile" exact />
             <AdminRoute component={AdminSalaryView} path="/admin/salaries/export/:id" exact />
-
-            <AdminRoute component={AdminCalendar} path="/doctor/schedules" exact />
+            <AdminRoute component={AdminCalendar} path="/doctor/appoinments" exact />
+            <AdminRoute component={AdminAppointments} path="/reception/appoinments" exact />
             
 
           </Switch>

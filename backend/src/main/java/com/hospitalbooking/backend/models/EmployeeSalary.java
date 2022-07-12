@@ -222,6 +222,4 @@ public class EmployeeSalary {
     public void setLabourWelfare(double labourWelfare) {
         this.labourWelfare = labourWelfare;
     }
-
-
 }

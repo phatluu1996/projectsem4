@@ -225,7 +225,7 @@ class EditDoctor extends Component {
       "country": "",
       "start": "",
       "end": "",
-      "jopPosition": "",
+      "jobPosition": "",
       "retired": false,
     }
     const tmp = { ...this.state.data };
@@ -445,7 +445,7 @@ class EditDoctor extends Component {
         render: (text, record) => (
           <div>
             <Select aria-autocomplete='none' showSearch={true} bordered={false} size={"small"} style={{ width: '100%' }} name='country'
-              className={isValid(record.country)} onChange={(e) => this.onChangeExperience(record, e, "country")}>
+              className={isValid(record.country)} onChange={(e) => this.onChangeExperience(record, e, "country")} value={record.country}>
               {this.state.countries?.map((ctr, idx) => {
                 return (<Option key={idx} value={ctr.name}>{ctr.name}</Option>)
               })}
@@ -460,7 +460,7 @@ class EditDoctor extends Component {
           <div>
             <DatePicker className={isValid(record.start)} name='start' disabledTime={true}
               showTime={false} format="YYYY-MM-DD" clearIcon={true}
-              allowClear={true} value={record.start} onChange={(value, e) => this.onChangeExperience(record, value, "start")}></DatePicker>
+              allowClear={true} value={toMoment(record.start)} onChange={(value, e) => this.onChangeExperience(record, value, "start")}></DatePicker>
             <div className="invalid-feedback">Cannot be left empty</div>
           </div>
         ),
@@ -471,7 +471,7 @@ class EditDoctor extends Component {
           <div>
             <DatePicker className={isValid(record.end)} name='end' disabledTime={true}
               showTime={false} format="YYYY-MM-DD" clearIcon={true}
-              allowClear={true} value={record.end} onSelect={(value) => this.onChangeExperience(record, value, "end")}></DatePicker>
+              allowClear={true} value={toMoment(record.end)} onSelect={(value) => this.onChangeExperience(record, value, "end")}></DatePicker>
             <div className="invalid-feedback">Cannot be left empty</div>
           </div>
         ),

@@ -6,11 +6,15 @@ import timeGridPlugin from '@fullcalendar/timegrid'
 import interactionPlugin from '@fullcalendar/interaction'
 import { Modal } from 'react-bootstrap';
 import OpenChat from "../../sidebar/openchatheader";
+import { GET } from '../../../../constants';
+import { axiosActions, notify } from '../../../../actions';
+import moment from 'moment';
 
 
 class Calendar extends React.Component {
 
 	state = {
+		loading: true,
 		startDate: new Date(),
 		show: false,
 		iseditdelete: false,
@@ -20,6 +24,7 @@ class Calendar extends React.Component {
 		category_color: '',
 		weekendsVisible: true,
 		currentEvents: [],
+		appointments:[],
 		defaultEvents: [{
 			title: 'Event Name 4',
 			start: Date.now() + 148000000,
@@ -44,7 +49,31 @@ class Calendar extends React.Component {
 	}
 
 	componentDidMount() {
-
+		const id = 1;
+		const fetchReq = {
+			url: "/appointments-doctor/" + id,
+			method: GET,
+			callback: (res) => {
+				notify('success', '', 'Success');
+				let list = [];
+				res.data.forEach((appointment) => {
+					// let app = { title: '', start: '', className: '' }
+					appointment.title = appointment.patient.lastName + " " + appointment.patient.firstName;
+					appointment.start = new Date(appointment.date).setSeconds(0);
+					appointment.end = new Date(appointment.dateEnd).setSeconds(0);
+					appointment.className = moment(appointment.date).isBefore(moment()) ? 'bg-success' : 'bg-info';
+					list.push(appointment);
+				});
+				this.setState({
+					defaultEvents: list,
+					currentEvents: list,
+					appointments: list,
+					loading: false
+				});
+			},
+			data: {}
+		}
+		axiosActions([fetchReq]);
 	}
 
 	handleChange = date => {
@@ -172,14 +201,15 @@ class Calendar extends React.Component {
 												center: 'title',
 												right: 'dayGridMonth,timeGridWeek,timeGridDay',
 											}}
-
+											events={this.state.appointments}											
+											// loading={this.state.loading}
 											initialView='dayGridMonth'
 											editable={true}
 											selectable={true}
 											selectMirror={true}
 											dayMaxEvents={true}
 											weekends={this.state.weekendsVisible}
-											initialEvents={defaultEvents}
+											// initialEvents={defaultEvents}
 											select={this.handleDateSelect}
 											eventClick={clickInfo => this.handleEventClick(clickInfo)}
 										/>

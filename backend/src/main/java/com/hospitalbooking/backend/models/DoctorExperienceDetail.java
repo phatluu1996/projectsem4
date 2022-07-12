@@ -24,7 +24,7 @@ public class DoctorExperienceDetail {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date end;
     @Column(name = "job_position", length = 100, columnDefinition = "nvarchar(100)")
-    private String jopPosition;
+    private String jobPosition;
     @ManyToOne
     @JoinColumn(name = "doctor_id", referencedColumnName = "id")
     @JsonIgnoreProperties("experienceDetails")
@@ -35,13 +35,13 @@ public class DoctorExperienceDetail {
     public DoctorExperienceDetail() {
     }
 
-    public DoctorExperienceDetail(Long id, String officeName, String country, Date start, Date end, String jopPosition, Doctor doctor, boolean retired) {
+    public DoctorExperienceDetail(Long id, String officeName, String country, Date start, Date end, String jobPosition, Doctor doctor, boolean retired) {
         Id = id;
         this.officeName = officeName;
         this.country = country;
         this.start = start;
         this.end = end;
-        this.jopPosition = jopPosition;
+        this.jobPosition = jobPosition;
         this.doctor = doctor;
         this.retired = retired;
     }
@@ -86,12 +86,12 @@ public class DoctorExperienceDetail {
         this.end = end;
     }
 
-    public String getJopPosition() {
-        return jopPosition;
+    public String getJobPosition() {
+        return jobPosition;
     }
 
-    public void setJopPosition(String jopPosition) {
-        this.jopPosition = jopPosition;
+    public void setJobPosition(String jopPosition) {
+        this.jobPosition = jopPosition;
     }
 
     public Doctor getDoctor() {

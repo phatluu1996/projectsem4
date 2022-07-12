@@ -7,7 +7,7 @@ import { itemRender, onShowSizeChange, } from "../../components/paginationfuncti
 import OpenChat from "../sidebar/openchatheader";
 import { axiosAction, axiosActions, dateSort, notify, numberSort, stringSort } from '../../../actions';
 import "../../../constants";
-import { DELETE, GET } from "../../../constants";
+import { appointment_status, DELETE, GET } from "../../../constants";
 import { toMoment } from "../../../utils";
 import moment from 'moment';
 
@@ -62,7 +62,7 @@ class Appointments extends Component {
 
     if (form.to.value) {
       const formEnd = this.state.to;
-      tmp = tmp.filter(e => moment(e.date).isBefore(formEnd));
+      tmp = tmp.filter(e => moment(e.dateEnd).isBefore(formEnd));
     }
 
     this.setState({ filterData: tmp });
@@ -159,7 +159,7 @@ class Appointments extends Component {
         sorter: (a, b) => stringSort(a.doctor?.employee.lastName + " " + a.doctor?.employee.firstName, b.doctor?.employee.lastName + " " + b.doctor?.employee.firstName)
       },
       {
-        title: "Appointment Date",
+        title: "Appointment Start Time",
         render: (text, record) => (
           <div>
             {record.date ? toMoment(record.date).format('DD-MM-YYYY h:mm:ss') : ""}
@@ -168,15 +168,24 @@ class Appointments extends Component {
         sorter: (a, b) => dateSort(a.date, b.date)
       },
       {
-        title: "Status",
+        title: "Appointment End Time",
         render: (text, record) => (
+          <div>
+            {record.dateEnd ? toMoment(record.dateEnd).format('DD-MM-YYYY h:mm:ss') : ""}
+          </div>
+        ),
+        sorter: (a, b) => dateSort(a.dateEnd, b.dateEnd)
+      },
+      {
+        title: "Status",
+        render: (text, record) => (record.status &&
           <span>
-            <Tag color={record.status ? "green" : "red"} className="custom-badge">
-              {record.status ? "Active" : "Inactive"}
+            <Tag color={appointment_status.find(e => e.value == record.status).color} className="custom-badge">
+              {appointment_status.find(e => e.value == record.status).label}
             </Tag>
           </span>
         ),
-        sorter: (a, b) => stringSort(a.status ? "Active" : "Inactive", b.status ? "Active" : "Inactive")
+        sorter: (a, b) => stringSort(appointment_status.find(e => e.value == b.status).label, appointment_status.find(e => e.value == b.status).label)
       },
       {
         title: "Action",

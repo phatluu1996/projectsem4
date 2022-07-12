@@ -213,7 +213,7 @@ class AddDoctor extends Component {
       "country": "",
       "start": "",
       "end": "",
-      "jopPosition": "",
+      "jobPosition": "",
       "retired": false,
     }
     const tmp = { ...this.state.data };

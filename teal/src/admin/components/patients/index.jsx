@@ -15,7 +15,7 @@ class Patients extends Component {
     this.state = {
       show: null,
       idDtl: null,
-      loading: false,
+      loading: true,
       data: [],
       filterData: []
     };

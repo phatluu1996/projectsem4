@@ -78,7 +78,7 @@ public class EmployeeController {
     public ResponseEntity<Employee> update(@RequestBody Employee employee, @PathVariable Long id){
         Optional<Employee> optional = employeeRepos.findById(id);
         return optional.map(model -> {
-            if(employee.getImage() != null && !employee.getImage().isEmpty()){
+            if(employee.getImage() != null && !employee.getImage().isEmpty() && !model.getImage().equals(employee.getImage())){
                 try {
                     String fileName = employee.getFirstName()+employee.getLastName()+employee.getcId()+".png";
                     String filePath = FileUploadUtil.UPLOAD_DIR + fileName;

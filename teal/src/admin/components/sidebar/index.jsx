@@ -67,7 +67,10 @@ class SidebarNav extends Component {
               </li>
               <MenuItem to="/admin/assets" icon="fas fa-cubes" title="Assets" />
               <li className="menu-title">DOCTOR</li>
-              <MenuItem to="/doctor/schedules" icon="far fa-calendar-alt" title="Schedules" />
+              <MenuItem to="/doctor/appoinments" icon="far fa-calendar-alt" title="Appoinments" />
+
+              <li className="menu-title">RECEPTIONIST</li>
+              <MenuItem to="/reception/appoinments" icon="far fa-calendar-alt" title="Appoinments" />
               
               {/* <li className={`${url === "patients" || url === "add-patients" || url === "edit-patient" ? "active" : ""}`}>
                 <Link to="/admin/patients"><i className="fas fa-wheelchair" /> Patients</Link>
