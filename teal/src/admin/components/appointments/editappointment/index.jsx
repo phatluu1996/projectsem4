@@ -231,7 +231,7 @@ class EditAppointment extends Component {
                       <RangePicker name='date' className={isValid(this.state.data.date && this.state.data.dateEnd)} value={[toMoment(this.state.data.date) ?? "", toMoment(this.state.data.dateEnd) ?? ""]}
                         showTime={{ defaultValue: moment('00:00:00', 'HH:mm:ss') }} minuteStep={30} showSecond={false} format="YYYY-MM-DD HH:mm" clearIcon={true}
                         allowClear={true} onChange={this.onChangeDate} onSelect={this.onChangeDate} inputReadOnly={true}
-                        disabledDate={this.disabledDate} disabledHours={this.disabledHours} disabledMinutes={this.disabledMinutes}></RangePicker>
+                        disabledHours={this.disabledHours} disabledMinutes={this.disabledMinutes}></RangePicker>
                       <div className="invalid-feedback">Time Range cannot be empty</div>
                     </div>
                   </div>

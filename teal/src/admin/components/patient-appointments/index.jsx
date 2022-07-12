@@ -5,13 +5,12 @@ import dayGridPlugin from '@fullcalendar/daygrid'
 import timeGridPlugin from '@fullcalendar/timegrid'
 import interactionPlugin from '@fullcalendar/interaction'
 import { Modal } from 'react-bootstrap';
-import OpenChat from "../../sidebar/openchatheader";
-import { GET } from '../../../../constants';
-import { axiosActions, notify } from '../../../../actions';
+import { GET } from '../../../constants';
+import { axiosActions, notify } from '../../../actions';
 import moment from 'moment';
 
 
-class Calendar extends React.Component {
+class PatientAppointment extends React.Component {
 
 	state = {
 		loading: true,
@@ -24,7 +23,7 @@ class Calendar extends React.Component {
 		category_color: '',
 		weekendsVisible: true,
 		currentEvents: [],
-		appointments: [],
+		appointments:[],
 		defaultEvents: [{
 			title: 'Event Name 4',
 			start: Date.now() + 148000000,
@@ -48,26 +47,17 @@ class Calendar extends React.Component {
 		}]
 	}
 
-	renderEventContent = (eventInfo) => {
-		return (
-			<>
-				<b>{moment(eventInfo.event.start).format("HH:mm") + "-" + moment(eventInfo.event.end).format("HH:mm")}</b>
-				<i> {eventInfo.event.title}</i>
-			</>
-		)
-	}
-
 	componentDidMount() {
 		const id = 1;
 		const fetchReq = {
-			url: "/appointments-doctor/" + id,
+			url: "/appointments-patient/" + id,
 			method: GET,
 			callback: (res) => {
 				notify('success', '', 'Success');
 				let list = [];
 				res.data.forEach((appointment) => {
 					// let app = { title: '', start: '', className: '' }
-					appointment.title = appointment.patient.lastName + " " + appointment.patient.firstName;
+					appointment.title = appointment.department+ " " + "appointment";
 					appointment.start = new Date(appointment.date).setSeconds(0);
 					appointment.end = new Date(appointment.dateEnd).setSeconds(0);
 					appointment.className = moment(appointment.date).isBefore(moment()) ? 'bg-success' : 'bg-info';
@@ -191,7 +181,10 @@ class Calendar extends React.Component {
 				<div className="content">
 					<div className="row">
 						<div className="col-sm-8 col-4">
-							<h4 className="page-title">My Appointment</h4>
+							<h4 className="page-title">Calendar</h4>
+						</div>
+						<div className="col-sm-4 col-8 text-right m-b-30">
+							<a href="#" className="btn btn-primary btn-rounded" data-toggle="modal" data-target="#add_event"><i className="fas fa-plus" /> Add Event</a>
 						</div>
 					</div>
 					<div className="row">
@@ -207,18 +200,17 @@ class Calendar extends React.Component {
 												center: 'title',
 												right: 'dayGridMonth,timeGridWeek,timeGridDay',
 											}}
-											events={this.state.appointments}
+											events={this.state.appointments}											
 											// loading={this.state.loading}
 											initialView='dayGridMonth'
-											editable={false}
-											// selectable={true}
+											editable={true}
+											selectable={true}
 											selectMirror={true}
 											dayMaxEvents={true}
 											weekends={this.state.weekendsVisible}
 											// initialEvents={defaultEvents}
-											// select={this.handleDateSelect}
+											select={this.handleDateSelect}
 											eventClick={clickInfo => this.handleEventClick(clickInfo)}
-											eventContent={this.renderEventContent}
 										/>
 										{/* /Calendar */}
 									</div>
@@ -273,6 +265,33 @@ class Calendar extends React.Component {
 						<button type="button" className="btn btn-success submit-btn delete-event" data-dismiss="modal" onClick={() => this.addnewevent()}>Create event</button>
 					</Modal.Footer>
 				</Modal>
+				<div id="add_event" className="modal fade" role="dialog">
+					<div className="modal-dialog">
+						<div className="modal-content modal-md">
+							<div className="modal-header">
+								<h4 className="modal-title">Add Event</h4>
+								<button type="button" className="close" data-dismiss="modal">×</button>
+							</div>
+							<div className="modal-body">
+								<form>
+									<div className="form-group">
+										<label>Event Name <span className="text-danger">*</span></label>
+										<input className="form-control" type="text" />
+									</div>
+									<div className="form-group">
+										<label>Event Date <span className="text-danger">*</span></label>
+										<div className="cal-icon">
+											{/* <input className="form-control datetimepicker" type="text" /> */}
+										</div>
+									</div>
+									<div className="m-t-20 text-center">
+										<button className="btn btn-primary submit-btn">Create Event</button>
+									</div>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
 			</div>
 		)
 	}
@@ -314,4 +333,4 @@ class Calendar extends React.Component {
 		)
 	}
 }
-export default Calendar;
+export default PatientAppointment;

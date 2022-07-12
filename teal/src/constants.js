@@ -91,6 +91,7 @@ export const appointment_status = [
     { value: 'pending', label: 'Pending', color: "purple" },
     { value: 'approved', label: 'Approved', color: "green" },
     { value: 'rejected', label: 'Rejected', color: "red" },
+    { value: 'canceled', label: 'Canceled', color: "red" },
 ]
 
 export const doctor_appointment_status = [
