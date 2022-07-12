@@ -84,13 +84,13 @@ public class AuthorizeController {
     public ResponseEntity<?> registerUser(@Valid @RequestBody RegisterRequest registerRequest) {
         if (userRepos.existsByUsername(registerRequest.getUsername())) {
             return ResponseEntity
-                    .ok()
+                    .badRequest()
                     .body(new MessageResponse("Username is already in use!", false));
         }
 
         if (patientRepos.existsByEmail(registerRequest.getEmail()) || employeeRepos.existsByEmail(registerRequest.getEmail())) {
             return ResponseEntity
-                    .ok()
+                    .badRequest()
                     .body(new MessageResponse("Email is already in use!",false));
         }
 
@@ -105,7 +105,7 @@ public class AuthorizeController {
         String strRoles = registerRequest.getRole();
         if (strRoles == null) {
             return ResponseEntity
-                    .ok()
+                    .badRequest()
                     .body(new MessageResponse("Role is not found.",false));
         } else {
             user.setRole("USER");
