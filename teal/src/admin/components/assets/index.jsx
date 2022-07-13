@@ -7,7 +7,7 @@ import {
 import { Link } from 'react-router-dom';
 import OpenChat from "../sidebar/openchatheader";
 import { Sent_img } from "../imagepath"
-import { axiosAction, GET, DELETE, numberSort, stringSort } from "../../../actions";
+import { axiosAction, GET, DELETE, numberSort, stringSort, notify } from "../../../actions";
 // import { DatePicker } from 'antd';
 
 class Assets extends Component {
