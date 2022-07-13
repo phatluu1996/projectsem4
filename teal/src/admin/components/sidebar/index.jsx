@@ -60,9 +60,9 @@ class SidebarNav extends Component {
               <li className="submenu">
                 <a href="#"><i className="fas fa-user" /> <span> Employees </span> <span className="menu-arrow" /></a>
                 <ul style={{ display: 'none' }}>
-                  <li><MenuItem to="/admin/employees" icon="fas fa-list" title="List" /></li>
-                  <li><MenuItem to="/admin/leaves" icon="fas fa-user-times" title="Leaves" /></li>
-                  <li><MenuItem to="/admin/salaries" icon="far fa-money-bill-alt" title="Salary" /></li>
+                  <MenuItem to="/admin/employees" icon="fas fa-list" title="List" />
+                  <MenuItem to="/admin/leaves" icon="fas fa-user-times" title="Leaves" />
+                  <MenuItem to="/admin/salaries" icon="far fa-money-bill-alt" title="Salary" />
                 </ul>
               </li>
               <MenuItem to="/admin/assets" icon="fas fa-cubes" title="Assets" />
@@ -70,8 +70,15 @@ class SidebarNav extends Component {
               <MenuItem to="/doctor/appointments" icon="far fa-calendar-alt" title="Appointments" />
 
               <li className="menu-title">RECEPTIONIST</li>
-              <MenuItem to="/reception/appointments" icon="far fa-calendar-alt" title="Appointments" />
-              
+              <li className="submenu">
+                <a href="#"><i className="far fa-calendar-alt" /> <span> Appointments </span> <span className="menu-arrow" /></a>
+                <ul style={{ display: 'none' }}>
+                  <MenuItem to="/reception/appointments" icon="fas fa-list" title="List" />
+                  <MenuItem to="/reception/appointments/pending" icon="fas fa-spinner fa-pulse" title="Pending Approval" />
+                </ul>
+              </li>
+
+
               {/* <li className={`${url === "patients" || url === "add-patients" || url === "edit-patient" ? "active" : ""}`}>
                 <Link to="/admin/patients"><i className="fas fa-wheelchair" /> Patients</Link>
               </li>

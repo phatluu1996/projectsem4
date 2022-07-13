@@ -112,7 +112,7 @@ class SalaryView extends Component {
             <div className="row" ref={el => (this.componentRef = el)} >
               <div className="col-md-3"></div>
               <div className="col-md-6">
-                <div className="card-box" id="print-payslip" style={{height: "210mm", width: "210mm"}}>
+                <div className="card-box" id="print-payslip" style={{height: "260mm", width: "210mm"}}>
                   <h4 className="payslip-title">Payslip for the month of {toMoment(this.state.data.salaryMonth).format("MMMM YYYY")}</h4>
                   <div className="row">
                     <div className="col-sm-6 m-b-20">

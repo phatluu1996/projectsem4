@@ -22,7 +22,7 @@ class AddAppointment extends Component {
         doctor: null,
         date: null,
         dateEnd: null,
-        status: '',
+        status: 'approved',
         message: null,
         retired: false
       },
@@ -204,8 +204,8 @@ class AddAppointment extends Component {
                   <div className="col-md-6">
                     <div className="form-group">
                       <label>Doctor</label>
-                      <Select bordered={false} size={"small"} style={{ width: '100%' }} name='doctor' className={isValid(this.state.data.doctor != null)} 
-                      onChange={this.onChangeDoctor} value={this.state.data.doctor ? this.state.data.doctor.id : ""}>
+                      <Select bordered={false} size={"small"} style={{ width: '100%' }} name='doctor' className={isValid(this.state.data.doctor != null)}
+                        onChange={this.onChangeDoctor} value={this.state.data.doctor ? this.state.data.doctor.id : ""}>
                         {this.state.doctors?.filter(doc => doc.department?.id == this.state.data.department?.id)?.map(doctor => {
                           return (<Option key={doctor.id} value={doctor.id}>{doctor.employee.firstName + " " + doctor.employee.lastName}</Option>)
                         })}
@@ -216,8 +216,8 @@ class AddAppointment extends Component {
                   <div className="col-md-6">
                     <div className="form-group">
                       <label>Time Range</label>
-                      <RangePicker name='date' className={isValid(this.state.data.date && this.state.data.dateEnd)} value={[this.state.data.date ?? "" , this.state.data.dateEnd ?? ""]}
-                        showTime={{defaultValue: moment('00:00:00', 'HH:mm:ss')}} minuteStep={30} showSecond={false} format="YYYY-MM-DD HH:mm" clearIcon={true}
+                      <RangePicker name='date' className={isValid(this.state.data.date && this.state.data.dateEnd)} value={[this.state.data.date ?? "", this.state.data.dateEnd ?? ""]}
+                        showTime={{ defaultValue: moment('00:00:00', 'HH:mm:ss') }} minuteStep={30} showSecond={false} format="YYYY-MM-DD HH:mm" clearIcon={true}
                         allowClear={true} onChange={this.onChangeDate} onSelect={this.onChangeDate} inputReadOnly={true}
                         disabledHours={this.disabledHours} disabledMinutes={this.disabledMinutes}></RangePicker>
                       <div className="invalid-feedback">Time Range cannot be empty</div>
@@ -244,7 +244,7 @@ class AddAppointment extends Component {
                   <label>Message</label>
                   <textarea name='message' cols={30} rows={4} className="form-control" onChange={this.onChange} />
                 </div>
-                <div className="form-group">
+                {!this.props.isReception && <div className="form-group">
                   <label>Status<span className="text-danger">*</span></label>
                   <Select bordered={false} size={"small"} style={{ width: '100%' }} value={this.state.data.status}
                     className={isValid(this.state.data.status)} onChange={this.onChangeStatus}>
@@ -252,12 +252,12 @@ class AddAppointment extends Component {
                       return (<Option key={idx} value={type.value}>{type.label}</Option>);
                     })}
                   </Select>
-                  <div className="invalid-feedback">Leave type cannot be empty</div>
-                </div>
+                  <div className="invalid-feedback">Status cannot be empty</div>
+                </div>}
 
                 <div className="m-t-20 text-center">
                   <button className="btn btn-primary submit-btn" type='submit'>Create Appointment</button>
-                  <button className="btn btn-danger submit-btn" onClick={() => this.props.history.push("/admin/appointments")}>Back</button>
+                  <button className="btn btn-danger submit-btn" onClick={() => this.props.history.push(this.props.pushBack)}>Back</button>
                 </div>
               </form>
             </div>

@@ -1,5 +1,6 @@
 package com.hospitalbooking.backend.controller;
 
+import com.hospitalbooking.backend.constant.AppointmentStatus;
 import com.hospitalbooking.backend.models.Appointment;
 import com.hospitalbooking.backend.models.Doctor;
 import com.hospitalbooking.backend.models.Patient;
@@ -40,13 +41,30 @@ public class AppointmentController {
 
     @GetMapping("/appointments-doctor/{id}")
     public ResponseEntity<List<Appointment>> allByDoctor(@PathVariable Long id){
-        Specification<?> spec = DBSpecification.createSpecification(Boolean.FALSE).and((root, cq, cb) -> cb.equal(root.get("doctor").get("id"), id));
+        Specification<?> spec = DBSpecification.createSpecification(Boolean.FALSE)
+                .and((root, cq, cb) -> cb.equal(root.get("doctor").get("id"), id))
+                .and((root, cq, cb) -> cb.or(cb.equal(root.get("status"), AppointmentStatus.APPROVED), cb.equal(root.get("status"),  AppointmentStatus.CANCELED)));
         return new ResponseEntity<List<Appointment>>(appointmentRepos.findAll(spec), HttpStatus.OK);
+    }
+
+    @GetMapping("/appointments-doctor/cancel/{id}")
+    public ResponseEntity<Appointment> cancelByDoctor(@PathVariable Long id) {
+        Optional<Appointment> optional = appointmentRepos.findById(id);
+        return optional.map(model -> {
+            model.setStatus(AppointmentStatus.CANCELED);
+            return new ResponseEntity<>(appointmentRepos.save(model), HttpStatus.OK);
+        }).orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     @GetMapping("/appointments-patient/{id}")
     public ResponseEntity<List<Appointment>> allByPatient(@PathVariable Long id){
-        Specification<?> spec = DBSpecification.createSpecification(Boolean.FALSE).and((root, cq, cb) -> cb.equal(root.join("patient").get("id"), id));;
+        Specification<?> spec = DBSpecification.createSpecification(Boolean.FALSE).and((root, cq, cb) -> cb.equal(root.get("patient").get("id"), id));;
+        return new ResponseEntity<List<Appointment>>(appointmentRepos.findAll(spec), HttpStatus.OK);
+    }
+
+    @GetMapping("/appointments-pending")
+    public ResponseEntity<List<Appointment>> allPending(){
+        Specification<?> spec = DBSpecification.createSpecification(Boolean.FALSE).and((root, cq, cb) -> cb.equal(root.get("status"), AppointmentStatus.PENDING));
         return new ResponseEntity<List<Appointment>>(appointmentRepos.findAll(spec), HttpStatus.OK);
     }
 
@@ -79,4 +97,6 @@ public class AppointmentController {
             return new ResponseEntity<>(appointmentRepos.save(model), HttpStatus.OK);
         }).orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
+
+
 }

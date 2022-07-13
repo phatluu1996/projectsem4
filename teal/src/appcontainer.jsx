@@ -187,6 +187,8 @@ import "./assets/js/app.js";
 
 import {NotificationContainer, NotificationManager} from 'react-notifications';
 import 'react-notifications/lib/notifications.css';
+import ReceptionAppointments from "./admin/components/reception-appointments/index.jsx";
+import ReceptionPendingAppointments from "./admin/components/reception-appointments/pending/index.jsx";
 
 class AppUniversal extends Component {
 
@@ -257,8 +259,8 @@ class AppUniversal extends Component {
             <AdminRoute component={AdminAddDepartment} path="/admin/departments/add" exact />
             <AdminRoute component={AdminEditDepartment} path="/admin/departments/update/:id" exact />
             <AdminRoute component={AdminAppointments} path="/admin/appointments" exact />
-            <AdminRoute component={AdminAddAppointment} path="/admin/appointments/add" exact />
-            <AdminRoute component={AdminEditAppointment} path="/admin/appointments/update/:id" exact />
+            <AdminRoute component={AdminAddAppointment} path="/admin/appointments/add" exact pushBack="/admin/appointments"/>
+            <AdminRoute component={AdminEditAppointment} path="/admin/appointments/update/:id" exact  pushBack="/admin/appointments"/>
             <AdminRoute component={AdminAssets} path="/admin/assets" exact />
             <AdminRoute component={AdminAddAsset} path="/admin/assets/add" exact />
             <AdminRoute component={AdminEditAsset} path="/admin/assets/update/:id" exact />
@@ -274,8 +276,10 @@ class AppUniversal extends Component {
             <AdminRoute component={AdminEditProfile} path="/admin/profile" exact />
             <AdminRoute component={AdminSalaryView} path="/admin/salaries/export/:id" exact />
             <AdminRoute component={AdminCalendar} path="/doctor/appointments" exact />
-            <AdminRoute component={AdminAppointments} path="/reception/appointments" exact />            
-
+            <AdminRoute component={ReceptionAppointments} path="/reception/appointments" exact />  
+            <AdminRoute component={AdminAddAppointment} path="/reception/appointments/add" exact pushBack="/reception/appointments" isReception={true}/>  
+            <AdminRoute component={AdminEditAppointment} path="/reception/appointments/update/:id" exact pushBack="/reception/appointments" isReception={true}/>   
+            <AdminRoute component={ReceptionPendingAppointments} path="/reception/appointments/pending" exact />   
           </Switch>
         </div>
         

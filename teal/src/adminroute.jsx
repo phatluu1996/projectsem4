@@ -4,11 +4,11 @@ import Header from "./admin/components/header";
 import '../src/admin/assets/css/style.css';
 import Sidebar from "./admin/components/sidebar";
 
-const AdminRoute = ({ component: Component, ...rest }) => {
+const AdminRoute = ({ component: Component, pushBack, isReception, ...rest }) => {
     return (<div id="admin">
         <Route render={(props) => <Sidebar {...props} />} />
         <Route render={(props) => <Header {...props} />} />
-        <Route {...rest} render={props => (<Component {...props} />)} />
+        <Route {...rest} render={props => (<Component {...props} pushBack={pushBack} isReception={isReception}/>)} />
         <div className="sidebar-overlay" data-reff />
     </div>
     );

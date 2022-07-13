@@ -9,6 +9,10 @@ import OpenChat from "../../sidebar/openchatheader";
 import { GET } from '../../../../constants';
 import { axiosActions, notify } from '../../../../actions';
 import moment from 'moment';
+import { toMoment } from '../../../../utils';
+import { countries } from '../../../../address';
+import { Popconfirm, Typography } from 'antd';
+import { CheckOutlined, ClearOutlined, HistoryOutlined, LocalDiningOutlined } from '@material-ui/icons';
 
 
 class Calendar extends React.Component {
@@ -25,53 +29,41 @@ class Calendar extends React.Component {
 		weekendsVisible: true,
 		currentEvents: [],
 		appointments: [],
-		defaultEvents: [{
-			title: 'Event Name 4',
-			start: Date.now() + 148000000,
-			className: 'bg-purple'
-		},
-		{
-			title: 'Test Event 1',
-			start: Date.now(),
-			end: Date.now(),
-			className: 'bg-success'
-		},
-		{
-			title: 'Test Event 2',
-			start: Date.now() + 168000000,
-			className: 'bg-info'
-		},
-		{
-			title: 'Test Event 3',
-			start: Date.now() + 338000000,
-			className: 'bg-primary'
-		}]
+		defaultEvents: [],
+		selectAppointment: {}
 	}
 
-	renderEventContent = (eventInfo) => {
-		return (
-			<>
-				<b>{moment(eventInfo.event.start).format("HH:mm") + "-" + moment(eventInfo.event.end).format("HH:mm")}</b>
-				<i> {eventInfo.event.title}</i>
-			</>
-		)
+	cancelAppointment = () => {
+		const appointmentParam = {
+			url: "/appointments-doctor/cancel/" + this.state.selectAppointment.id,
+			method: GET,
+			callback: (res) => {
+				notify('success', '', 'Success');
+				this.fetchAppointment();
+				this.setState({ iseditdelete: false })
+			},
+			data: {}
+		}
+
+		axiosActions([appointmentParam]);
 	}
 
-	componentDidMount() {
+	fetchAppointment() {
 		const id = 1;
 		const fetchReq = {
 			url: "/appointments-doctor/" + id,
 			method: GET,
 			callback: (res) => {
-				notify('success', '', 'Success');
+				// 
 				let list = [];
 				res.data.forEach((appointment) => {
-					// let app = { title: '', start: '', className: '' }
-					appointment.title = appointment.patient.lastName + " " + appointment.patient.firstName;
-					appointment.start = new Date(appointment.date).setSeconds(0);
-					appointment.end = new Date(appointment.dateEnd).setSeconds(0);
-					appointment.className = moment(appointment.date).isBefore(moment()) ? 'bg-success' : 'bg-info';
-					list.push(appointment);
+					let event = { title: '', start: '', className: '', end: '', data: {} };
+					event.title = appointment.patient.lastName + " " + appointment.patient.firstName;
+					event.start = new Date(appointment.date).setSeconds(0);
+					event.end = new Date(appointment.dateEnd).setSeconds(0);
+					event.className = appointment.status == "canceled" ? 'bg-danger' : moment(appointment.date).isBefore(moment()) ? 'bg-success' : 'bg-primary';
+					event.data = appointment;
+					list.push(event);
 				});
 				this.setState({
 					defaultEvents: list,
@@ -83,6 +75,22 @@ class Calendar extends React.Component {
 			data: {}
 		}
 		axiosActions([fetchReq]);
+	}
+
+	renderEventContent = (eventInfo) => {
+		return (eventInfo.event.extendedProps.data.status == "canceled" ?
+			<Typography.Text delete>
+				<i><ClearOutlined /><b>{moment(eventInfo.event.start).format("HH:mm") + " - " + moment(eventInfo.event.end).format("HH:mm")}</b></i>				
+			</Typography.Text> :
+			<Typography.Text>
+				{moment(eventInfo.event.extendedProps.data.date).isBefore(moment()) ? <CheckOutlined /> : <HistoryOutlined />}
+				<b>{moment(eventInfo.event.start).format("HH:mm") + " - " + moment(eventInfo.event.end).format("HH:mm")}</b>				
+			</Typography.Text>
+		)
+	}
+
+	componentDidMount() {
+		this.fetchAppointment();
 	}
 
 	handleChange = date => {
@@ -103,7 +111,8 @@ class Calendar extends React.Component {
 		this.setState({
 			iseditdelete: true,
 			event_title: clickInfo.event.title,
-			calenderevent: clickInfo.event
+			calenderevent: clickInfo.event,
+			selectAppointment: clickInfo.event.extendedProps.data
 		})
 	}
 
@@ -152,7 +161,8 @@ class Calendar extends React.Component {
 		this.setState({
 			iseditdelete: true,
 			event_title: clickInfo.event.title,
-			calenderevent: clickInfo.event
+			calenderevent: clickInfo.event,
+			selectAppointment: clickInfo.event.extendedProps.data
 		})
 	}
 
@@ -180,6 +190,7 @@ class Calendar extends React.Component {
 			show: true
 		});
 	}
+
 
 	render() {
 
@@ -213,7 +224,9 @@ class Calendar extends React.Component {
 											editable={false}
 											// selectable={true}
 											selectMirror={true}
+											expandRows={true}
 											dayMaxEvents={true}
+											contentHeight={1600}
 											weekends={this.state.weekendsVisible}
 											// initialEvents={defaultEvents}
 											// select={this.handleDateSelect}
@@ -244,21 +257,124 @@ class Calendar extends React.Component {
 				</div>
 				<OpenChat />
 				{/* Page Content */}
-				<Modal centered show={iseditdelete} onHide={this.handleClose}>
+				<Modal size='xl' centered show={iseditdelete} onHide={this.handleClose}>
 					<Modal.Header closeButton toggle={() => this.oncreateeventModalClose()}>
-						Add Event
+						<h3>Appointment Details</h3>
 					</Modal.Header>
 					<Modal.Body>
-						<label>Change event name</label>
-						<div className='input-group'><input className='form-control' type="text" />
-							<span className='input-group-append'>
-								<button type='submit' className='btn btn-success'><i className='fa fa-check'></i> Save</button>
-							</span>
+						<div className="row">
+							<div className="col-md-6">
+								<div className="row">
+									<div className="col-md-6">
+										<div className="form-group">
+											<label>Name</label>
+											<input className='form-control' type="text" readOnly value={this.state.selectAppointment?.patient?.lastName + " " + this.state.selectAppointment?.patient?.firstName} />
+										</div>
+									</div>
+									<div className="col-md-6">
+										<div className="form-group">
+											<label>Birthday</label>
+											<input className='form-control' type="text" readOnly value={moment(this.state.selectAppointment?.patient?.dateOfBirth).format("DD-MMMM-YYYY")} />
+										</div>
+									</div>
+									<div className="col-md-6">
+										<div className="form-group">
+											<label>Email</label>
+											<input className='form-control' type="text" readOnly value={this.state.selectAppointment?.patient?.email} />
+										</div>
+									</div>
+									<div className="col-md-6">
+										<div className="form-group">
+											<label>Phone</label>
+											<input className='form-control' type="text" readOnly value={this.state.selectAppointment?.patient?.phoneNumber} />
+										</div>
+									</div>
+									<div className="col-sm-6">
+										<div className="form-group gender-select">
+											<label className="gen-label">Gender </label>
+											<div className="form-check-inline">
+												<label className="form-check-label">
+													<input type="radio" checked={this.state.selectAppointment?.patient?.gender} readOnly />Male
+												</label>
+											</div>
+											<div className="form-check-inline">
+												<label className="form-check-label">
+													<input type="radio" name="gender" checked={!this.state.selectAppointment?.patient?.gender} readOnly />Female
+												</label>
+											</div>
+										</div>
+									</div>
+									<div className="col-md-12">
+										<div className="form-group">
+											<label>Address</label>
+											<input className='form-control' type="text" readOnly value={this.state.selectAppointment?.patient?.address?.line} />
+										</div>
+									</div>
+									<div className="col-md-4">
+										<div className="form-group">
+											<label>Country</label>
+											<input className='form-control' type="text" readOnly value={this.state.selectAppointment?.patient?.address?.country} />
+										</div>
+									</div>
+									<div className="col-md-4">
+										<div className="form-group">
+											<label>City</label>
+											<input className='form-control' type="text" readOnly value={this.state.selectAppointment?.patient?.address?.city} />
+										</div>
+									</div>
+									<div className="col-md-4">
+										<div className="form-group">
+											<label>State</label>
+											<input className='form-control' type="text" readOnly value={this.state.selectAppointment?.patient?.address?.province} />
+										</div>
+									</div>
+								</div>
+
+							</div>
+							<div className="col-md-6">
+								<div className="row">
+									<div className="col-md-6">
+										<div className="form-group">
+											<label>Department</label>
+											<input className='form-control' type="text" readOnly value={this.state.selectAppointment?.department?.name} />
+										</div>
+									</div>
+									<div className="col-md-6">
+										<div className="form-group">
+											<label>Appointment Date</label>
+											<input className='form-control' type="text" readOnly value={moment(this.state.selectAppointment?.date).format("DD-MM-YYYY")} />
+										</div>
+									</div>
+									<div className="col-md-6">
+										<div className="form-group">
+											<label>Start time</label>
+											<input className='form-control' type="text" readOnly value={moment(this.state.selectAppointment?.date).format("HH:mm")} />
+										</div>
+									</div>
+									<div className="col-md-6">
+										<div className="form-group">
+											<label>End time</label>
+											<input className='form-control' type="text" readOnly value={moment(this.state.selectAppointment?.dateEnd).format("HH:mm")} />
+										</div>
+									</div>
+									<div className="col-md-12">
+										<div className="form-group">
+											<label>Note</label>
+											<textarea name='message' cols={30} rows={6} className="form-control" readOnly value={this.state.selectAppointment?.message} />
+										</div>
+									</div>
+								</div>
+							</div>
 						</div>
 					</Modal.Body>
 					<Modal.Footer>
+						{moment(this.state.selectAppointment?.date).isAfter(moment()) && this.state.selectAppointment.status != "canceled" &&
+							<Popconfirm className='btn btn-warning submit-btn delete-event centered' data-dismiss="modal"
+								title="Sure to cancel?" onConfirm={() => this.cancelAppointment(this.state.selectAppointment.id)}>
+								<a>Cancel</a>
+							</Popconfirm>}
 						<button type="button" className="btn btn-danger submit-btn delete-event centered"
-							data-dismiss="modal" onClick={() => this.removeevent()}>Delete</button>
+							data-dismiss="modal" onClick={() => this.setState({ iseditdelete: false })}>Back</button>
 					</Modal.Footer>
 				</Modal>
 

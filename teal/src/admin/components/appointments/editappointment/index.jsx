@@ -256,7 +256,7 @@ class EditAppointment extends Component {
                   <label>Message</label>
                   <textarea name='message' cols={30} rows={4} className="form-control" value={this.state.data.message} onChange={this.onChange} />
                 </div>
-                <div className="form-group">
+                {!this.props.isReception && <div className="form-group">
                   <label>Status<span className="text-danger">*</span></label>
                   <Select bordered={false} size={"small"} style={{ width: '100%' }} value={this.state.data.status}
                     className={isValid(this.state.data.status)} onChange={this.onChangeStatus}>
@@ -264,11 +264,11 @@ class EditAppointment extends Component {
                       return (<Option key={idx} value={type.value}>{type.label}</Option>);
                     })}
                   </Select>
-                  <div className="invalid-feedback">Leave type cannot be empty</div>
-                </div>
+                  <div className="invalid-feedback">Status cannot be empty</div>
+                </div>}
                 <div className="m-t-20 text-center">
                   <button className="btn btn-primary submit-btn" type='submit'>Save</button>
-                  <button className="btn btn-danger submit-btn" onClick={() => this.props.history.push("/admin/appointments")}>Back</button>
+                  <button className="btn btn-danger submit-btn" onClick={() => this.props.history.push(this.props.pushBack)}>Back</button>
                 </div>
               </form>
             </div>

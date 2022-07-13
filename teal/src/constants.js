@@ -88,15 +88,12 @@ export const leave_status = [
 ]
 
 export const appointment_status = [
-    { value: 'pending', label: 'Pending', color: "purple" },
-    { value: 'approved', label: 'Approved', color: "green" },
-    { value: 'rejected', label: 'Rejected', color: "red" },
-    { value: 'canceled', label: 'Canceled', color: "red" },
+    { value: 'pending', label: 'Pending', color: "purple", next_status: [{ value: 'approved', label: 'Approved', color: "green" }, { value: 'rejected', label: 'Rejected', color: "red" }] },
+    { value: 'approved', label: 'Approved', color: "green", next_status: [{ value: 'canceled', label: 'Canceled', color: "yellow" }] },
+    { value: 'rejected', label: 'Rejected', color: "red", next_status: [] },
+    { value: 'canceled', label: 'Canceled', color: "yellow", next_status: [] },
 ]
 
-export const doctor_appointment_status = [
-
-]
 
 
 

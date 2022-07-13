@@ -1,7 +1,12 @@
 import axios from 'axios';
 import { api, ADD, DELETE, UPDATE, GET } from './constants';
 import moment from "moment";
-import { notification } from 'antd';
+import { notification, Button, Modal, Space } from 'antd';
+import { InfoOutlined } from '@material-ui/icons';
+import React, { Component } from "react";
+
+
+const { confirm } = Modal;
 
 export const axiosAction = (url, method, successCallback, errorCallback, data = {}) => {
     const response = undefined;
@@ -147,7 +152,7 @@ export const numberSort = (value1, value2) => {
     return value1 - value2;
 }
 
-export const dateSort = (value1, value2) => {    
+export const dateSort = (value1, value2) => {
     // return moment.utc(value1.timeStamp).diff(moment.utc(value2.timeStamp));
     return moment(value1).diff(moment(value2))
 }
@@ -157,13 +162,29 @@ export const momentSort = (value1, value2) => {
     return value1.diff(value2)
 }
 
-export const encodeBase64 = (file,callback) =>{
-      // Encode the file using the FileReader API
-      const reader = new FileReader();
-      reader.onloadend = () => {
+export const encodeBase64 = (file, callback) => {
+    // Encode the file using the FileReader API
+    const reader = new FileReader();
+    reader.onloadend = () => {
         callback(reader.result);
         // console.log(reader.result);
         // Logs data:<type>;base64,wL2dvYWwgbW9yZ...
-      };
-      reader.readAsDataURL(file);
+    };
+    reader.readAsDataURL(file);
 }
+
+export const showConfirm = (title, content, onOk, onCancel) => {
+    confirm({
+        title: title,
+        icon: <InfoOutlined/>,
+        content: content,
+
+        onOk() {
+            onOk();
+        },
+
+        onCancel() {
+            onCancel();
+        },
+    });
+};
