@@ -31,6 +31,10 @@ import Login from "./user/components/login";
 import Register from "./user/components/register";
 import ForgotPassword from "./user/components/forgotpassword";
 import Error404 from "./user/components/error_404";
+//User
+import Profile from "./user/components/userprofile/profile/index.jsx";
+import EditProfile from "./user/components/userprofile/edit-profile/index.jsx";
+
 
 //Admin
 
@@ -190,6 +194,8 @@ import 'react-notifications/lib/notifications.css';
 import ReceptionAppointments from "./admin/components/reception-appointments/index.jsx";
 import ReceptionPendingAppointments from "./admin/components/reception-appointments/pending/index.jsx";
 
+
+
 class AppUniversal extends Component {
 
   constructor(props){
@@ -238,6 +244,8 @@ class AppUniversal extends Component {
             
             <BusinessRoute restricted={false} path="/login" exact component={Login} />
             <BusinessRoute restricted={true} component={Register} path="/register" exact />
+            <BusinessRoute component={Profile} path="/profile" exact />
+
             <BusinessRoute component={AboutUs} path="/aboutus" exact />
             <BusinessRoute component={Departments} path="/departments" exact />
             <BusinessRoute component={Doctor} path="/doctors" exact />

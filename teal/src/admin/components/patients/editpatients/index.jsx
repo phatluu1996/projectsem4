@@ -170,6 +170,8 @@ class EditPatient extends Component {
   }
 
 
+
+
   render() {
 
     return (!this.state.loading && <div className="page-wrapper">

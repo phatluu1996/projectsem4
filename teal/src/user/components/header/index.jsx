@@ -94,6 +94,7 @@ class Header extends Component {
                             <Link className="dropdown-item" to="/login">Login</Link>
                             <Link className="dropdown-item" to="/register">Register</Link>
                             <Link className="dropdown-item" to="/forgot-password">Forgot Password</Link>
+                            <Link className="dropdown-item" to="/profile">User Profile</Link>
                             {/* <Link className="dropdown-item" to="/404">404</Link> */}
                           </div>
                         </li>
