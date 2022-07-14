@@ -115,7 +115,7 @@ class Profile extends Component {
       case 'cId':
         tmp.cId = value;
         break;
-      case 'city':
+      case 'district':
         tmp.address.district = value;
         break;
       case 'line':

@@ -51,7 +51,7 @@ export const axiosAction = (url, method, successCallback, errorCallback, data = 
             api.get(url).then(res => {
                 successCallback(res);
             }).catch(err => {
-                console.log(err);
+                console.error(err);
                 errorCallback(err);
             });
             break;
@@ -96,7 +96,7 @@ export const axiosActions = (params = [{
         })
     }).catch(errArr => {
         notify('error', "Technical error !", "Error", 500, () => {
-            console.log(errArr);
+            console.error(errArr);
         });
     });
 }
@@ -180,21 +180,33 @@ export const showConfirm = (title, content, onOk, onCancel) => {
         content: content,
 
         onOk() {
-            onOk();
+            if (onOk) {
+                onOk();
+            }
         },
 
         onCancel() {
-            onCancel();
+            if (onCancel) {
+                onCancel();
+            }
         },
     });
 };
 
-export const logout = () => {
-    localStorage.removeItem('userToken');
-    localStorage.removeItem('headerName');
-    localStorage.removeItem('userName');
-    localStorage.removeItem('userId');
-    localStorage.removeItem('userRole');
+export const logout = (onOk) => {
+    showConfirm("Are you sure ?",
+        "All the changes without saving could be lost !",
+        () => {
+            localStorage.removeItem('userToken');
+            localStorage.removeItem('headerName');
+            localStorage.removeItem('userName');
+            localStorage.removeItem('userId');
+            localStorage.removeItem('userRole');
+            onOk();
+        }
+    );
+
+
 }
 
 export const valid_email_regex = new RegExp(/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+.[a-zA-Z]$/);
@@ -208,7 +220,7 @@ export const isValidWithRegex = (val, type) => {
         case "email":
             return valid_email_regex.test(val);
         case "identity":
-            return valid_number_regex.test(val);            
+            return valid_number_regex.test(val);
 
         default:
             return false;

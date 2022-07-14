@@ -17,7 +17,7 @@ public class Employee  extends UserProfile{
     @Column(name = "status")
     private boolean status;
     @Column(name = "remaining_leave")
-    private int remainingLeave;
+    private float remainingLeave;
     @Column(name = "joining_date")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date joiningDate;
@@ -41,21 +41,13 @@ public class Employee  extends UserProfile{
         super();
     }
 
-    public Employee(String employeeRole, boolean status, int remainingLeave, Date joiningDate, List<EmployeeLeave> leaves) {
+    public Employee(Long id, String cId, String firstName, String lastName, String gender, Date dateOfBirth, String email, String phoneNumber, String image, String imageByteArr, Address address, boolean retired, String employeeRole, boolean status, int remainingLeave, Date joiningDate, User user) {
+        super(id, cId, firstName, lastName, gender, dateOfBirth, email, phoneNumber, image, imageByteArr, address, retired);
         this.employeeRole = employeeRole;
         this.status = status;
         this.remainingLeave = remainingLeave;
         this.joiningDate = joiningDate;
-        this.leaves = leaves;
-    }
-
-    public Employee(Long id, String cId, String firstName, String lastName, String gender, Date dateOfBirth, String email, String phoneNumber, String image,String imageByteArr, Address address, boolean retired, String employeeRole, boolean status, int remainingLeave, Date joiningDate, List<EmployeeLeave> leaves) {
-        super(id, cId, firstName, lastName, gender, dateOfBirth, email, phoneNumber,image,imageByteArr, address, retired);
-        this.employeeRole = employeeRole;
-        this.status = status;
-        this.remainingLeave = remainingLeave;
-        this.joiningDate = joiningDate;
-        this.leaves = leaves;
+        this.user = user;
     }
 
     public String getEmployeeRole() {
@@ -74,11 +66,11 @@ public class Employee  extends UserProfile{
         this.status = status;
     }
 
-    public int getRemainingLeave() {
+    public float getRemainingLeave() {
         return remainingLeave;
     }
 
-    public void setRemainingLeave(int remainingLeave) {
+    public void setRemainingLeave(float remainingLeave) {
         this.remainingLeave = remainingLeave;
     }
 

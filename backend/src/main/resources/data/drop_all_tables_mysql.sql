@@ -1,0 +1,17 @@
+SET FOREIGN_KEY_CHECKS = 0;
+DROP TABLE IF EXISTS `address`;
+DROP TABLE IF EXISTS `appointment`;
+DROP TABLE IF EXISTS `asset`;
+DROP TABLE IF EXISTS `department`;
+DROP TABLE IF EXISTS `doctor`;
+DROP TABLE IF EXISTS `doc_edu_detail`;
+DROP TABLE IF EXISTS `doc_exp_detail`;
+DROP TABLE IF EXISTS `doc_schedule`;
+DROP TABLE IF EXISTS `employee`;
+DROP TABLE IF EXISTS `employee_doctor`;
+DROP TABLE IF EXISTS `employee_leave`;
+DROP TABLE IF EXISTS `patient`;
+DROP TABLE IF EXISTS `user`;
+DROP TABLE IF EXISTS `user_doctor`;
+DROP TABLE IF EXISTS `employee_salary`;
+SET FOREIGN_KEY_CHECKS = 1

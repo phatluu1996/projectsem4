@@ -264,7 +264,7 @@ class AddDoctor extends Component {
         tmp.employee.gender = val;
         break;
 
-      case "line":
+    case "line":
         tmp.employee.address.line = val;
         break;
       case "district":

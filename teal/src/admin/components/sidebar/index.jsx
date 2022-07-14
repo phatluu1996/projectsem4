@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Link, withRouter } from "react-router-dom";
 import $ from "jquery"
 import MenuItem from "./ext_menuitem";
+import { ADMIN, DOCTOR, RECEPTION } from "../../../constants";
 
 class SidebarNav extends Component {
   componentDidMount() {
@@ -50,33 +51,40 @@ class SidebarNav extends Component {
         <div className="sidebar-inner slimscroll">
           <div id="sidebar-menu" className="sidebar-menu">
             <ul>
-              <li className="menu-title">ADMIN</li>
-              <MenuItem to="/admin" icon="fas fa-tachometer-alt" title="Dashboard" />
-              <MenuItem to="/admin/patients" icon="fas fa-bed" title="Patients" />
-              <MenuItem to="/admin/doctors" icon="fas fa-user-md" title="Doctors" />
-              <MenuItem to="/admin/schedules" icon="far fa-calendar-check" title="Schedules" />
-              <MenuItem to="/admin/appointments" icon="far fa-calendar-alt" title="Appointments" />
-              <MenuItem to="/admin/departments" icon="far fa-hospital" title="Departments" />
-              <li className="submenu">
-                <a href="#"><i className="fas fa-user" /> <span> Employees </span> <span className="menu-arrow" /></a>
-                <ul style={{ display: 'none' }}>
-                  <MenuItem to="/admin/employees" icon="fas fa-list" title="List" />
-                  <MenuItem to="/admin/leaves" icon="fas fa-user-times" title="Leaves" />
-                  <MenuItem to="/admin/salaries" icon="far fa-money-bill-alt" title="Salary" />
-                </ul>
-              </li>
-              <MenuItem to="/admin/assets" icon="fas fa-cubes" title="Assets" />
-              <li className="menu-title">DOCTOR</li>
-              <MenuItem to="/doctor/appointments" icon="far fa-calendar-alt" title="Appointments" />
+              {localStorage.getItem("userRole") == ADMIN &&
+                <>
+                  <li className="menu-title">ADMIN</li>
+                  <MenuItem to="/admin" icon="fas fa-tachometer-alt" title="Dashboard" />
+                  <MenuItem to="/admin/patients" icon="fas fa-bed" title="Patients" />
+                  <MenuItem to="/admin/doctors" icon="fas fa-user-md" title="Doctors" />
+                  <MenuItem to="/admin/schedules" icon="far fa-calendar-check" title="Schedules" />
+                  <MenuItem to="/admin/appointments" icon="far fa-calendar-alt" title="Appointments" />
+                  <MenuItem to="/admin/departments" icon="far fa-hospital" title="Departments" />
+                  <li className="submenu">
+                    <a href="#"><i className="fas fa-user" /> <span> Employees </span> <span className="menu-arrow" /></a>
+                    <ul style={{ display: 'none' }}>
+                      <MenuItem to="/admin/employees" icon="fas fa-list" title="List" />
+                      <MenuItem to="/admin/leaves" icon="fas fa-user-times" title="Leaves" />
+                      <MenuItem to="/admin/salaries" icon="far fa-money-bill-alt" title="Salary" />
+                    </ul>
+                  </li>
+                </>}
 
-              <li className="menu-title">RECEPTIONIST</li>
-              <li className="submenu">
-                <a href="#"><i className="far fa-calendar-alt" /> <span> Appointments </span> <span className="menu-arrow" /></a>
-                <ul style={{ display: 'none' }}>
+
+              {localStorage.getItem("userRole") == DOCTOR &&
+                <>
+                  <MenuItem to="/admin/assets" icon="fas fa-cubes" title="Assets" />
+                  <li className="menu-title">DOCTOR</li>
+                  <MenuItem to="/doctor/appointments" icon="far fa-calendar-alt" title="Appointments" />
+                </>}
+
+
+              {localStorage.getItem("userRole") == RECEPTION &&
+                <>
+                  <li className="menu-title">RECEPTIONIST</li>
                   <MenuItem to="/reception/appointments" icon="fas fa-list" title="List" />
-                  <MenuItem to="/reception/appointments/pending" icon="fas fa-spinner fa-pulse" title="Pending Approval" />
-                </ul>
-              </li>
+                  <MenuItem to="/reception/appointments/pending" icon="fas fa-circle-notch" title="Pending Approval" />
+                </>}
 
 
               {/* <li className={`${url === "patients" || url === "add-patients" || url === "edit-patient" ? "active" : ""}`}>

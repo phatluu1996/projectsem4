@@ -49,8 +49,14 @@ public class EmployeeController {
         return new ResponseEntity<>(employeeRepos.findAll(spec), HttpStatus.OK);
     }
 
+    @GetMapping("/employees-admin")
+    public ResponseEntity<List<Employee>> allForAdmin(){
+        Specification<?> spec = DBSpecification.createSpecification(Boolean.FALSE).and((root, cq, cb) -> cb.notEqual(root.get("employeeRole"), EmployeeRole.ADMIN)).and((root, cq, cb) -> cb.notEqual(root.get("employeeRole"), EmployeeRole.DOCTOR));
+        return new ResponseEntity<>(employeeRepos.findAll(spec), HttpStatus.OK);
+    }
+
     @GetMapping("/employees-doctors")
-    public ResponseEntity<List<Employee>> all(){
+    public ResponseEntity<List<Employee>> allIncludeDoctor(){
         Specification<?> spec = DBSpecification.createSpecification(Boolean.FALSE);
         return new ResponseEntity<>(employeeRepos.findAll(spec), HttpStatus.OK);
     }
@@ -92,7 +98,9 @@ public class EmployeeController {
             employee.setId(model.getId());
             addressRepos.save(employee.getAddress());
             User user = employee.getUser();
-            user.setPassword(encoder.encode(user.getPassword()));
+            if(!user.getPassword().equals(model.getUser().getPassword())){
+                user.setPassword(encoder.encode(user.getPassword()));
+            }
             User savedUser = userRepos.save(user);
             employee.setUser(savedUser);
             Employee savedEmployee = employeeRepos.save(employee);

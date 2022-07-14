@@ -1,16 +1,16 @@
 import { data } from "jquery";
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import { DatePicker, Select } from 'antd';
+import { DatePicker, Select, Modal } from 'antd';
 import { countries } from '../../../address';
 import { NotificationContainer, NotificationManager } from 'react-notifications';
 import { ADD, GET, UPDATE } from '../../../constants';
 import { axiosAction, axiosActions, notify } from '../../../actions';
+import moment from "moment";
 
 const { Option } = Select;
 
 class Register extends Component {
-
   constructor(props) {
     super(props);
 
@@ -24,6 +24,7 @@ class Register extends Component {
         confirmPassword: null,
         dateOfBirth: null,
         phone: null,
+        gender: null,
         cid: null,
         address: {
           line: null,
@@ -44,6 +45,7 @@ class Register extends Component {
         confirmPassword: false,
         phone: false,
         cid: false,
+        gender: false,
         address: {
           line: false,
           postalCode: false,
@@ -68,7 +70,7 @@ class Register extends Component {
     const tmp = { ...this.state.data };
     let statusChange = { ...this.state.statusChange };
     tmp.dateOfBirth = val;
-    statusChange.dateOfBirth = val == this.state.data.dateOfBirth;
+    statusChange.dateOfBirth = val != this.state.data.dateOfBirth;
     this.setState({
       data: tmp,
       statusChange: statusChange
@@ -99,6 +101,11 @@ class Register extends Component {
         case "confirmPassword":
           statusChange[e.target.name] = this.state.data.password == e.target.value;
           break;
+
+        // case "gender":
+        // case "dateOfBirth":
+        //   statusChange[e.target.name] = e.target.value ;
+        //   break;
 
         default:
           statusChange[e.target.name] = !(e.target.value == "");
@@ -152,6 +159,8 @@ class Register extends Component {
     if (this.state.data.email == null) { dataCheck.email = ""; }
     if (this.state.data.password == null) { dataCheck.password = ""; }
     if (this.state.data.confirmPassword == null) { dataCheck.confirmPassword = ""; }
+    if (this.state.data.dateOfBirth == null) { dataCheck.dateOfBirth = ""; }
+    if (this.state.data.gender == null) { dataCheck.gender = ""; }
     if (this.state.data.phone == null) { dataCheck.phone = ""; }
     if (this.state.data.cid == null) { dataCheck.cid = ""; }
     if (this.state.data.address.line == null) { dataCheck.address.line = ""; }
@@ -160,13 +169,24 @@ class Register extends Component {
     if (this.state.data.address.province == null) { dataCheck.address.province = ""; }
     if (this.state.data.address.district == null) { dataCheck.address.district = ""; }
 
+
     isAllValid = this.state.statusChange.firstName && this.state.statusChange.lastName && this.state.statusChange.email
       && this.state.statusChange.password && this.state.statusChange.confirmPassword && this.state.statusChange.phone
+      && this.state.statusChange.dateOfBirth && this.state.statusChange.gender
       && this.state.statusChange.cid && this.state.statusChange.username && this.state.statusChange.address.line
       && this.state.statusChange.address.country && this.state.statusChange.address.province
       && this.state.statusChange.address.district && this.state.statusChange.address.postalCode;
 
+
     if (!isAllValid) {
+      Modal.warning({
+        title: `Register Fail`,
+        content: (
+          <>
+            Form data is not qualified enough to finish the registration.
+          </>
+        )
+      });
       this.setState({ data: dataCheck });
     } else {
       let newPatient = {
@@ -176,14 +196,36 @@ class Register extends Component {
         password: dataCheck.password,
         email: dataCheck.email,
         phone: dataCheck.phone,
+        dateOfBirth: dataCheck.dateOfBirth,
+        gender: dataCheck.gender,
         cId: dataCheck.cid,
         address: dataCheck.address,
         role: 'PATIENT'
       };
 
       axiosAction("/register", ADD, (res) => {
-        notify('success', "Success")
-        this.props.history.push("/");
+        // this.props.history.push("/");
+        const modalConfig = (success, msg, callback) => {
+          return {
+            title: `Register ${success ? "Successfully" : "Fail"}`,
+            content: (
+              <>
+                {msg}
+              </>
+            ),
+            onOk: () => {
+              if (callback) {
+                callback();
+              }
+            }
+          }
+        }
+        if (res.data.success) {
+          Modal.success(modalConfig(res.data.success, res.data.message), () => { this.props.history.push("/") })
+        } else {
+          Modal.error(modalConfig(res.data.success, res.data.message))
+        }
+
       }, (err) => notify('error', 'Error'), newPatient);
     }
   }
@@ -216,17 +258,33 @@ class Register extends Component {
                   <div className="row">
                     <div className="col-sm-6">
                       <div className="form-group">
-                        <div className="form-group">
-                          <label>First Name</label>
-                          <input type="text"
-                            style={this.inputBorder(this.state.data.firstName != null, this.state.data.firstName && this.state.statusChange.firstName)}
-                            className={this.inputClassname(this.state.data.firstName != null, this.state.data.firstName && this.state.statusChange.firstName)}
-                            name="firstName"
-                            onBlur={this.handleChange}
-                          />
-                          <div className="invalid-feedback">Please enter first name.</div>
-                        </div>
-                        <label>User Name</label>
+                        <label>First Name<span className="text-danger">*</span></label>
+                        <input type="text"
+                          style={this.inputBorder(this.state.data.firstName != null, this.state.data.firstName && this.state.statusChange.firstName)}
+                          className={this.inputClassname(this.state.data.firstName != null, this.state.data.firstName && this.state.statusChange.firstName)}
+                          name="firstName"
+                          onBlur={this.handleChange}
+                        />
+                        <div className="invalid-feedback">Please enter first name.</div>
+                      </div>
+                    </div>
+                    <div className="col-sm-6">
+                      <div className="form-group">
+                        <label>Last Name<span className="text-danger">*</span></label>
+                        <input type="text"
+                          style={this.inputBorder(this.state.data.lastName != null, this.state.data.lastName && this.state.statusChange.lastName)}
+                          className={this.inputClassname(this.state.data.lastName != null, this.state.data.lastName && this.state.statusChange.lastName)}
+                          name="lastName"
+                          onBlur={this.handleChange}
+                        />
+                        <div className="invalid-feedback">Please enter last name.</div>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="row">
+                    <div className="col-sm-6">
+                      <div className="form-group">
+                        <label>User Name<span className="text-danger">*</span></label>
                         <input type="text"
                           style={this.inputBorder(this.state.data.username != null, this.state.data.username && this.state.statusChange.username)}
                           className={this.inputClassname(this.state.data.username != null, this.state.data.username && this.state.statusChange.username)}
@@ -235,9 +293,34 @@ class Register extends Component {
                         />
                         <div className="invalid-feedback">Please enter user name.</div>
                       </div>
-
+                    </div>
+                    <div className="col-sm-3">
                       <div className="form-group">
-                        <label>Password</label>
+                        <label>Email<span className="text-danger">*</span></label>
+                        <input type="email"
+                          style={this.inputBorder(this.state.data.email != null, this.state.data.email && this.state.statusChange.email)}
+                          className={this.inputClassname(this.state.data.email != null, this.state.data.email && this.state.statusChange.email)}
+                          name="email"
+                          onBlur={this.handleChange}
+                        />
+                        <div className="invalid-feedback">Please enter valid email.</div>
+                      </div>
+                    </div>
+                    <div className="col-sm-3">
+                      <div className="form-group">
+                        <label>Date of Birth<span className="text-danger">*</span></label>
+                        <DatePicker name='date' className={this.inputClassname(this.state.data.dateOfBirth != null, this.state.data.dateOfBirth && this.state.statusChange.dateOfBirth)}
+                          style={this.inputBorder(this.state.data.dateOfBirth != null, this.state.data.dateOfBirth && this.state.statusChange.dateOfBirth)}
+                          showTime={false} format="YYYY-MM-DD" clearIcon={true} disabledTime={true} value={ this.state.data.dateOfBirth ? moment(this.state.data.dateOfBirth) : ''}
+                          allowClear={true} onChange={this.onChangeDateOfBirth} onSelect={this.onChangeDateOfBirth}></DatePicker>
+                        <div className="invalid-feedback">Date of birth cannot be empty</div>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="row">
+                    <div className="col-sm-3">
+                      <div className="form-group">
+                        <label>Password<span className="text-danger">*</span></label>
                         <input
                           style={this.inputBorder(this.state.data.password != null, this.state.data.password && this.state.statusChange.password)}
                           className={this.inputClassname(this.state.data.password != null, this.state.data.password && this.state.statusChange.password)}
@@ -246,8 +329,10 @@ class Register extends Component {
                           onBlur={this.handleChange} />
                         <div className="invalid-feedback">Please enter valid password.</div>
                       </div>
+                    </div>
+                    <div className="col-sm-3">
                       <div className="form-group">
-                        <label>Confirm Password</label>
+                        <label>Confirm Password<span className="text-danger">*</span></label>
                         <input
                           type="password"
                           style={this.inputBorder(this.state.data.confirmPassword != null, this.state.data.confirmPassword && this.state.statusChange.confirmPassword)}
@@ -256,8 +341,22 @@ class Register extends Component {
                           onBlur={this.handleChange} />
                         <div className="invalid-feedback">Password must be the same.</div>
                       </div>
+                    </div>
+                    <div className="col-sm-3">
                       <div className="form-group">
-                        <label>Mobile Number</label>
+                        <label>Identity Card<span className="text-danger">*</span></label>
+                        <input
+                          type="text"
+                          style={this.inputBorder(this.state.data.cid != null, this.state.data.cid && this.state.statusChange.cid)}
+                          className={this.inputClassname(this.state.data.cid != null, this.state.data.cid && this.state.statusChange.cid)}
+                          name="cid"
+                          onBlur={this.handleChange} />
+                        <div className="invalid-feedback">Please enter identity card.</div>
+                      </div>
+                    </div>
+                    <div className="col-sm-3">
+                      <div className="form-group">
+                        <label>Mobile Number<span className="text-danger">*</span></label>
                         <input
                           type="number"
                           style={this.inputBorder(this.state.data.phone != null, this.state.data.phone && this.state.statusChange.phone)}
@@ -267,68 +366,11 @@ class Register extends Component {
                         <div className="invalid-feedback">Please enter phone number.</div>
                       </div>
                     </div>
-
-                    <div className="col-sm-6">
+                  </div>
+                  <div className="row">
+                    <div className="col-sm-4">
                       <div className="form-group">
-                        <label>Last Name</label>
-                        <input type="text"
-                          style={this.inputBorder(this.state.data.lastName != null, this.state.data.lastName && this.state.statusChange.lastName)}
-                          className={this.inputClassname(this.state.data.lastName != null, this.state.data.lastName && this.state.statusChange.lastName)}
-                          name="lastName"
-                          onBlur={this.handleChange}
-                        />
-                        <div className="invalid-feedback">Please enter last name.</div>
-                      </div>
-                      <div className="row">
-                        <div className="form-group col-sm-6">
-                          <div className="form-group">
-                            <label>Email</label>
-                            <input type="email"
-                              style={this.inputBorder(this.state.data.email != null, this.state.data.email && this.state.statusChange.email)}
-                              className={this.inputClassname(this.state.data.email != null, this.state.data.email && this.state.statusChange.email)}
-                              name="email"
-                              onBlur={this.handleChange}
-                            />
-                            <div className="invalid-feedback">Please enter valid email.</div>
-                          </div>
-                        </div>
-                        <div className="form-group col-sm-6">
-                          <div className="form-group">
-                            <label>Date of Birth<span className="text-danger">*</span></label>
-                            <DatePicker name='date' className={this.inputClassname(this.state.data.dateOfBirth != null, this.state.data.dateOfBirth && this.state.statusChange.dateOfBirth)} disabledTime={true}
-                              style={this.inputBorder(this.state.data.dateOfBirth, this.state.data.dateOfBirth && this.state.statusChange.dateOfBirth)}
-                              showTime={false} format="YYYY-MM-DD" clearIcon={true}
-                              allowClear={true} onChange={this.onChangeDateOfBirth} onSelect={this.onChangeDateOfBirth} onBlur={this.onChangeDateOfBirth}></DatePicker>
-                            <div className="invalid-feedback">Date of birth cannot be empty</div>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="row">
-                        <div className="form-group col-sm-6">
-                          <label>Identity Card</label>
-                          <input
-                            type="text"
-                            style={this.inputBorder(this.state.data.cid != null, this.state.data.cid && this.state.statusChange.cid)}
-                            className={this.inputClassname(this.state.data.cid != null, this.state.data.cid && this.state.statusChange.cid)}
-                            name="cid"
-                            onBlur={this.handleChange} />
-                          <div className="invalid-feedback">Please enter identity card.</div>
-                        </div>
-                        <div className="form-group col-sm-6">
-                          <label>Postal Code</label>
-                          <input
-                            type="text"
-                            style={this.inputBorder(this.state.data.address.postalCode != null, this.state.data.address.postalCode && this.state.statusChange.address.postalCode)}
-                            className={this.inputClassname(this.state.data.address.postalCode != null, this.state.data.address.postalCode && this.state.statusChange.address.postalCode)}
-                            name="postalCode"
-                            onBlur={this.handleChange} />
-                          <div className="invalid-feedback">Please enter postal code.</div>
-                        </div>
-                      </div>
-
-                      <div className="form-group">
-                        <label>Address</label>
+                        <label>Address<span className="text-danger">*</span></label>
                         <input
                           type="text"
                           style={this.inputBorder(this.state.data.address.line != null, this.state.data.address.line && this.state.statusChange.address.line)}
@@ -337,54 +379,88 @@ class Register extends Component {
                           onBlur={this.handleChange} />
                         <div className="invalid-feedback">Please enter address.</div>
                       </div>
-
-                      <div className="row">
-                        <div className="form-group col-sm-4">
-                          <label>Country</label>
-                          <Select
-                            aria-autocomplete='none'
-                            border='1'
-                            showSearch={true} bordered={false} size={"small"} style={{ width: '100%' }}
-                            name='country'
-                            className={this.inputClassname(this.state.data.address.country != null, this.state.data.address.country && this.state.statusChange.address.country)}
-                            onChange={this.onChangeCountry}
-                          >
-                            {this.state.initCountries?.map((ctr, idx) => {
-                              return (<Option key={idx} value={ctr.name}>{ctr.name}</Option>)
-                            })}
-                          </Select>
-                          <div className="invalid-feedback">Please enter country.</div>
+                    </div>
+                    <div className="col-sm-2">
+                      <div className="form-group">
+                        <label>Postal Code<span className="text-danger">*</span></label>
+                        <input
+                          type="text"
+                          style={this.inputBorder(this.state.data.address.postalCode != null, this.state.data.address.postalCode && this.state.statusChange.address.postalCode)}
+                          className={this.inputClassname(this.state.data.address.postalCode != null, this.state.data.address.postalCode && this.state.statusChange.address.postalCode)}
+                          name="postalCode"
+                          onBlur={this.handleChange} />
+                        <div className="invalid-feedback">Please enter postal code.</div>
+                      </div>
+                    </div>
+                    <div className="col-sm-6">
+                      <label className="gen-label">Gender<span className="text-danger">*</span></label>
+                      <div className="form-group gender-select">
+                        <div className="form-check-inline">
+                          <label className="form-check-label">
+                            <input type="radio" name="gender" className={this.state.data.gender != null ? (this.state.data.gender && this.state.statusChange.gender ? "form-check-input is-valid" : "form-check-input is-invalid") : "form-check-input"}
+                              value="Male" onBlur={this.handleChange} />Male
+                            <div className="invalid-feedback">Gender must be selected </div>
+                          </label>
                         </div>
-                        <div className="form-group col-sm-4">
-                          <label>State</label>
-                          <Select
-                            aria-autocomplete='none'
-                            showSearch={true} bordered={false} size={"small"} style={{ width: '100%' }}
-                            name='province'
-                            className={this.inputClassname(this.state.data.address.province != null, this.state.data.address.province && this.state.statusChange.address.province)}
-                            onChange={this.onChangeProvince}
-                            value={this.state.data.address.province}
-                          >
-                            {this.state.initCountries?.filter(ctr => ctr.name === this.state.data.address?.country)[0]?.states?.map((st, idx) => {
-                              return (<Option key={idx} value={st.name}>{st.name}</Option>)
-                            })}
-                          </Select>
-                          <div className="invalid-feedback">Please enter province.</div>
-                        </div>
-                        <div className="form-group col-sm-4">
-                          <label>District</label>
-                          <input
-                            type="text"
-                            style={this.inputBorder(this.state.data.address.district != null, this.state.data.address.district && this.state.statusChange.address.district)}
-                            className={this.inputClassname(this.state.data.address.district != null, this.state.data.address.district && this.state.statusChange.address.district)}
-                            name="district"
-                            onBlur={this.handleChange} />
-                          <div className="invalid-feedback">Please enter city.</div>
+                        <div className="form-check-inline">
+                          <label className="form-check-label">
+                            <input type="radio" name="gender" className="form-check-input"
+                              value="Female" onBlur={this.handleChange} />Female
+                          </label>
                         </div>
                       </div>
                     </div>
                   </div>
-
+                  <div className="row">
+                    <div className="col-sm-2">
+                      <div className="form-group">
+                        <label>Country<span className="text-danger">*</span></label>
+                        <Select
+                          aria-autocomplete='none'
+                          border='1'
+                          showSearch={true} bordered={false} size={"small"} style={{ width: '100%' }}
+                          name='country'
+                          className={this.inputClassname(this.state.data.address.country != null, this.state.data.address.country && this.state.statusChange.address.country)}
+                          onChange={this.onChangeCountry}
+                        >
+                          {this.state.initCountries?.map((ctr, idx) => {
+                            return (<Option key={idx} value={ctr.name}>{ctr.name}</Option>)
+                          })}
+                        </Select>
+                        <div className="invalid-feedback">Please enter country.</div>
+                      </div>
+                    </div>
+                    <div className="col-sm-2">
+                      <div className="form-group">
+                        <label>State<span className="text-danger">*</span></label>
+                        <Select
+                          aria-autocomplete='none'
+                          showSearch={true} bordered={false} size={"small"} style={{ width: '100%' }}
+                          name='province'
+                          className={this.inputClassname(this.state.data.address.province != null, this.state.data.address.province && this.state.statusChange.address.province)}
+                          onChange={this.onChangeProvince}
+                          value={this.state.data.address.province}
+                        >
+                          {this.state.initCountries?.filter(ctr => ctr.name === this.state.data.address?.country)[0]?.states?.map((st, idx) => {
+                            return (<Option key={idx} value={st.name}>{st.name}</Option>)
+                          })}
+                        </Select>
+                        <div className="invalid-feedback">Please enter province.</div>
+                      </div>
+                    </div>
+                    <div className="col-sm-2">
+                      <div className="form-group">
+                        <label>District<span className="text-danger">*</span></label>
+                        <input
+                          type="text"
+                          style={this.inputBorder(this.state.data.address.district != null, this.state.data.address.district && this.state.statusChange.address.district)}
+                          className={this.inputClassname(this.state.data.address.district != null, this.state.data.address.district && this.state.statusChange.address.district)}
+                          name="district"
+                          onBlur={this.handleChange} />
+                        <div className="invalid-feedback">Please enter city.</div>
+                      </div>
+                    </div>
+                  </div>
                   <div className="form-group form-check  text-center">
                     <label>
                       <input type="checkbox" name="checkbox" onChange={this.handleChange} /> I have read and agree the Terms &amp; Conditions</label>

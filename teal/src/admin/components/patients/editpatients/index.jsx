@@ -145,7 +145,7 @@ class EditPatient extends Component {
       case 'cId':
         tmp.cId = value;
         break;
-      case 'city':
+      case 'district':
         tmp.address.district = value;
         break;
       case 'line':
@@ -305,8 +305,8 @@ class EditPatient extends Component {
                     <div className="col-sm-6 col-md-6 col-lg-3">
                       <div className="form-group">
                         <label>District <span className="text-danger">*</span></label>
-                        <input type="text" name='city' className="form-control" onChange={(e) => this.onChange(e)} defaultValue={this.state.data?.address?.district} />
-                        <div className="invalid-feedback">Please input city.</div>
+                        <input type="text" name='district' className="form-control" onChange={(e) => this.onChange(e)} defaultValue={this.state.data?.address?.district} />
+                        <div className="invalid-feedback">Please input district.</div>
                       </div>
                     </div>
                     <div className="col-sm-6 col-md-6 col-lg-3">
