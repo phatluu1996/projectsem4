@@ -4,10 +4,10 @@ import { Link } from 'react-router-dom';
 import { countries } from '../../../../address';
 import { GET, UPDATE } from "../../../../constants";
 import { isFormValid, isValid, notify, axiosAction, encodeBase64 } from '../../../../actions';
-import { DatePicker, Select, Spin, Upload } from 'antd';
+import { Avatar, DatePicker, Modal, Select, Spin, Upload } from 'antd';
 import { Icon_01 } from "../../imagepath"
 import { toMoment } from '../../../../utils';
-import { AddOutlined } from '@material-ui/icons';
+import { AddOutlined, Edit, EditOutlined, Person, PersonOutline, RemoveRedEyeOutlined } from '@material-ui/icons';
 
 class Profile extends Component {
   id = localStorage.getItem("userId")
@@ -21,7 +21,7 @@ class Profile extends Component {
       countrySelect: null,
       img: null,
       confirm: null,
-      imgLoading: false,
+      imgFade: false,
       data: {
         firstName: null,
         lastName: null,
@@ -174,22 +174,14 @@ class Profile extends Component {
   }
 
   onSelectImage = (info) => {
-    // if (info.file.status === 'uploading') {
-    //   this.setState({ imgLoading: true });
-    //   return;
-    // }
-
-    // if (info.file.status === 'done') {
-      encodeBase64(info.file.originFileObj, (res) => {
-        const tmp = { ...this.state.data };
-        tmp.image = res;
-        tmp.imageByteArr = res
-        this.setState({
-          data: tmp
-        })
-        this.setState({ imgLoading: false });
+    encodeBase64(info.file.originFileObj, (res) => {
+      const tmp = { ...this.state.data };
+      tmp.image = res;
+      tmp.imageByteArr = res
+      this.setState({
+        data: tmp
       })
-    // }
+    })
   }
 
 
@@ -209,41 +201,44 @@ class Profile extends Component {
                   <div className="row">
                     <div className="col-sm-7 col-4">
                       <h4 className="page-title ml-3 ">My Profile</h4>
-                      {/* <div className="form-group">                                            
-                        <img src={this.state.data.imageByteArr ? this.state.data.imageByteArr : Icon_01} alt="" className="rounded float-left" width={150} height={150} />
-                      </div> */}
                     </div>
-                    {/* <div className="col-sm-6">
-                      <div className="form-group">
-                        <input 
-                          className="form-control-file"
-                          ref="file"
-                          type="file"
-                          onChange={this.onSelectImage}/>
-                      </div>
-                    </div> */}
                   </div>
                   <div className="row">
-                    <div className="col-sm-2">
-                      <div className="form-group">
+                    <div className="col-sm-2 pb-3">
+                      <div style={{ width: "fit-content !important", height: "100%" }} id="avatar-scale">
                         <label>Avatar</label>
                         <Upload name="avatar"
-                          multiple={false}                          
+                          multiple={false}
                           listType="picture-card"
-                          className="avatar-uploader"
+                          className="avatar-uploader m-4"
+                          onChange={this.onSelectImage}
                           showUploadList={false}
-                          onChange={this.onSelectImage}>
+                        >
                           {this.state.data.imageByteArr ? (
-                            <img
-                              src={this.state.data.imageByteArr}
-                              alt="avatar"
-                              style={{
-                                width: '120%',
-                                marginTop: 20,
-                              }}
-                            />
+                            <>
+                              <img className='patient-avatar'
+                                style={
+                                  {
+                                    border: "2px solid #E7E9EB",
+                                    borderRadius: "4px",
+                                    width: document.getElementById("avatar-scale").offsetWidth,
+                                    height: document.getElementById("avatar-scale").offsetHeight * 0.8,
+                                    opacity: this.state.imgFade ? 0.6 : 1
+                                  }}
+                                src={this.state.data.imageByteArr}
+                                onMouseEnter={() => this.setState({ imgFade: true })}
+                                onMouseLeave={() => this.setState({ imgFade: false })}
+                              />
+                              {this.state.imgFade && <EditOutlined style={{
+                                top: "45%",
+                                left: "45%",
+                                position: "absolute",
+                                transform: "translate(-45 %, -45 %)"
+                              }} />}
+                            </>
                           ) : (
-                            <div>                              
+                            <div>
+                              <EditOutlined />
                               <div
                                 style={{
                                   marginTop: 8,
