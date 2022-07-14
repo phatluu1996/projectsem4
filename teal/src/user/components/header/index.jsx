@@ -2,8 +2,14 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import { Logo } from './../imagepath';
 import $ from "jquery"
+import { logout } from "../../../actions";
 
 class Header extends Component {
+  constructor(props) {
+    super(props);
+    this.handleLogout = this.handleLogout.bind(this);
+  }
+
   componentDidMount() {
     // Mobile menu overlay
 
@@ -46,6 +52,12 @@ class Header extends Component {
         });
     }
   }
+
+  handleLogout() {
+    logout();
+    this.props.history.push("/")
+  }
+
   render() {
     const pathname = this.props.location.pathname.split("/")[1];
 
@@ -91,10 +103,15 @@ class Header extends Component {
                         <li className="dropdown nav-item">
                           <a className="dropdown-toggle settings-icon nav-link" data-toggle="dropdown"><i className="fas fa-cog" /></a>
                           <div className="dropdown-menu dropdown-menu-right">
-                            <Link className="dropdown-item" to="/login">Login</Link>
-                            <Link className="dropdown-item" to="/register">Register</Link>
-                            <Link className="dropdown-item" to="/forgot-password">Forgot Password</Link>
-                            <Link className="dropdown-item" to="/profile">User Profile</Link>
+                            {!localStorage.getItem('userToken') ?
+                              <>
+                                <Link className="dropdown-item" to="/login">Login</Link>
+                                <Link className="dropdown-item" to="/register">Register</Link>
+                              </> : <>
+                                <Link className="dropdown-item" to="/forgot-password">Forgot Password</Link>
+                                <Link className="dropdown-item" to="/profile">User Profile</Link>
+                                <a className="dropdown-item" onClick={this.handleLogout}>Logout</a>
+                              </>}
                             {/* <Link className="dropdown-item" to="/404">404</Link> */}
                           </div>
                         </li>
@@ -105,7 +122,7 @@ class Header extends Component {
               </div>
             </div>
           </div>
-        </header>        
+        </header>
       </>
     );
   }

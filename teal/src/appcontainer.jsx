@@ -189,20 +189,27 @@ import "./assets/js/bootstrap-datetimepicker.min.js";
 import "./assets/plugins/light-gallery/js/lightgallery-all.min.js";
 import "./assets/js/app.js";
 
-import {NotificationContainer, NotificationManager} from 'react-notifications';
+import { NotificationContainer, NotificationManager } from 'react-notifications';
 import 'react-notifications/lib/notifications.css';
 import ReceptionAppointments from "./admin/components/reception-appointments/index.jsx";
 import ReceptionPendingAppointments from "./admin/components/reception-appointments/pending/index.jsx";
+import { ADMIN, DOCTOR, PATIENT, RECEPTION } from "./constants.js";
 
 
 
 class AppUniversal extends Component {
 
-  constructor(props){
+  constructor(props) {
     super(props);
+    this.state = {
+      isLogin: false
+    }
   }
 
-  
+  componentDidMount() {
+
+  }
+
 
   render() {
     const url = this.props.location.pathname.split("/")[1];
@@ -211,86 +218,58 @@ class AppUniversal extends Component {
     }
     return (
       <Router basename="/">
-        <div className="main-wrapper"> 
+        <div className="main-wrapper">
           <Switch>
-            {/* <PublicRoute restricted={false} path="/" exact component={Home} />
-            <PublicRoute restricted={false} path="/departments" exact component={Departments} />
-            <PublicRoute restricted={false} path="/department-details" exact component={DepartmentDetails} />
-            <PublicRoute restricted={false} path="/services" exact component={Service} />
-            <PublicRoute restricted={false} path="/service-details" exact component={ServiceDetails} />
-            <PublicRoute restricted={false} path="/doctors" exact component={Doctor} />
-            <PublicRoute restricted={false} path="/doctor-details" exact component={DoctorDetails} />
-            <PublicRoute restricted={false} path="/blog" exact component={Blog} />
-            <PublicRoute restricted={false} path="/blog-left-sidebar" exact component={BlogLeftSidebar} />
-            <PublicRoute restricted={false} path="/blog-full-width" exact component={BlogFullWidth} />
-            <PublicRoute restricted={false} path="/blog-grid" exact component={BlogGrid} />
-            <PublicRoute restricted={false} path="/blog-details" exact component={BlogDetails} />
-            <PublicRoute restricted={false} path="/about-us" exact component={AboutUs} />
-            <PublicRoute restricted={false} path="/contact-us" exact component={ContactUs} />
-            <PublicRoute restricted={false} path="/appointment" exact component={Appointment} />
-            
-            <PublicRoute restricted={false} path="/register" exact component={Register} />
-            <PublicRoute restricted={false} path="/forgot-password" exact component={ForgotPassword} />
-            <PublicRoute restricted={false} path="/404" exact component={Error404} /> */}
-
-            {/* <PublicRoute restricted={false} component={Home} path="/" exact />
-            <PublicRoute restricted={true} component={Login} path="/login" exact />
-            
-            <PublicRoute restricted={true} component={ForgotPassword} path="/forgot-password" exact /> */}
-
-            {/* <PrivateRoute component={AdminDashboard} path="/admin/dashboard" exact /> */}
-            <BusinessRoute component={Home} path="/" exact/>
-            <BusinessRoute restricted={false} path="/appointment" exact component={Appointment} />
-            
-            <BusinessRoute restricted={false} path="/login" exact component={Login} />
+            <BusinessRoute component={Home} path="/" exact restricted={true} />
+            <BusinessRoute restricted={false} path="/appointment" exact component={Appointment} role={PATIENT} />
+            <BusinessRoute restricted={true} path="/login" exact component={Login} />
             <BusinessRoute restricted={true} component={Register} path="/register" exact />
-            <BusinessRoute component={Profile} path="/profile" exact />
+            <BusinessRoute component={Profile} path="/profile" exact role={PATIENT} />
+            <BusinessRoute component={AboutUs} path="/aboutus" exact restricted={true} />
+            <BusinessRoute component={Departments} path="/departments" exact restricted={true} />
+            <BusinessRoute component={Doctor} path="/doctors" exact restricted={true} />
+            <BusinessRoute component={DoctorDetails} path="/doctordetails" exact restricted={true} />
+            <BusinessRoute component={ContactUs} path="/contact-us" exact restricted={true} />
+            <BusinessRoute component={ForgotPassword} path="/forgot-password" exact restricted={true} />
 
-            <BusinessRoute component={AboutUs} path="/aboutus" exact />
-            <BusinessRoute component={Departments} path="/departments" exact />
-            <BusinessRoute component={Doctor} path="/doctors" exact />
-            <BusinessRoute component={DoctorDetails} path="/doctordetails" exact />
-            <BusinessRoute component={ContactUs} path="/contact-us" exact />
-            <BusinessRoute component={ForgotPassword} path="/forgot-password" exact />
-
-            <AdminRoute component={AdminDashboard} path="/admin" exact />
-            <AdminRoute component={AdminDoctors} path="/admin/doctors" exact />
-            <AdminRoute component={AdminAddDoctor} path="/admin/doctors/add" exact />
-            <AdminRoute component={AdminEditDoctor} path="/admin/doctors/update/:id" exact />
-            <AdminRoute component={AdminSchedules} path="/admin/schedules" exact />
-            <AdminRoute component={AdminAddSchedule} path="/admin/schedules/add" exact />
-            <AdminRoute component={AdminEditSchedule} path="/admin/schedules/update/:id" exact />
-            <AdminRoute component={AdminPatients} path="/admin/patients" exact />
-            <AdminRoute component={AdminAddPatient} path="/admin/patients/add" exact />
-            <AdminRoute component={AdminEditPatient} path="/admin/patients/update/:id" exact />
-            <AdminRoute component={AdminDepartments} path="/admin/departments" exact />
-            <AdminRoute component={AdminAddDepartment} path="/admin/departments/add" exact />
-            <AdminRoute component={AdminEditDepartment} path="/admin/departments/update/:id" exact />
-            <AdminRoute component={AdminAppointments} path="/admin/appointments" exact />
-            <AdminRoute component={AdminAddAppointment} path="/admin/appointments/add" exact pushBack="/admin/appointments"/>
-            <AdminRoute component={AdminEditAppointment} path="/admin/appointments/update/:id" exact  pushBack="/admin/appointments"/>
-            <AdminRoute component={AdminAssets} path="/admin/assets" exact />
-            <AdminRoute component={AdminAddAsset} path="/admin/assets/add" exact />
-            <AdminRoute component={AdminEditAsset} path="/admin/assets/update/:id" exact />
-            <AdminRoute component={AdminEmployees} path="/admin/employees" exact />
-            <AdminRoute component={AdminAddEmployee} path="/admin/employees/add" exact />
-            <AdminRoute component={AdminEditEmployee} path="/admin/employees/update/:id" exact />
-            <AdminRoute component={AdminLeave} path="/admin/leaves" exact />
-            <AdminRoute component={AdminAddLeave} path="/admin/leaves/add" exact />
-            <AdminRoute component={AdminEditLeave} path="/admin/leaves/update/:id" exact />
-            <AdminRoute component={AdminSalary} path="/admin/salaries" exact />
-            <AdminRoute component={AdminAddSalary} path="/admin/salaries/add" exact />
-            <AdminRoute component={AdminEditSalary} path="/admin/salaries/update/:id" exact />
-            <AdminRoute component={AdminEditProfile} path="/admin/profile" exact />
-            <AdminRoute component={AdminSalaryView} path="/admin/salaries/export/:id" exact />
-            <AdminRoute component={AdminCalendar} path="/doctor/appointments" exact />
-            <AdminRoute component={ReceptionAppointments} path="/reception/appointments" exact />  
-            <AdminRoute component={AdminAddAppointment} path="/reception/appointments/add" exact pushBack="/reception/appointments" isReception={true}/>  
-            <AdminRoute component={AdminEditAppointment} path="/reception/appointments/update/:id" exact pushBack="/reception/appointments" isReception={true}/>   
-            <AdminRoute component={ReceptionPendingAppointments} path="/reception/appointments/pending" exact />   
+            <AdminRoute component={AdminDashboard} path="/admin" exact restricted={false} role={ADMIN} />
+            <AdminRoute component={AdminDoctors} path="/admin/doctors" exact restricted={false} role={ADMIN} />
+            <AdminRoute component={AdminAddDoctor} path="/admin/doctors/add" exact restricted={false} role={ADMIN} />
+            <AdminRoute component={AdminEditDoctor} path="/admin/doctors/update/:id" exact restricted={false} role={ADMIN} />
+            <AdminRoute component={AdminSchedules} path="/admin/schedules" exact restricted={false} role={ADMIN} />
+            <AdminRoute component={AdminAddSchedule} path="/admin/schedules/add" exact restricted={false} role={ADMIN} />
+            <AdminRoute component={AdminEditSchedule} path="/admin/schedules/update/:id" exact restricted={false} role={ADMIN} />
+            <AdminRoute component={AdminPatients} path="/admin/patients" exact restricted={false} role={ADMIN} />
+            <AdminRoute component={AdminAddPatient} path="/admin/patients/add" exact restricted={false} role={ADMIN} />
+            <AdminRoute component={AdminEditPatient} path="/admin/patients/update/:id" exact restricted={false} role={ADMIN} />
+            <AdminRoute component={AdminDepartments} path="/admin/departments" exact restricted={false} role={ADMIN} />
+            <AdminRoute component={AdminAddDepartment} path="/admin/departments/add" exact restricted={false} role={ADMIN} />
+            <AdminRoute component={AdminEditDepartment} path="/admin/departments/update/:id" exact restricted={false} role={ADMIN} />
+            <AdminRoute component={AdminAppointments} path="/admin/appointments" exact restricted={false} role={ADMIN} />
+            <AdminRoute component={AdminAddAppointment} path="/admin/appointments/add" exact pushBack="/admin/appointments" restricted={false} role={ADMIN} />
+            <AdminRoute component={AdminEditAppointment} path="/admin/appointments/update/:id" exact pushBack="/admin/appointments" restricted={false} role={ADMIN} />
+            <AdminRoute component={AdminAssets} path="/admin/assets" exact restricted={false} role={ADMIN} />
+            <AdminRoute component={AdminAddAsset} path="/admin/assets/add" exact restricted={false} role={ADMIN} />
+            <AdminRoute component={AdminEditAsset} path="/admin/assets/update/:id" exact restricted={false} role={ADMIN} />
+            <AdminRoute component={AdminEmployees} path="/admin/employees" exact restricted={false} role={ADMIN} />
+            <AdminRoute component={AdminAddEmployee} path="/admin/employees/add" exact restricted={false} role={ADMIN} />
+            <AdminRoute component={AdminEditEmployee} path="/admin/employees/update/:id" exact restricted={false} role={ADMIN} />
+            <AdminRoute component={AdminLeave} path="/admin/leaves" exact restricted={false} role={ADMIN} />
+            <AdminRoute component={AdminAddLeave} path="/admin/leaves/add" exact restricted={false} role={ADMIN} />
+            <AdminRoute component={AdminEditLeave} path="/admin/leaves/update/:id" exact restricted={false} role={ADMIN} />
+            <AdminRoute component={AdminSalary} path="/admin/salaries" exact restricted={false} role={ADMIN} />
+            <AdminRoute component={AdminAddSalary} path="/admin/salaries/add" exact restricted={false} role={ADMIN} />
+            <AdminRoute component={AdminEditSalary} path="/admin/salaries/update/:id" exact restricted={false} role={ADMIN} />
+            <AdminRoute component={AdminEditProfile} path="/admin/profile" exact restricted={false} role={ADMIN} />
+            <AdminRoute component={AdminSalaryView} path="/admin/salaries/export/:id" exact restricted={false} role={ADMIN} />
+            <AdminRoute component={AdminCalendar} path="/doctor/appointments" exact restricted={false} role={DOCTOR} />
+            <AdminRoute component={ReceptionAppointments} path="/reception/appointments" exact role={RECEPTION} />
+            <AdminRoute component={AdminAddAppointment} path="/reception/appointments/add" exact pushBack="/reception/appointments" isReception={true} restricted={false} role={RECEPTION} />
+            <AdminRoute component={AdminEditAppointment} path="/reception/appointments/update/:id" exact pushBack="/reception/appointments" isReception={true} restricted={false} role={RECEPTION} />
+            <AdminRoute component={ReceptionPendingAppointments} path="/reception/appointments/pending" exact restricted={false} role={RECEPTION} />
           </Switch>
         </div>
-        
+
       </Router>
     );
   };

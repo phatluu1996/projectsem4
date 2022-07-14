@@ -5,7 +5,7 @@ import { DatePicker, Select } from "antd";
 
 class Appointment extends Component {
 
-  username = sessionStorage.getItem("userName");
+  username = localStorage.getItem("userName");
 
   constructor(props) {
     super(props);

@@ -4,13 +4,14 @@ import { Link } from 'react-router-dom';
 import { countries } from '../../../../address';
 import { GET, UPDATE } from "../../../../constants";
 import { isFormValid, isValid, notify, axiosAction, encodeBase64 } from '../../../../actions';
-import { DatePicker, Select } from 'antd';
+import { DatePicker, Select, Spin, Upload } from 'antd';
 import { Icon_01 } from "../../imagepath"
 import { toMoment } from '../../../../utils';
+import { AddOutlined } from '@material-ui/icons';
 
 class Profile extends Component {
-  id = sessionStorage.getItem("userId")
-  
+  id = localStorage.getItem("userId")
+
   constructor(props) {
     super(props);
     this.state = {
@@ -20,6 +21,7 @@ class Profile extends Component {
       countrySelect: null,
       img: null,
       confirm: null,
+      imgLoading: false,
       data: {
         firstName: null,
         lastName: null,
@@ -28,6 +30,7 @@ class Profile extends Component {
         email: null,
         phoneNumber: null,
         image: null,
+        imageByteArr: null,
         cId: null,
         address: {
           postalCode: null,
@@ -68,7 +71,6 @@ class Profile extends Component {
   onSubmit = (e) => {
     e.preventDefault();
     const tmp = { ...this.state.data }
-    console.log(tmp);
     if (!isFormValid(e)) return;
     axiosAction("/patients/" + this.id, UPDATE, res => {
       notify('success', '', 'Success')
@@ -81,7 +83,7 @@ class Profile extends Component {
       console.log(res.data);
       this.setState({
         data: res.data,
-        countrySelect:countries.find(ct=>ct.name === res.data.address.country),
+        countrySelect: countries.find(ct => ct.name === res.data.address.country),
         img: res.data.imageByteArr,
         loading: false,
       });
@@ -171,23 +173,32 @@ class Profile extends Component {
     return c1 ? "is-valid" : "is-invalid";
   }
 
-  onSelectImage = (e) => {
-    const tmp = { ...this.state.data };
-    var file = e.target.files[0];
-    encodeBase64(file, (res) => {
-      tmp.image = res;
-      this.setState({
-        data: tmp,
-        img:URL.createObjectURL(file)
+  onSelectImage = (info) => {
+    // if (info.file.status === 'uploading') {
+    //   this.setState({ imgLoading: true });
+    //   return;
+    // }
+
+    // if (info.file.status === 'done') {
+      encodeBase64(info.file.originFileObj, (res) => {
+        const tmp = { ...this.state.data };
+        tmp.image = res;
+        tmp.imageByteArr = res
+        this.setState({
+          data: tmp
+        })
+        this.setState({ imgLoading: false });
       })
-    })
+    // }
   }
 
 
+
+
   render() {
-      //rounded-circle
-      // rounded-thumbnail
-    return (
+    //rounded-circle
+    // rounded-thumbnail
+    return (!this.state.loading &&
       <>
         {/* Content */}
         <div className="main-content account-content">
@@ -198,34 +209,180 @@ class Profile extends Component {
                   <div className="row">
                     <div className="col-sm-7 col-4">
                       <h4 className="page-title ml-3 ">My Profile</h4>
-                      <div className="form-group">                                            
-                        <img src={this.state?.img ? this.state.img : Icon_01} alt="" className="rounded float-left" width={150} height={150} />
-                      </div>
+                      {/* <div className="form-group">                                            
+                        <img src={this.state.data.imageByteArr ? this.state.data.imageByteArr : Icon_01} alt="" className="rounded float-left" width={150} height={150} />
+                      </div> */}
                     </div>
-                    <div className="col-sm-6">
+                    {/* <div className="col-sm-6">
                       <div className="form-group">
                         <input 
-                          class="form-control-file"
+                          className="form-control-file"
                           ref="file"
                           type="file"
-                          multiple="true"
                           onChange={this.onSelectImage}/>
+                      </div>
+                    </div> */}
+                  </div>
+                  <div className="row">
+                    <div className="col-sm-2">
+                      <div className="form-group">
+                        <label>Avatar</label>
+                        <Upload name="avatar"
+                          multiple={false}                          
+                          listType="picture-card"
+                          className="avatar-uploader"
+                          showUploadList={false}
+                          onChange={this.onSelectImage}>
+                          {this.state.data.imageByteArr ? (
+                            <img
+                              src={this.state.data.imageByteArr}
+                              alt="avatar"
+                              style={{
+                                width: '120%',
+                                marginTop: 20,
+                              }}
+                            />
+                          ) : (
+                            <div>                              
+                              <div
+                                style={{
+                                  marginTop: 8,
+                                }}
+                              >
+                                Upload
+                              </div>
+                            </div>
+                          )}
+                        </Upload>
+                      </div>
+                    </div>
+                    <div className="col-sm-10">
+                      <div className="row">
+                        <div className="col-sm-4">
+                          <div className="form-group">
+                            <label>First Name</label>
+                            <input type="text"
+                              // style={this.inputBorder(this.state.data.firstName)}
+                              className={this.inputClassname(this.state.data?.firstName)}
+                              defaultValue={this.state.data?.firstName}
+                              name="firstName"
+                              onChange={this.onChange}
+                            />
+                            <div className="invalid-feedback">Please enter first name.</div>
+                          </div>
+                        </div>
+                        <div className="col-sm-4">
+                          <div className="form-group">
+                            <label>Last Name</label>
+                            <input type="text"
+                              defaultValue={this.state.data?.lastName}
+                              // style={this.inputBorder(this.state.data.lastName != null, this.state.data.lastName && this.state.statusChange.lastName)}
+                              className={this.inputClassname(this.state.data?.lastName)}
+                              name="lastName"
+                              onChange={this.onChange} />
+                            <div className="invalid-feedback">Please enter last name.</div>
+                          </div>
+                        </div>
+                        <div className="col-sm-4">
+                          <div className="form-group">
+                            <label>Date of Birth <span className="text-danger">*</span></label>
+                            <DatePicker name='dateOfBirth'
+                              className={isValid(this.state.data?.dateOfBirth)} aria-required
+                              showTime={false}
+                              format="YYYY-MM-DD"
+                              clearIcon={true}
+                              // defaultOpen
+                              value={toMoment(this.state.data?.dateOfBirth)}
+                              // allowClear={true}
+                              onChange={(e) => this.onChangeDate(e)}
+                              onSelect={(e) => this.onChangeDate(e)}
+                            />
+                            {/* </DatePicker> */}
+                          </div>
+                        </div>
+                      </div>
+                      <div className="row">
+                        <div className="col-sm-4">
+                          <div className="form-group">
+                            <label>Identity Card</label>
+                            <input
+                              type="text"
+                              defaultValue={this.state?.data?.cId}
+                              // style={this.inputBorder(this.state.data.cid != null, this.state.data.cid && this.state.statusChange.cid)}
+                              className={this.inputClassname(this.state?.data?.cId)}
+                              name="cId"
+                              onChange={this.onChange} />
+                            <div className="invalid-feedback">Please enter identity card.</div>
+                          </div>
+                        </div>
+                        <div className="col-sm-4">
+                          <div className="form-group">
+                            <label>Mobile Number</label>
+                            <input
+                              type="number"
+                              defaultValue={this.state.data?.phoneNumber}
+                              // style={this.inputBorder(this.state.data.phone != null, this.state.data.phone && this.state.statusChange.phone)}
+                              className={this.inputClassname(this.state.data?.phoneNumber)}
+                              name="phoneNumber"
+                              onChange={this.onChange} />
+                            <div className="invalid-feedback">Please enter phone number.</div>
+                          </div>
+                        </div>
+                        <div className="col-sm-4">
+                          <div className="form-group">
+                            <label>Email</label>
+                            <input type="email"
+                              defaultValue={this.state.data?.email}
+                              // style={this.inputBorder(this.state.data.email != null, this.state.data.email && this.state.statusChange.email)}
+                              className={this.inputClassname(this.state.data?.email)}
+                              name="email"
+                              onChange={this.onChange}
+                            />
+                            <div className="invalid-feedback">Please enter valid email.</div>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
                   <div className="row">
-                    <div className="col-sm-6">
-                      <div className="form-group">
-                        <label>First Name</label>
-                        <input type="text"
-                          // style={this.inputBorder(this.state.data.firstName)}
-                          className={this.inputClassname(this.state.data?.firstName)}
-                          defaultValue={this.state.data?.firstName}
-                          name="firstName"
-                          onChange={this.onChange}
-                        />
-                        <div className="invalid-feedback">Please enter first name.</div>
-                      </div>
+                    <div className="form-group col-sm-4">
+                      <label>User Name</label>
+                      <input type="text"
+                        defaultValue={this.state.data?.user?.username}
+                        // style={this.inputBorder(this.state.data.username != null, this.state.data.username && this.state.statusChange.username)}
+                        className={this.inputClassname(this.state.data?.user?.username)}
+                        name="username"
+                        onChange={this.onChange}
+                      />
+                      <div className="invalid-feedback">Please enter user name.</div>
+                    </div>
+                    <div className="form-group col-sm-4">
+                      <label>Password</label>
+                      <input
+                        type="password"
+                        defaultValue={this.state.data?.user?.password}
+                        // style={this.inputBorder(this.state.data.username != null, this.state.data.username && this.state.statusChange.username)}
+                        className={this.inputClassname(this.state.data?.user?.password)}
+                        name="password"
+                        onChange={this.onChange}
+                      />
+                      <div className="invalid-feedback">Please input your password.</div>
+                    </div>
+                    <div className="form-group col-sm-4">
+                      <label>Password Confirm</label>
+                      <input
+                        type="password"
+                        defaultValue={this.state.data?.user?.password}
+                        // style={this.inputBorder(this.state.data.username != null, this.state.data.username && this.state.statusChange.username)}
+                        className={this.inputClassname(this.state.data?.user?.password != null || this.state.data?.confirm != null)}
+                        name="confirm"
+                        onChange={this.onChange}
+                      />
+                      <div className="invalid-feedback">Please confirm your password.</div>
+                    </div>
+                  </div>
+                  <div className="row">
+                    <div className="col-sm-12">
                       <div className="form-group">
                         <label>Address</label>
                         <input
@@ -238,7 +395,7 @@ class Profile extends Component {
                         <div className="invalid-feedback">Please enter address.</div>
                       </div>
                       <div className="row">
-                        <div className="form-group col-sm-4">
+                        <div className="form-group col-sm-3">
                           <label>Country</label>
                           <Select
                             showSearch={true}
@@ -255,7 +412,7 @@ class Profile extends Component {
                           </Select>
                           <div className="invalid-feedback">Please enter country.</div>
                         </div>
-                        <div className="form-group col-sm-4">
+                        <div className="form-group col-sm-3">
                           <label>State</label>
                           <Select
                             showSearch={true}
@@ -273,7 +430,7 @@ class Profile extends Component {
                           </Select>
                           <div className="invalid-feedback">Please enter province.</div>
                         </div>
-                        <div className="form-group col-sm-4">
+                        <div className="form-group col-sm-3">
                           <label>City</label>
                           <input
                             type="text"
@@ -284,109 +441,7 @@ class Profile extends Component {
                             onChange={this.onChange} />
                           <div className="invalid-feedback">Please enter city.</div>
                         </div>
-                      </div>
-                      <div className="row">
-                        <div className="form-group col-sm-4">
-                          <label>User Name</label>
-                          <input type="text"
-                            defaultValue={this.state.data?.user?.username}
-                            // style={this.inputBorder(this.state.data.username != null, this.state.data.username && this.state.statusChange.username)}
-                            className={this.inputClassname(this.state.data?.user?.username)}
-                            name="username"
-                            onChange={this.onChange}
-                          />
-                          <div className="invalid-feedback">Please enter user name.</div>
-                        </div>
-                        <div className="form-group col-sm-4">
-                          <label>Password</label>
-                          <input
-                            type="password"
-                            defaultValue={this.state.data?.user?.password}
-                            // style={this.inputBorder(this.state.data.username != null, this.state.data.username && this.state.statusChange.username)}
-                            className={this.inputClassname(this.state.data?.user?.password)}
-                            name="password"
-                            onChange={this.onChange}
-                          />
-                          <div className="invalid-feedback">Please input your password.</div>
-                        </div>
-                        <div className="form-group col-sm-4">
-                          <label>Password Confirm</label>
-                          <input
-                            type="password"
-                            defaultValue={this.state.data?.user?.password}
-                            // style={this.inputBorder(this.state.data.username != null, this.state.data.username && this.state.statusChange.username)}
-                            className={this.inputClassname(this.state.data?.user?.password != null || this.state.data?.confirm != null)}
-                            name="confirm"
-                            onChange={this.onChange}
-                          />
-                          <div className="invalid-feedback">Please confirm your password.</div>
-                        </div>
-                      </div>
-                      {/* </div> */}
-                    </div>
-                    <div className="col-sm-6">
-                      <div className="form-group">
-                        <label>Last Name</label>
-                        <input type="text"
-                          defaultValue={this.state.data?.lastName}
-                          // style={this.inputBorder(this.state.data.lastName != null, this.state.data.lastName && this.state.statusChange.lastName)}
-                          className={this.inputClassname(this.state.data?.lastName)}
-                          name="lastName"
-                          onChange={this.onChange} />
-                        <div className="invalid-feedback">Please enter last name.</div>
-                      </div>
-                      <div className="form-group">
-                        <label>Email</label>
-                        <input type="email"
-                          defaultValue={this.state.data?.email}
-                          // style={this.inputBorder(this.state.data.email != null, this.state.data.email && this.state.statusChange.email)}
-                          className={this.inputClassname(this.state.data?.email)}
-                          name="email"
-                          onChange={this.onChange}
-                        />
-                        <div className="invalid-feedback">Please enter valid email.</div>
-                      </div>
-                      <div className="row">
-                        <div className="form-group col-sm-6">
-                          <label>Mobile Number</label>
-                          <input
-                            type="number"
-                            defaultValue={this.state.data?.phoneNumber}
-                            // style={this.inputBorder(this.state.data.phone != null, this.state.data.phone && this.state.statusChange.phone)}
-                            className={this.inputClassname(this.state.data?.phoneNumber)}
-                            name="phoneNumber"
-                            onChange={this.onChange} />
-                          <div className="invalid-feedback">Please enter phone number.</div>
-                        </div>
-                        <div className="form-group col-sm-6">
-                          <label>Date of Birth <span className="text-danger">*</span></label>
-                          <DatePicker name='dateOfBirth'
-                            className={isValid(this.state.data?.dateOfBirth)} aria-required
-                            showTime={false}
-                            format="YYYY-MM-DD"
-                            clearIcon={true}
-                            // defaultOpen
-                            value={toMoment(this.state.data?.dateOfBirth)}
-                            // allowClear={true}
-                            onChange={(e) => this.onChangeDate(e)}
-                            onSelect={(e) => this.onChangeDate(e)}
-                            />
-                          {/* </DatePicker> */}
-                        </div>
-                      </div>
-                      <div className="row">
-                        <div className="form-group col-sm-6">
-                          <label>Identity Card</label>
-                          <input
-                            type="text"
-                            defaultValue={this.state?.data?.cId}
-                            // style={this.inputBorder(this.state.data.cid != null, this.state.data.cid && this.state.statusChange.cid)}
-                            className={this.inputClassname(this.state?.data?.cId)}
-                            name="cId"
-                            onChange={this.onChange} />
-                          <div className="invalid-feedback">Please enter identity card.</div>
-                        </div>
-                        <div className="form-group col-sm-6">
+                        <div className="form-group col-sm-3">
                           <label>Postal Code</label>
                           <input
                             type="text"
@@ -399,12 +454,7 @@ class Profile extends Component {
                         </div>
                       </div>
                     </div>
-                    {/* </div> */}
                   </div>
-                  {/* <div className="form-group form-check  text-center">
-                    <label>
-                      <input type="checkbox" name="checkbox" onChange={this.onChange} /> I have read and agree the Terms &amp; Conditions</label>
-                  </div> */}
                   <div className="form-group text-center">
                     <button className="btn btn-primary account-btn" type="submit" >Save</button>
                   </div>

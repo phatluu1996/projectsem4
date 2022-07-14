@@ -161,7 +161,7 @@ class Register extends Component {
         phone: dataCheck.phone,
         cId: dataCheck.cid,
         address: dataCheck.address,
-        role: 'user'
+        role: 'PATIENT'
       };
 
       axiosAction("/register", ADD, (res) => {

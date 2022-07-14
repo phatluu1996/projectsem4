@@ -95,6 +95,7 @@ public class PatientController {
             }
             //user update
             User user = patient.getUser();
+            addressRepos.save(patient.getAddress());
             user.setPassword(encoder.encode(user.getPassword()));
             User savedUser = userRepos.save(user);
             patient.setUser(savedUser);

@@ -65,9 +65,9 @@ public class AuthorizeController {
 
         if(roles.get(0).equals("ROLE_ADMIN")){
             headerName = "Admin";
-        }else if(roles.get(0).equals("ROLE_DOCTOR")){
+        }else if(roles.get(0).equals("ROLE_DOCTOR") || roles.get(0).equals("ROLE_RECEPTION")){
             headerName = optional.getEmployee().getFirstName() + " " + optional.getEmployee().getLastName();
-        }else if(roles.get(0).equals("ROLE_USER")){
+        }else if(roles.get(0).equals("ROLE_PATIENT")){
             headerName = optional.getPatient().getFirstName() + " " + optional.getPatient().getLastName();
         }else {
             return ResponseEntity.ok(new MessageResponse("Error authorize !", false));

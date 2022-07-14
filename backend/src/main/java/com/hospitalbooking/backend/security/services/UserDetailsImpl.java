@@ -45,6 +45,15 @@ public class UserDetailsImpl implements UserDetails{
             case UserRole.DOCTOR:
                 role =  new SimpleGrantedAuthority("ROLE_DOCTOR");
                 break;
+
+            case UserRole.RECEPTIONIST:
+                role =  new SimpleGrantedAuthority("ROLE_RECEPTION");
+                break;
+
+            case UserRole.PATIENT:
+                role =  new SimpleGrantedAuthority("ROLE_PATIENT");
+                break;
+
             default:
                 role = new SimpleGrantedAuthority("ROLE_USER");
                 break;

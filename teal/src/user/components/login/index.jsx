@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import { ADD } from '../../../constants';
+import { ADD, ADMIN, DOCTOR, RECEPTION } from '../../../constants';
 import { axiosAction, notify } from '../../../actions';
 
 class Login extends Component {
@@ -57,13 +57,24 @@ class Login extends Component {
       };
 
       axiosAction("/login", ADD, (res) => {
-        sessionStorage.setItem('userToken', res.data.accessToken);
-        sessionStorage.setItem('headerName', res.data.header);
-        sessionStorage.setItem('userName', res.data.username);
-        sessionStorage.setItem('userId', res.data.id);
-        sessionStorage.setItem('userRole', res.data.roles[0]);
+        localStorage.setItem('userToken', res.data.accessToken);
+        localStorage.setItem('headerName', res.data.header);
+        localStorage.setItem('userName', res.data.username);
+        localStorage.setItem('userId', res.data.id);
+        localStorage.setItem('userRole', res.data.roles[0]);
         notify('success', "Success")
-        this.props.history.push("/");
+        switch (res.data.roles[0]) {
+          case ADMIN:
+          case RECEPTION:
+          case DOCTOR:
+            this.props.history.push("/admin");
+            break;
+        
+          default:
+            this.props.history.push("/");
+            break;
+        }
+        
       }, (err) => notify('error', 'Error'), dataLogin);
     }
   }
@@ -94,7 +105,7 @@ class Login extends Component {
                     name="username"
                     className={this.inputClassname(this.state.data.username != null, this.state.data.username && this.state.statusChange.username)}
                     style={this.inputBorder(this.state.data.username != null, this.state.data.username && this.state.statusChange.username)}
-                    onBlur={this.handleChange} />
+                    onChange={this.handleChange} />
                   <div className="invalid-feedback">Please enter username.</div>
                 </div>
                 <div className="form-group">
@@ -103,7 +114,7 @@ class Login extends Component {
                     name="password"
                     className={this.inputClassname(this.state.data.password != null, this.state.data.password && this.state.statusChange.password)}
                     style={this.inputBorder(this.state.data.password != null, this.state.data.password && this.state.statusChange.password)}
-                    onBlur={this.handleChange} />
+                    onChange={this.handleChange} />
                   <div className="invalid-feedback">Please enter password.</div>
                 </div>
                 <div className="form-group text-right"> 

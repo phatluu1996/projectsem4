@@ -176,7 +176,7 @@ export const encodeBase64 = (file, callback) => {
 export const showConfirm = (title, content, onOk, onCancel) => {
     confirm({
         title: title,
-        icon: <InfoOutlined/>,
+        icon: <InfoOutlined />,
         content: content,
 
         onOk() {
@@ -188,3 +188,11 @@ export const showConfirm = (title, content, onOk, onCancel) => {
         },
     });
 };
+
+export const logout = () => {
+    localStorage.removeItem('userToken');
+    localStorage.removeItem('headerName');
+    localStorage.removeItem('userName');
+    localStorage.removeItem('userId');
+    localStorage.removeItem('userRole');
+}

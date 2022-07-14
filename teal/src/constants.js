@@ -94,6 +94,10 @@ export const appointment_status = [
     { value: 'canceled', label: 'Canceled', color: "yellow", next_status: [] },
 ]
 
+export const ADMIN = "ROLE_ADMIN";
+export const PATIENT = "ROLE_PATIENT";
+export const RECEPTION = "ROLE_RECEPTION";
+export const DOCTOR = "ROLE_DOCTOR";
 
 
 
