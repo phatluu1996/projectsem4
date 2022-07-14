@@ -37,7 +37,7 @@ class Profile extends Component {
           province: null,
           line: null,
           country: null,
-          city: null
+          district: null
         },
         user: {
           username: null,
@@ -116,7 +116,7 @@ class Profile extends Component {
         tmp.cId = value;
         break;
       case 'city':
-        tmp.address.city = value;
+        tmp.address.district = value;
         break;
       case 'line':
         tmp.address.line = value;
@@ -426,13 +426,13 @@ class Profile extends Component {
                           <div className="invalid-feedback">Please enter province.</div>
                         </div>
                         <div className="form-group col-sm-3">
-                          <label>City</label>
+                          <label>District</label>
                           <input
                             type="text"
-                            defaultValue={this.state.data?.address?.city}
-                            // style={this.inputBorder(this.state.data.address.city != null, this.state.data.address.city && this.state.statusChange.address.city)}
-                            className={this.inputClassname(this.state.data.address.city)}
-                            name="city"
+                            defaultValue={this.state.data?.address?.district}
+                            // style={this.inputBorder(this.state.data.address.district != null, this.state.data.address.district && this.state.statusChange.address.district)}
+                            className={this.inputClassname(this.state.data.address.district)}
+                            name="district"
                             onChange={this.onChange} />
                           <div className="invalid-feedback">Please enter city.</div>
                         </div>

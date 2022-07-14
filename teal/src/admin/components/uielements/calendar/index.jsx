@@ -318,8 +318,8 @@ class Calendar extends React.Component {
 									</div>
 									<div className="col-md-4">
 										<div className="form-group">
-											<label>City</label>
-											<input className='form-control' type="text" readOnly value={this.state.selectAppointment?.patient?.address?.city} />
+											<label>District</label>
+											<input className='form-control' type="text" readOnly value={this.state.selectAppointment?.patient?.address?.district} />
 										</div>
 									</div>
 									<div className="col-md-4">

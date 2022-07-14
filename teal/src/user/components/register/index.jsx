@@ -1,11 +1,13 @@
 import { data } from "jquery";
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import { Select } from 'antd';
+import { DatePicker, Select } from 'antd';
 import { countries } from '../../../address';
 import { NotificationContainer, NotificationManager } from 'react-notifications';
 import { ADD, GET, UPDATE } from '../../../constants';
 import { axiosAction, axiosActions, notify } from '../../../actions';
+
+const { Option } = Select;
 
 class Register extends Component {
 
@@ -20,13 +22,14 @@ class Register extends Component {
         email: null,
         password: null,
         confirmPassword: null,
+        dateOfBirth: null,
         phone: null,
         cid: null,
         address: {
           line: null,
           postalCode: null,
           province: null,
-          city: null,
+          district: null,
           country: null,
           retired: false
         }
@@ -36,6 +39,7 @@ class Register extends Component {
         lastName: false,
         username: false,
         email: false,
+        dateOfBirth: false,
         password: false,
         confirmPassword: false,
         phone: false,
@@ -44,7 +48,7 @@ class Register extends Component {
           line: false,
           postalCode: false,
           province: false,
-          city: false,
+          district: false,
           country: false
         },
       },
@@ -57,7 +61,18 @@ class Register extends Component {
     this.inputClassname = this.inputClassname.bind(this);
     this.onChangeCountry = this.onChangeCountry.bind(this);
     this.onChangeProvince = this.onChangeProvince.bind(this);
+    this.onChangeDateOfBirth = this.onChangeDateOfBirth.bind(this);
+  }
 
+  onChangeDateOfBirth(val) {
+    const tmp = { ...this.state.data };
+    let statusChange = { ...this.state.statusChange };
+    tmp.dateOfBirth = val;
+    statusChange.dateOfBirth = val == this.state.data.dateOfBirth;
+    this.setState({
+      data: tmp,
+      statusChange: statusChange
+    });
   }
 
   handleChange = (e) => {
@@ -66,9 +81,9 @@ class Register extends Component {
     let data = { ...this.state.data };
     let statusChange = { ...this.state.statusChange };
 
-    var addressField = ["line", "city", "postalCode"];
+    var addressField = ["line", "district", "postalCode"];
 
-    if (addressField.findIndex(field => field === e.target.name) == -1) {
+    if (!addressField.includes(e.target.name)) {
 
       data[e.target.name] = e.target.value;
 
@@ -94,8 +109,10 @@ class Register extends Component {
       statusChange.address[e.target.name] = !(e.target.value == "");
     }
 
-    this.setState({ data: data });
-    this.setState({ statusChange: statusChange });
+    this.setState({
+      data: data,
+      statusChange: statusChange
+    });
   }
 
   onChangeCountry(val) {
@@ -141,13 +158,13 @@ class Register extends Component {
     if (this.state.data.address.postalCode == null) { dataCheck.address.postalCode = ""; }
     if (this.state.data.address.country == null) { dataCheck.address.country = ""; }
     if (this.state.data.address.province == null) { dataCheck.address.province = ""; }
-    if (this.state.data.address.city == null) { dataCheck.address.city = ""; }
+    if (this.state.data.address.district == null) { dataCheck.address.district = ""; }
 
     isAllValid = this.state.statusChange.firstName && this.state.statusChange.lastName && this.state.statusChange.email
       && this.state.statusChange.password && this.state.statusChange.confirmPassword && this.state.statusChange.phone
       && this.state.statusChange.cid && this.state.statusChange.username && this.state.statusChange.address.line
       && this.state.statusChange.address.country && this.state.statusChange.address.province
-      && this.state.statusChange.address.city && this.state.statusChange.address.postalCode;
+      && this.state.statusChange.address.district && this.state.statusChange.address.postalCode;
 
     if (!isAllValid) {
       this.setState({ data: dataCheck });
@@ -262,16 +279,31 @@ class Register extends Component {
                         />
                         <div className="invalid-feedback">Please enter last name.</div>
                       </div>
-                      <div className="form-group">
-                        <label>Email</label>
-                        <input type="email"
-                          style={this.inputBorder(this.state.data.email != null, this.state.data.email && this.state.statusChange.email)}
-                          className={this.inputClassname(this.state.data.email != null, this.state.data.email && this.state.statusChange.email)}
-                          name="email"
-                          onBlur={this.handleChange}
-                        />
-                        <div className="invalid-feedback">Please enter valid email.</div>
+                      <div className="row">
+                        <div className="form-group col-sm-6">
+                          <div className="form-group">
+                            <label>Email</label>
+                            <input type="email"
+                              style={this.inputBorder(this.state.data.email != null, this.state.data.email && this.state.statusChange.email)}
+                              className={this.inputClassname(this.state.data.email != null, this.state.data.email && this.state.statusChange.email)}
+                              name="email"
+                              onBlur={this.handleChange}
+                            />
+                            <div className="invalid-feedback">Please enter valid email.</div>
+                          </div>
+                        </div>
+                        <div className="form-group col-sm-6">
+                          <div className="form-group">
+                            <label>Date of Birth<span className="text-danger">*</span></label>
+                            <DatePicker name='date' className={this.inputClassname(this.state.data.dateOfBirth != null, this.state.data.dateOfBirth && this.state.statusChange.dateOfBirth)} disabledTime={true}
+                              style={this.inputBorder(this.state.data.dateOfBirth, this.state.data.dateOfBirth && this.state.statusChange.dateOfBirth)}
+                              showTime={false} format="YYYY-MM-DD" clearIcon={true}
+                              allowClear={true} onChange={this.onChangeDateOfBirth} onSelect={this.onChangeDateOfBirth} onBlur={this.onChangeDateOfBirth}></DatePicker>
+                            <div className="invalid-feedback">Date of birth cannot be empty</div>
+                          </div>
+                        </div>
                       </div>
+
                       <div className="row">
                         <div className="form-group col-sm-6">
                           <label>Identity Card</label>
@@ -315,7 +347,7 @@ class Register extends Component {
                             showSearch={true} bordered={false} size={"small"} style={{ width: '100%' }}
                             name='country'
                             className={this.inputClassname(this.state.data.address.country != null, this.state.data.address.country && this.state.statusChange.address.country)}
-                            onChange={this.onChangeCountry} 
+                            onChange={this.onChangeCountry}
                           >
                             {this.state.initCountries?.map((ctr, idx) => {
                               return (<Option key={idx} value={ctr.name}>{ctr.name}</Option>)
@@ -330,7 +362,7 @@ class Register extends Component {
                             showSearch={true} bordered={false} size={"small"} style={{ width: '100%' }}
                             name='province'
                             className={this.inputClassname(this.state.data.address.province != null, this.state.data.address.province && this.state.statusChange.address.province)}
-                            onChange={this.onChangeProvince} 
+                            onChange={this.onChangeProvince}
                             value={this.state.data.address.province}
                           >
                             {this.state.initCountries?.filter(ctr => ctr.name === this.state.data.address?.country)[0]?.states?.map((st, idx) => {
@@ -340,12 +372,12 @@ class Register extends Component {
                           <div className="invalid-feedback">Please enter province.</div>
                         </div>
                         <div className="form-group col-sm-4">
-                          <label>City</label>
+                          <label>District</label>
                           <input
                             type="text"
-                            style={this.inputBorder(this.state.data.address.city != null, this.state.data.address.city && this.state.statusChange.address.city)}
-                            className={this.inputClassname(this.state.data.address.city != null, this.state.data.address.city && this.state.statusChange.address.city)}
-                            name="city"
+                            style={this.inputBorder(this.state.data.address.district != null, this.state.data.address.district && this.state.statusChange.address.district)}
+                            className={this.inputClassname(this.state.data.address.district != null, this.state.data.address.district && this.state.statusChange.address.district)}
+                            name="district"
                             onBlur={this.handleChange} />
                           <div className="invalid-feedback">Please enter city.</div>
                         </div>

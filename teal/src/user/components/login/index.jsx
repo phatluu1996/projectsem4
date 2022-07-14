@@ -78,6 +78,7 @@ class Login extends Component {
       }, (err) => notify('error', 'Error'), dataLogin);
     }
   }
+  
 
   inputBorder = (c1, c2) => {
     return c1?{border : c2?'1px solid green':'1px solid red'}:{};

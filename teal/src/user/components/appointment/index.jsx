@@ -104,7 +104,7 @@ class Appointment extends Component {
                         </div>
                         <div className="form-group row">
                           <p className="col-2"><strong>Address:</strong></p>
-                          <p className="col-10">&ensp;{this.state.patient.address.line}, {this.state.patient.address.city}, {this.state.patient.address.province}, {this.state.patient.address.country}</p>
+                          <p className="col-10">&ensp;{this.state.patient.address.line}, {this.state.patient.address.district}, {this.state.patient.address.province}, {this.state.patient.address.country}</p>
                         </div>
                         <hr/>
                         <div className="form-group">

@@ -15,8 +15,8 @@ public class Address {
     private String postalCode;
     @Column(name = "province", length = 150, columnDefinition = "nvarchar(150)")
     private String province;
-    @Column(name = "city", length = 150, columnDefinition = "nvarchar(150)")
-    private String city;
+    @Column(name = "district", length = 150, columnDefinition = "nvarchar(150)")
+    private String district;
     @Column(name = "country", length = 150, columnDefinition = "nvarchar(150)")
     private String country;
     @Column(name = "retired")
@@ -25,12 +25,12 @@ public class Address {
     public Address() {
     }
 
-    public Address(Long id, String line, String postalCode, String province, String city, String country, boolean retired) {
+    public Address(Long id, String line, String postalCode, String province, String district, String country, boolean retired) {
         this.id = id;
         this.line = line;
         this.postalCode = postalCode;
         this.province = province;
-        this.city = city;
+        this.district = district;
         this.country = country;
         this.retired = retired;
     }
@@ -67,12 +67,12 @@ public class Address {
         this.province = province;
     }
 
-    public String getCity() {
-        return city;
+    public String getDistrict() {
+        return district;
     }
 
-    public void setCity(String city) {
-        this.city = city;
+    public void setDistrict(String city) {
+        this.district = city;
     }
 
     public String getCountry() {

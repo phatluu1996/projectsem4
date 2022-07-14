@@ -31,7 +31,7 @@ public class InitialLoaderController {
 
     @GetMapping("/load-initial")
     public ResponseEntity view() {
-        
+
         return new ResponseEntity<>(null, HttpStatus.OK);
     }
 }

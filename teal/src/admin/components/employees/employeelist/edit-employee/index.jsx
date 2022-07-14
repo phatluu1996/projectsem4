@@ -34,7 +34,7 @@ class EditEmployee extends Component {
           "line": null,
           "postalCode": null,
           "province": null,
-          "city": null,
+          "district": null,
           "country": null,
           "retired": false
         },
@@ -123,8 +123,8 @@ class EditEmployee extends Component {
       case "province":
         tmp.address.province = arg;
         break;
-      case "city":
-        tmp.address.city = arg.target.value;
+      case "district":
+        tmp.address.district = arg.target.value;
         break;
       case "postal":
         tmp.address.postalCode = arg.target.value;
@@ -319,9 +319,9 @@ class EditEmployee extends Component {
                       </div>
                       <div className="col-sm-6">
                         <div className="form-group">
-                          <label>City<span className="text-danger">*</span></label>
-                          <input name="city" type="text" className={isValid(this.state.data.address?.city)} onChange={(arg) => this.onChange(arg, "city")} value={this.state.data.address.city} />
-                          <div className="invalid-feedback">City cannot be empty</div>
+                          <label>District<span className="text-danger">*</span></label>
+                          <input name="district" type="text" className={isValid(this.state.data.address?.district)} onChange={(arg) => this.onChange(arg, "district")} value={this.state.data.address.district} />
+                          <div className="invalid-feedback">District cannot be empty</div>
                         </div>
                       </div>
                       <div className="col-sm-6">

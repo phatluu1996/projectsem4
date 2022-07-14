@@ -30,7 +30,7 @@ class AddPatient extends Component {
           province: null,
           line: null,
           country: null,
-          city: null
+          district: null
         },
         user: {
           username: null,
@@ -122,7 +122,7 @@ class AddPatient extends Component {
         tmp.cId = value;
         break;
       case 'city':
-        tmp.address.city = value;
+        tmp.address.district = value;
         break;
       case 'line':
         tmp.address.line = value;
@@ -277,8 +277,8 @@ class AddPatient extends Component {
                       </div>
                       <div className="col-sm-6 col-md-6 col-lg-3">
                         <div className="form-group">
-                          <label>City<span className="text-danger">*</span></label>
-                          <input type="text" name='city' className={isValid(this.state.data.address.city)} onChange={(e) => this.onChange(e)} />
+                          <label>District<span className="text-danger">*</span></label>
+                          <input type="text" name='city' className={isValid(this.state.data.address.district)} onChange={(e) => this.onChange(e)} />
                           <div className="invalid-feedback">Please select city cannot be empty</div>
                         </div>
                       </div>

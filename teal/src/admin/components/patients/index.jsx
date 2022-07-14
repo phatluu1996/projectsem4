@@ -142,10 +142,10 @@ class Patients extends Component {
         dataIndex: "address",
         render: (text, record) => (
           <div>
-            {record.address?.line + " " + record.address?.city + " " + record.address?.province + " " + record.address?.country}
+            {record.address?.line + " " + record.address?.district + " " + record.address?.province + " " + record.address?.country}
           </div>
         ),
-        sorter: (a, b) => stringSort(a.address?.line + " " + a.address?.city + " " + a.address?.province + " " + a.address?.country, b.address?.line + " " + b.address?.city + " " + b.address?.province + " " + b.address?.country),
+        sorter: (a, b) => stringSort(a.address?.line + " " + a.address?.district + " " + a.address?.province + " " + a.address?.country, b.address?.line + " " + b.address?.district + " " + b.address?.province + " " + b.address?.country),
       },
       {
         title: "Phone",

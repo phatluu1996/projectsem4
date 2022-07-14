@@ -1,5 +1,7 @@
 package com.hospitalbooking.backend.controller;
 
+import com.hospitalbooking.backend.constant.EmployeeRole;
+import com.hospitalbooking.backend.constant.UserRole;
 import com.hospitalbooking.backend.models.*;
 import com.hospitalbooking.backend.repository.*;
 import com.hospitalbooking.backend.security.jwt.JwtUtils;
@@ -108,8 +110,7 @@ public class AuthorizeController {
                     .badRequest()
                     .body(new MessageResponse("Role is not found.",false));
         } else {
-            user.setRole("USER");
-
+            user.setRole(UserRole.PATIENT);
             patient = new Patient();
             patient.setFirstName(registerRequest.getFirstName());
             patient.setLastName(registerRequest.getLastName());
