@@ -52,7 +52,11 @@ public class PatientController {
         return patientRepos.findById(id).map(patient -> new ResponseEntity<>(patient, HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
-
+    @GetMapping("/patients-user/{username}")
+    public ResponseEntity<Patient> oneByUsername(@PathVariable String username){
+        return userRepos.findByUsername(username).map(user -> new ResponseEntity<>(user.getPatient(), HttpStatus.OK))
+                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
     @GetMapping("/patients")
     public ResponseEntity<List<Patient>> all(){
         Specification<?> spec = DBSpecification.createSpecification(Boolean.FALSE);

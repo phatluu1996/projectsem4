@@ -57,7 +57,7 @@ class Header extends Component {
   }
 
   handleLogout() {
-    logout(() => setTimeout(()=>{this.props.history.push("/")}, 250) );
+    logout(() => setTimeout(()=>{this.props.history.replace("/")}, 250) );
   }
 
   render() {

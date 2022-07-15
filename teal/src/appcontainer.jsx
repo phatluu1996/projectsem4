@@ -224,8 +224,8 @@ class AppUniversal extends Component {
           <Switch>
             <BusinessRoute component={Home} path="/" exact restricted={true} />
             <BusinessRoute restricted={false} path="/appointment" exact component={Appointment} role={PATIENT} />
-            <BusinessRoute restricted={!login_register_avai.includes(localStorage.getItem("userRole"))} path="/login" exact component={Login}/>
-            <BusinessRoute restricted={!login_register_avai.includes(localStorage.getItem("userRole"))} component={Register} path="/register" exact />
+            <BusinessRoute restricted={localStorage.getItem("userToken") == null} path="/login" exact component={Login}/>
+            <BusinessRoute restricted={localStorage.getItem("userToken") == null} component={Register} path="/register" exact />
             <BusinessRoute component={Profile} path="/profile" exact role={PATIENT} />
             <BusinessRoute component={AboutUs} path="/aboutus" exact restricted={true} />
             <BusinessRoute component={Departments} path="/departments" exact restricted={true} />

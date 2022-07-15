@@ -44,7 +44,7 @@ public class EmployeeController {
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
-    @GetMapping("/employees/{username}")
+    @GetMapping("/employees-user/{username}")
     public ResponseEntity<Employee> oneByUsername(@PathVariable String username){
         return userRepos.findByUsername(username).map(user -> new ResponseEntity<>(user.getEmployee(), HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));

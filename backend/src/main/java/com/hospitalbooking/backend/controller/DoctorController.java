@@ -52,7 +52,7 @@ public class DoctorController {
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
-    @GetMapping("/doctors/{username}")
+    @GetMapping("/doctors-user/{username}")
     public ResponseEntity<Doctor> oneByUsername(@PathVariable String username){
         return userRepos.findByUsername(username).map(user -> new ResponseEntity<>(user.getEmployee().getDoctor(), HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));

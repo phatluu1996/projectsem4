@@ -74,19 +74,29 @@ class Profile extends Component {
     const tmp = { ...this.state.data }
     if (!isFormValid(e)) return;
     axiosAction(`/patients/${this.state.data.id}`, UPDATE, res => {
-      notify('success', '', 'Success')
-      this.props.history.push("/");
+      // notify('success', '', 'Success')
+      Modal.success({
+        title: `Update Profile Successfully `,
+        content: (
+          <>
+            Your account profile has been updated !
+          </>
+        ),
+        onOk: () => {
+          this.props.history.replace("/");
+        }
+      });     
     }, (err) => notify('error', "Error"), tmp);
   }
 
   fetchData = () => {
-    axiosAction(`/patients/${this.username}`, GET, res => {
-      console.log(res.data);
+    axiosAction(`/patients-user/${this.username}`, GET, res => {
       this.setState({
         data: res.data,
         countrySelect: countries.find(ct => ct.name === res.data.address.country),
         img: res.data.imageByteArr,
         loading: false,
+        confirm: res.data.user.password
       });
     }, (err) => notify('error', "Error"));
   }
@@ -125,9 +135,13 @@ class Profile extends Component {
       case 'username':
         tmp.user.username = value;
         break;
-      // case 'password':
-      //   tmp.user.password = value;
-      //   break;
+      case 'password':
+        tmp.user.password = value;
+        break;
+
+      case 'confirm':
+        this.setState({confirm : value});
+        break;
     }
     this.setState({ data: tmp });
   }
@@ -184,8 +198,6 @@ class Profile extends Component {
       })
     })
   }
-
-
 
 
   render() {
@@ -368,13 +380,13 @@ class Profile extends Component {
                       <label>Password Confirm</label>
                       <input
                         type="password"
-                        defaultValue={this.state.data?.user?.password}
+                        value={this.state.confirm}
                         // style={this.inputBorder(this.state.data.username != null, this.state.data.username && this.state.statusChange.username)}
-                        className={this.inputClassname(this.state.data?.user?.password != null || this.state.data?.confirm != null)}
+                        className={this.inputClassname(this.state.data?.confirm || (this.state.data?.user?.password && this.state.data?.user?.password == this.state.confirm))}
                         name="confirm"
                         onChange={this.onChange}
                       />
-                      <div className="invalid-feedback">Please confirm your password.</div>
+                      {this.state.confirm ? (this.state.data?.user?.password && this.state.data?.user?.password == this.state.confirm ? <></> : <div className="invalid-feedback">Password and confirm password are not the same.</div>) : <div className="invalid-feedback">Please input confirm password.</div>}
                     </div>
                   </div>
                   <div className="row">
@@ -453,6 +465,7 @@ class Profile extends Component {
                   </div>
                   <div className="form-group text-center">
                     <button className="btn btn-primary account-btn" type="submit" >Save</button>
+                    <Link className="btn btn-danger account-btn" to="/">Back</Link>
                   </div>
                 </form>
               </div>
