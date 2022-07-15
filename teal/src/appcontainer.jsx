@@ -237,9 +237,10 @@ class AppUniversal extends Component {
             <BusinessRoute component={ForgotPassword} path="/forgot-password" exact restricted={true} />
 
             <AdminRoute component={AdminDashboard} path="/admin" exact restricted={false} role={ADMIN} />
+            <AdminRoute component={AdminProfile} path="/employee/profile" exact restricted={true} />
             <AdminRoute component={AdminDoctors} path="/admin/doctors" exact restricted={false} role={ADMIN} />
             <AdminRoute component={AdminAddDoctor} path="/admin/doctors/add" exact restricted={false} role={ADMIN} />
-            <AdminRoute component={AdminEditDoctor} path="/admin/doctors/update/:id" exact restricted={false} role={ADMIN} />
+            <AdminRoute component={AdminEditDoctor} path="/admin/doctors/update/:id" exact restricted={true} />
             <AdminRoute component={AdminSchedules} path="/admin/schedules" exact restricted={false} role={ADMIN} />
             <AdminRoute component={AdminAddSchedule} path="/admin/schedules/add" exact pushBack="/admin/schedules" restricted={false} role={ADMIN} />
             <AdminRoute component={AdminEditSchedule} path="/admin/schedules/update/:id" pushBack="/admin/schedules" exact restricted={false} role={ADMIN} />
@@ -257,7 +258,7 @@ class AppUniversal extends Component {
             <AdminRoute component={AdminEditAsset} path="/admin/assets/update/:id" exact restricted={false} role={ADMIN} />
             <AdminRoute component={AdminEmployees} path="/admin/employees" exact restricted={false} role={ADMIN} />
             <AdminRoute component={AdminAddEmployee} path="/admin/employees/add" exact restricted={false} role={ADMIN} />
-            <AdminRoute component={AdminEditEmployee} path="/admin/employees/update/:id" exact restricted={false} role={ADMIN} />
+            <AdminRoute component={AdminEditEmployee} path="/admin/employees/update/:id" exact restricted={true}/>
             <AdminRoute component={AdminLeave} path="/admin/leaves" exact restricted={false} role={ADMIN} />
             <AdminRoute component={AdminAddLeave} path="/admin/leaves/add" exact restricted={false} role={ADMIN} />
             <AdminRoute component={AdminEditLeave} path="/admin/leaves/update/:id" exact restricted={false} role={ADMIN} />
