@@ -61,7 +61,7 @@ class Header extends Component {
   }
 
   handleAppointment() {
-    if (localStorage.getItem("accessToken") && localStorage.getItem("userRole") == PATIENT) {
+    if (localStorage.getItem("userToken") && localStorage.getItem("userRole") == PATIENT) {
       this.props.history.push("/appointment");
     } else {
       Modal.info({

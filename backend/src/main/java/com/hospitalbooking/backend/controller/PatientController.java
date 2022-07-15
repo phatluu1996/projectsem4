@@ -1,5 +1,6 @@
 package com.hospitalbooking.backend.controller;
 
+import com.hospitalbooking.backend.constant.UserRole;
 import com.hospitalbooking.backend.models.Patient;
 import com.hospitalbooking.backend.models.User;
 import com.hospitalbooking.backend.repository.AddressRepos;
@@ -70,9 +71,9 @@ public class PatientController {
         addressRepos.save(patient.getAddress());
         User user = patient.getUser();
         user.setPassword(encoder.encode(user.getPassword()));
+        user.setRole(UserRole.PATIENT);
         User savedUser = userRepos.save(user);
         patient.setUser(savedUser);
-
         return new ResponseEntity<>(patientRepos.save(patient), HttpStatus.OK);
     }
 
@@ -82,7 +83,7 @@ public class PatientController {
         return patientById.map(model -> {
             patient.setId(model.getId());
             //img update
-            if(patient.getImage() != null && !patient.getImage().isEmpty() && !model.getImage().equals(patient.getImage())){
+            if(patient.getImage() != null && !patient.getImage().isEmpty() && !patient.getImage().equals(model.getImage())){
                 try {
                     String fileName =patient.getFirstName()+patient.getLastName()+patient.getcId()+".png";
                     String filePath = FileUploadUtil.UPLOAD_DIR + fileName;
@@ -96,7 +97,10 @@ public class PatientController {
             //user update
             User user = patient.getUser();
             addressRepos.save(patient.getAddress());
-            user.setPassword(encoder.encode(user.getPassword()));
+            if(!user.getPassword().equals(model.getUser().getPassword())){
+                user.setPassword(encoder.encode(user.getPassword()));
+            }
+            user.setRole(UserRole.PATIENT);
             User savedUser = userRepos.save(user);
             patient.setUser(savedUser);
             //address update

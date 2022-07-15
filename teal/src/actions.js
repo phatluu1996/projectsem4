@@ -202,6 +202,7 @@ export const logout = (onOk) => {
             localStorage.removeItem('userName');
             localStorage.removeItem('userId');
             localStorage.removeItem('userRole');
+            localStorage.removeItem('userAvatar');            
             onOk();
         }
     );

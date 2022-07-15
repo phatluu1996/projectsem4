@@ -1,6 +1,7 @@
 package com.hospitalbooking.backend.controller;
 
 import com.hospitalbooking.backend.constant.EmployeeRole;
+import com.hospitalbooking.backend.models.Doctor;
 import com.hospitalbooking.backend.models.Employee;
 import com.hospitalbooking.backend.models.User;
 import com.hospitalbooking.backend.repository.AddressRepos;
@@ -40,6 +41,12 @@ public class EmployeeController {
     @GetMapping("/employees/{id}")
     public ResponseEntity<Employee> one(@PathVariable Long id){
         return employeeRepos.findById(id).map(employee -> new ResponseEntity<>(employee, HttpStatus.OK))
+                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
+
+    @GetMapping("/employees/{username}")
+    public ResponseEntity<Employee> oneByUsername(@PathVariable String username){
+        return userRepos.findByUsername(username).map(user -> new ResponseEntity<>(user.getEmployee(), HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
@@ -84,7 +91,7 @@ public class EmployeeController {
     public ResponseEntity<Employee> update(@RequestBody Employee employee, @PathVariable Long id){
         Optional<Employee> optional = employeeRepos.findById(id);
         return optional.map(model -> {
-            if(employee.getImage() != null && !employee.getImage().isEmpty() && !model.getImage().equals(employee.getImage())){
+            if(employee.getImage() != null && !employee.getImage().isEmpty() && !employee.getImage().equals(model.getImage())){
                 try {
                     String fileName = employee.getFirstName()+employee.getLastName()+employee.getcId()+".png";
                     String filePath = FileUploadUtil.UPLOAD_DIR + fileName;

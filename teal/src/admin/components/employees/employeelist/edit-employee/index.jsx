@@ -5,7 +5,7 @@ import { countries } from '../../../../../address';
 import { DatePicker, Select } from 'antd';
 import { isValid, isFormValid, axiosAction, axiosActions, notify, encodeBase64 } from '../../../../../actions'
 const { Option } = Select;
-import { ADD, GET, employeeRoles } from '../../../../../constants';
+import { ADD, GET, employeeRoles, UPDATE } from '../../../../../constants';
 import { toMoment } from '../../../../../utils';
 
 class EditEmployee extends Component {
@@ -137,7 +137,7 @@ class EditEmployee extends Component {
   onSubmit(e) {
     e.preventDefault();
     if (!isFormValid(e)) return;
-    axiosAction("/employees", ADD, (res) => {
+    axiosAction(`/employees/${this.id}`, UPDATE, (res) => {
       notify('success', '', 'Success')
       this.props.history.push("/admin/employees");
     }, (err) => notify('error', '', 'Error'), this.state.data);

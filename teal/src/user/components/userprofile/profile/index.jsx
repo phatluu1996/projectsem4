@@ -10,7 +10,7 @@ import { toMoment } from '../../../../utils';
 import { AddOutlined, Edit, EditOutlined, Person, PersonOutline, RemoveRedEyeOutlined } from '@material-ui/icons';
 
 class Profile extends Component {
-  id = localStorage.getItem("userId")
+  username = localStorage.getItem("userName")
 
   constructor(props) {
     super(props);
@@ -23,6 +23,7 @@ class Profile extends Component {
       confirm: null,
       imgFade: false,
       data: {
+        id: null,
         firstName: null,
         lastName: null,
         gender: null,
@@ -72,14 +73,14 @@ class Profile extends Component {
     e.preventDefault();
     const tmp = { ...this.state.data }
     if (!isFormValid(e)) return;
-    axiosAction("/patients/" + this.id, UPDATE, res => {
+    axiosAction(`/patients/${this.state.data.id}`, UPDATE, res => {
       notify('success', '', 'Success')
       this.props.history.push("/");
     }, (err) => notify('error', "Error"), tmp);
   }
 
   fetchData = () => {
-    axiosAction("/patients/" + this.id, GET, res => {
+    axiosAction(`/patients/${this.username}`, GET, res => {
       console.log(res.data);
       this.setState({
         data: res.data,

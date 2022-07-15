@@ -1,5 +1,7 @@
 package com.hospitalbooking.backend.controller;
 
+import com.hospitalbooking.backend.constant.EmployeeRole;
+import com.hospitalbooking.backend.constant.UserRole;
 import com.hospitalbooking.backend.models.*;
 import com.hospitalbooking.backend.repository.*;
 import com.hospitalbooking.backend.specification.DBSpecification;
@@ -50,6 +52,12 @@ public class DoctorController {
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
+    @GetMapping("/doctors/{username}")
+    public ResponseEntity<Doctor> oneByUsername(@PathVariable String username){
+        return userRepos.findByUsername(username).map(user -> new ResponseEntity<>(user.getEmployee().getDoctor(), HttpStatus.OK))
+                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
+
     @GetMapping("/doctors")
     public ResponseEntity<List<Doctor>> all(){
         Specification<?> spec = DBSpecification.createSpecification(Boolean.FALSE);
@@ -68,6 +76,7 @@ public class DoctorController {
         addressRepos.save(doctor.getEmployee().getAddress());
         User user = doctor.getEmployee().getUser();
         user.setPassword(encoder.encode(user.getPassword()));
+        user.setRole(UserRole.DOCTOR);
         User savedUser = userRepos.save(user);
         doctor.getEmployee().setUser(savedUser);
         Employee saveEmployee = employeeRepos.save(doctor.getEmployee());
@@ -85,9 +94,9 @@ public class DoctorController {
     public ResponseEntity<Doctor> update(@RequestBody Doctor doctor, @PathVariable Long id){
         Optional<Doctor> optional = doctorRepos.findById(id);
         return optional.map(model -> {
-            if(doctor.getEmployee().getImage() != null && !doctor.getEmployee().getImage().isEmpty() && !model.getEmployee().getImage().equals(doctor.getEmployee().getImage())){
+            if(doctor.getEmployee().getImage() != null && !doctor.getEmployee().getImage().isEmpty() && !doctor.getEmployee().getImage().equals(model.getEmployee().getImage())){
                 try {
-                    String fileName = doctor.getEmployee().getFirstName()+doctor.getEmployee().getLastName()+doctor.getEmployee().getcId()+".png";
+                    String fileName = doctor.getEmployee().getFirstName()+doctor.getEmployee().getLastName()+" - " +doctor.getEmployee().getcId()+".png";
                     String filePath = FileUploadUtil.UPLOAD_DIR + fileName;
                     FileUploadUtil.saveFile(doctor.getEmployee().getImage(),fileName);
                     doctor.getEmployee().setImageByteArr(doctor.getEmployee().getImage());
@@ -98,7 +107,10 @@ public class DoctorController {
             }
             addressRepos.save(doctor.getEmployee().getAddress());
             User user = doctor.getEmployee().getUser();
-            user.setPassword(encoder.encode(user.getPassword()));
+            if(!user.getPassword().equals(model.getEmployee().getUser().getPassword())){
+                user.setPassword(encoder.encode(user.getPassword()));
+            }
+            user.setRole(UserRole.DOCTOR);
             User savedUser = userRepos.save(user);
             doctor.getEmployee().setUser(savedUser);
             employeeRepos.save(doctor.getEmployee());

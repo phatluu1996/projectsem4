@@ -33,7 +33,6 @@ import ForgotPassword from "./user/components/forgotpassword";
 import Error404 from "./user/components/error_404";
 //User
 import Profile from "./user/components/userprofile/profile/index.jsx";
-import EditProfile from "./user/components/userprofile/edit-profile/index.jsx";
 
 
 //Admin
@@ -194,6 +193,7 @@ import 'react-notifications/lib/notifications.css';
 import ReceptionAppointments from "./admin/components/reception-appointments/index.jsx";
 import ReceptionPendingAppointments from "./admin/components/reception-appointments/pending/index.jsx";
 import { ADMIN, DOCTOR, PATIENT, RECEPTION } from "./constants.js";
+import DoctorSchedule from "./admin/components/doctor-schedule/index.jsx";
 
 
 
@@ -216,14 +216,16 @@ class AppUniversal extends Component {
     if (url.includes("error-404") || url.includes("error-500")) {
       $('body').addClass('error-page');
     }
+
+    const login_register_avai = [PATIENT, DOCTOR, RECEPTION, ADMIN];
     return (
       <Router basename="/">
         <div className="main-wrapper">
           <Switch>
             <BusinessRoute component={Home} path="/" exact restricted={true} />
             <BusinessRoute restricted={false} path="/appointment" exact component={Appointment} role={PATIENT} />
-            <BusinessRoute restricted={true} path="/login" exact component={Login} />
-            <BusinessRoute restricted={true} component={Register} path="/register" exact />
+            <BusinessRoute restricted={!login_register_avai.includes(localStorage.getItem("userRole"))} path="/login" exact component={Login}/>
+            <BusinessRoute restricted={!login_register_avai.includes(localStorage.getItem("userRole"))} component={Register} path="/register" exact />
             <BusinessRoute component={Profile} path="/profile" exact role={PATIENT} />
             <BusinessRoute component={AboutUs} path="/aboutus" exact restricted={true} />
             <BusinessRoute component={Departments} path="/departments" exact restricted={true} />
@@ -263,6 +265,9 @@ class AppUniversal extends Component {
             <AdminRoute component={AdminEditProfile} path="/admin/profile" exact restricted={false} role={ADMIN} />
             <AdminRoute component={AdminSalaryView} path="/admin/salaries/export/:id" exact restricted={false} role={ADMIN} />
             <AdminRoute component={AdminCalendar} path="/doctor/appointments" exact restricted={false} role={DOCTOR} />
+            <AdminRoute component={DoctorSchedule} path="/doctor/schedules" exact restricted={false} role={DOCTOR}/>
+            <AdminRoute component={AdminAddSchedule} path="/doctor/schedules/add" exact restricted={false} role={DOCTOR} pushBack="/doctor/schedules" isDoctor={true}/>
+            <AdminRoute component={AdminEditSchedule} path="/doctor/schedules/update/:id" exact restricted={false} role={DOCTOR} pushBack="/doctor/schedules" isDoctor={true}/>
             <AdminRoute component={ReceptionAppointments} path="/reception/appointments" exact role={RECEPTION} />
             <AdminRoute component={AdminAddAppointment} path="/reception/appointments/add" exact pushBack="/reception/appointments" isReception={true} restricted={false} role={RECEPTION} />
             <AdminRoute component={AdminEditAppointment} path="/reception/appointments/update/:id" exact pushBack="/reception/appointments" isReception={true} restricted={false} role={RECEPTION} />

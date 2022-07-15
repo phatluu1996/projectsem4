@@ -99,7 +99,22 @@ class AddSchedule extends Component {
       data: {}
     }
 
-    axiosActions([doctorsParam]);
+    const doctorParam = {
+      url: `/doctors/${localStorage.getItem("userName")}`,
+      method: GET,
+      callback: (res) => {
+        const tmp = {...this.state.data};
+        tmp.doctor = res.data;
+        this.setState({
+          loading: false,
+          data: tmp
+        });
+      },
+      data: {}
+    }
+
+    const param = this.props.isDoctor ? doctorParam : doctorsParam;
+    axiosActions([param]);
   }
 
   render() {
@@ -119,7 +134,7 @@ class AddSchedule extends Component {
                   <div className="col-md-6">
                     <div className="form-group">
                       <label>Doctor Name</label>
-                      <Select name='doctor' bordered={false} size={"small"} style={{ width: '100%' }}
+                      <Select name='doctor' bordered={false} size={"small"} style={{ width: '100%' }} value={this.state.data.doctor.id} disabled={this.props.isDoctor}
                         className={this.state.data.doctor != null ? "form-control is-valid" : "form-control is-invalid"} onChange={this.onChangeDoctor}>
                         {this.state.doctors?.map(doctor => {
                           return (<Option key={doctor.id} value={doctor.id}>{doctor.employee.firstName + " " + doctor.employee.lastName}</Option>)

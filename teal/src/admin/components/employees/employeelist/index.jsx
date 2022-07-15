@@ -29,7 +29,7 @@ class EmployeeList extends Component {
   }
 
   fetchData() {
-    axiosAction("/employees", GET, res => {
+    axiosAction("/employees-admin", GET, res => {
       this.setState({
         data: res.data,
         filterData: res.data,
@@ -49,7 +49,7 @@ class EmployeeList extends Component {
     }
 
     const fetchReq = {
-      url: "/employees",
+      url: "/employees-admin",
       method: GET,
       callback: (res) => {
         notify('success', '', 'Success');
