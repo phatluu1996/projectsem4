@@ -139,7 +139,7 @@ class EditEmployee extends Component {
     if (!isFormValid(e)) return;
     axiosAction(`/employees/${this.id}`, UPDATE, (res) => {
       notify('success', '', 'Success')
-      this.props.history.push("/admin/employees");
+      this.props.history.goBack();
     }, (err) => notify('error', '', 'Error'), this.state.data);
   }
 

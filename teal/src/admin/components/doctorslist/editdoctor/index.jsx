@@ -327,7 +327,7 @@ class EditDoctor extends Component {
     if (!isFormValid(e)) return;
     axiosAction(`/doctors/${this.id}`, UPDATE, (res) => {
       notify('success', '', 'Success')
-      this.props.history.push("/admin/doctors");
+      this.props.history.goBack();
     }, (err) => notify('error', '', 'Error'), this.state.data);
   }
 

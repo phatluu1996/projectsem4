@@ -40,7 +40,9 @@ class AdminProfile extends Component {
         image: null,
         imageByteArr: null,
         cId: null,
-        doctor: {},
+        doctor: {
+          id: null
+        },
         address: {
           postalCode: null,
           province: null,
@@ -49,6 +51,7 @@ class AdminProfile extends Component {
           district: null
         },
         user: {
+          id:null,
           username: null,
           password: null,
           role: null
@@ -81,6 +84,7 @@ class AdminProfile extends Component {
   onSubmit = (e) => {
     e.preventDefault();
     const tmp = { ...this.state.data }
+    this.state.edit = false;
     console.log(tmp);
     // if (!isFormValid(e)) return;
     // axiosAction("/employees/" + this.id, UPDATE, res => {
@@ -184,10 +188,16 @@ class AdminProfile extends Component {
     })
   }
 
-  changeAction = (e) => {
-    this.setState({
-      edit: e
-    })
+  changeAction = (role) => {
+    if (role == "DOCTOR") {
+      this.props.history.push("/admin/doctors/update/" + this.state.data.doctor.id);
+    } else if (role != "DOCTOR" && role != "ADMIN") {
+      this.props.history.push("/admin/employees/update/" + this.state.data.id);
+    } else {
+      this.setState({
+        edit: true
+      })
+    }
   }
 
 
@@ -203,7 +213,8 @@ class AdminProfile extends Component {
               <h4 className="page-title">{!this.state.edit ? "My Profile" : "Edit Profile"}</h4>
             </div>
             <div className="col-sm-5 col-8 text-right m-b-30">
-              <button className="btn btn-primary btn-rounded" hidden={this.state.edit} onClick={() => this.changeAction(true)}><i className="fas fa-plus" /> Edit Profile </button>
+              {/* <Link className="btn btn-primary btn-rounded" to={"/admin/patients/update/" + record.id}><i className="fas fa-plus" /> Edit</Link> */}
+              <button className="btn btn-primary btn-rounded" hidden={this.state.edit} onClick={() => this.changeAction(this.state.data.employeeRole)}><i className="fas fa-plus" /> Edit Profile </button>
             </div>
           </div>
           <div className="card-box profile-header">
@@ -212,47 +223,51 @@ class AdminProfile extends Component {
                 <div className="profile-view">
                   {!this.state.edit ? <div className="profile-img-wrap">
                     <div className="profile-img">
-                      <Upload name="avatar"
-                        multiple={false}
-                        listType="picture-card"
-                        className="avatar-uploader m-4"
-                        showUploadList={false}
-                      >
-                        {this.state.data.imageByteArr ? (
-                          <>
-                            <img className='patient-avatar'
-                              style={
-                                {
-                                  border: "2px solid #E7E9EB",
-                                  borderRadius: "4px",
-                                  width: document.getElementById("avatar-scale").offsetWidth,
-                                  height: document.getElementById("avatar-scale").offsetHeight * 0.8,
-                                  opacity: this.state.imgFade ? 0.6 : 1
+                    <div style={{ width: "fit-content !important", height: "100%" }} id="avatar-scale">
+                        {/* <label>Avatar</label> */}
+                        <Upload name="avatar"
+                          multiple={false}
+                          listType="picture-card"
+                          className="avatar-uploader m-4"
+                          onChange={this.onSelectImage}
+                          showUploadList={false}
+                        >
+                          {this.state.data.imageByteArr ? (
+                            <>
+                              {!this.state.loading && <img className='patient-avatar'
+                                style={
+                                  {
+                                    border: "2px solid #E7E9EB",
+                                    borderRadius: "4px",
+                                    width: document.getElementById("avatar-scale").offsetWidth,
+                                    height: document.getElementById("avatar-scale").offsetHeight * 0.8,
+                                    opacity: this.state.imgFade ? 0.6 : 1
+                                  }}
+                                src={this.state.data.imageByteArr}
+                                onMouseEnter={() => this.setState({ imgFade: true })}
+                                onMouseLeave={() => this.setState({ imgFade: false })}
+                              />}
+                              {this.state.imgFade && <EditOutlined style={{
+                                top: "45%",
+                                left: "45%",
+                                position: "absolute",
+                                transform: "translate(-45 %, -45 %)"
+                              }} />}
+                            </>
+                          ) : (
+                            <div>
+                              {/* <EditOutlined /> */}
+                              <div
+                                style={{
+                                  marginTop: 8,
                                 }}
-                              src={this.state.data.imageByteArr}
-                              onMouseEnter={() => this.setState({ imgFade: true })}
-                              onMouseLeave={() => this.setState({ imgFade: false })}
-                            />
-                            {this.state.imgFade && <EditOutlined style={{
-                              top: "45%",
-                              left: "45%",
-                              position: "absolute",
-                              transform: "translate(-45 %, -45 %)"
-                            }} />}
-                          </>
-                        ) : (
-                          <div>
-                            <EditOutlined />
-                            <div
-                              style={{
-                                marginTop: 8,
-                              }}
-                            >
-                              Upload
+                              >
+                                Image
+                              </div>
                             </div>
-                          </div>
-                        )}
-                      </Upload>
+                          )}
+                        </Upload>
+                      </div>
                     </div>
                   </div> : ""}
                   {!this.state.edit ?
@@ -390,10 +405,10 @@ class AdminProfile extends Component {
                           <div className="col-sm-6">
                             <div className="form-group">
                               <label>CID Number<span className="text-danger">*</span></label>
-                              <input 
-                              value={this.state.data?.cId}
-                              className={isValid(this.state.data.cId)} 
-                              name='cId' type="text" onChange={(e) => this.onChange(e)} />
+                              <input
+                                value={this.state.data?.cId}
+                                className={isValid(this.state.data.cId)}
+                                name='cId' type="text" onChange={(e) => this.onChange(e)} />
                               <div className="invalid-feedback">CID cannot be empty</div>
                             </div>
                           </div>
@@ -446,8 +461,8 @@ class AdminProfile extends Component {
                                 <div className="form-group">
                                   <label>District<span className="text-danger">*</span></label>
                                   <input type="text"
-                                   value={this.state.data?.address?.district}
-                                   name='district' className={isValid(this.state.data.address.district)} onChange={(e) => this.onChange(e)} />
+                                    value={this.state.data?.address?.district}
+                                    name='district' className={isValid(this.state.data.address.district)} onChange={(e) => this.onChange(e)} />
                                   <div className="invalid-feedback">District cannot be empty</div>
                                 </div>
                               </div>
@@ -463,7 +478,7 @@ class AdminProfile extends Component {
                           <div className="col-sm-6">
                             <div className="form-group">
                               <label>Phone <span className="text-danger">*</span></label>
-                              
+
                               <input value={this.state.data?.phoneNumber} className={isValid(this.state.data.phoneNumber)} name='phoneNumber' type="text" onChange={(e) => this.onChange(e)} />
                               <div className="invalid-feedback">Phone number code cannot be empty</div>
                             </div>
@@ -489,7 +504,6 @@ class AdminProfile extends Component {
                         </div>
                         <div className="m-t-20 text-center ">
                           <button type='submit' className="btn btn-primary submit-btn m-r-20">Save</button>
-                          <button className="btn btn-primary submit-btn" onClick={() => this.changeAction(false)}>Cancel</button>
                         </div>
                       </form>
                     </div>
@@ -497,11 +511,11 @@ class AdminProfile extends Component {
               </div>
             </div>
           </div>
-          {/* <div className="profile-tabs">
+          {this.state.data.employeeRole != "ADMIN" ? <div className="profile-tabs">
             <ul className="nav nav-tabs nav-tabs-bottom">
               <li className="nav-item"><a className="nav-link active" href="#about-cont" data-toggle="tab">About</a></li>
-              <li className="nav-item"><a className="nav-link" href="#bottom-tab2" data-toggle="tab">Profile</a></li>
-              <li className="nav-item"><a className="nav-link" href="#bottom-tab3" data-toggle="tab">Messages</a></li>
+              {/* <li className="nav-item"><a className="nav-link" href="#bottom-tab2" data-toggle="tab">Profile</a></li>
+              <li className="nav-item"><a className="nav-link" href="#bottom-tab3" data-toggle="tab">Messages</a></li> */}
             </ul>
             <div className="tab-content">
               <div className="tab-pane show active" id="about-cont">
@@ -587,7 +601,7 @@ class AdminProfile extends Component {
                 Tab content 3
               </div>
             </div>
-          </div> */}
+          </div>:""}
         </div>
         <OpenChat />
       </div>

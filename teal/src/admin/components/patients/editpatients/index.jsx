@@ -49,9 +49,6 @@ class EditPatient extends Component {
 
 
   componentDidMount() {
-    this.setState({
-      loading: true
-    });
     this.fetchData();
   }
 
@@ -62,10 +59,6 @@ class EditPatient extends Component {
 
   fetchData = () => {
     axiosAction("/patients/" + this.id, GET, res => {
-      console.log(res.data);
-      // const blob = new Blob([res.data.imageByteArr], { type: "image/jpeg" });
-      // const imageUrl = URL.createObjectURL(blob);
-      // console.log(imageUrl);
       this.setState({
         data: res.data,
         img:res.data.imageByteArr, 
@@ -81,7 +74,6 @@ class EditPatient extends Component {
       tmp.address.province = "";
     }
     tmp.address.country = this.state.countries[value].name
-    console.log(tmp.address.country);
     this.setState({
       crrValue: null,
       countrySelect: this.state.countries[value],
