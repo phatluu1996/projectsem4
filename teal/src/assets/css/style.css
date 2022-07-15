@@ -542,6 +542,18 @@ Version      : 1.3
 	justify-content: space-around;
 	align-content: space-around;
 }
+
+#business .ant-radio-button-wrapper {
+	/* background-color: #f2f2f2; */
+	color: #323232;
+	cursor: pointer;
+	font-size: 12px;
+	margin-bottom: 20px;
+	/* min-height: 50px; */
+	text-align: center;
+	width: 160px;
+}
+
 #business .appoint-time > li {
 	background-color: #f2f2f2;
 	margin-bottom: 20px;

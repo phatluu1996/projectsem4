@@ -15,13 +15,13 @@ export const UPDATE = "update";
 export const DELETE = "delete";
 export const outOfficeHours = [1, 2, 3, 4, 5, 6, 7, 18, 19, 20, 21, 22, 23, 24];
 export const DayOptions = [
-    { value: '1', label: 'Sunday', shortLabel: 'sun' },
-    { value: '2', label: 'Monday', shortLabel: 'mon' },
-    { value: '3', label: 'Tuesday', shortLabel: 'tue' },
-    { value: '4', label: 'Wednesday', shortLabel: 'wed' },
-    { value: '5', label: 'Thursday', shortLabel: 'thur' },
-    { value: '6', label: 'Friday', shortLabel: 'fri' },
-    { value: '7', label: 'Saturday', shortLabel: 'sat' },
+    { value: '0', label: 'Sunday', shortLabel: 'sun' },
+    { value: '1', label: 'Monday', shortLabel: 'mon' },
+    { value: '2', label: 'Tuesday', shortLabel: 'tue' },
+    { value: '3', label: 'Wednesday', shortLabel: 'wed' },
+    { value: '4', label: 'Thursday', shortLabel: 'thur' },
+    { value: '5', label: 'Friday', shortLabel: 'fri' },
+    { value: '6', label: 'Saturday', shortLabel: 'sat' },
 ]
 export const disabledHoursFromNow = () => {
     const hours = [];
