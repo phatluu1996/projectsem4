@@ -237,6 +237,7 @@ class AppUniversal extends Component {
             <BusinessRoute component={ForgotPassword} path="/forgot-password" exact restricted={true} />
 
             <AdminRoute component={AdminDashboard} path="/admin" exact restricted={false} role={ADMIN} />
+            <AdminRoute component={AdminProfile} path="/employee/profile" exact restricted={false} role={ADMIN} />
             <AdminRoute component={AdminDoctors} path="/admin/doctors" exact restricted={false} role={ADMIN} />
             <AdminRoute component={AdminAddDoctor} path="/admin/doctors/add" exact restricted={false} role={ADMIN} />
             <AdminRoute component={AdminEditDoctor} path="/admin/doctors/update/:id" exact restricted={false} role={ADMIN} />
