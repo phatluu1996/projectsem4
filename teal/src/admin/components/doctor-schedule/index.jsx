@@ -90,7 +90,7 @@ class DoctorSchedule extends Component {
 
   fetchData() {
     const fetchReq = {
-      url: "/schedules",
+      url: `/schedules-doctor/${localStorage.getItem("userName")}`,
       method: GET,
       callback: (res) => {
         this.setState({
@@ -128,7 +128,7 @@ class DoctorSchedule extends Component {
     }
 
     const fetchReq = {
-      url: "/schedules",
+      url: `/schedules-doctor/${localStorage.getItem("userName")}`,
       method: GET,
       callback: (res) => {
         notify('success', '', 'Success');
@@ -178,19 +178,6 @@ class DoctorSchedule extends Component {
         render: (text, record) => <div>{`SCH-${record.id}`}</div>,
         sorter: (a, b) => numberSort(a.id, b.id)
       },
-      {
-        title: "Doctor Name",
-        render: (text, record) => (
-          <div className="table-avatar">
-            <a href="#0" className="avatar avatar-sm mr-2">
-              {record.doctor.employee.imageByteArr && <img alt="" src={record.doctor.employee.imageByteArr} />}
-            </a>
-            {record.doctor?.employee.lastName + " " + record.doctor?.employee.firstName}
-          </div>
-        ),
-        sorter: (a, b) => stringSort(a.doctor?.employee.lastName + " " + a.doctor?.employee.firstName, b.doctor?.employee.lastName + " " + b.doctor?.employee.firstName)
-      },
-
       {
         title: "Department",
         render: (text, record) => (
@@ -275,12 +262,6 @@ class DoctorSchedule extends Component {
               </div>
             </div>
             <div className="col-sm-2">
-              <div className="form-group form-focus">
-                <label className="focus-label">Doctor Name</label>
-                <input type="text" className="form-control floating" name="name" />
-              </div>
-            </div>
-            <div className="col-sm-2">
               <div className="form-group form-focus select-focus">
                 <label className="focus-label">Department</label>
                 <select className="form-control floating" name="department">
@@ -291,17 +272,14 @@ class DoctorSchedule extends Component {
                 </select>
               </div>
             </div>
-            <div className="col-sm-2">
+            <div className="col-sm-3">
               <div className="form-group form-focus focused">
                 <label className="focus-label">From</label>
-                {/* <DatePicker name='from' className="form-control"
-                  showTime={true} format="YYYY-MM-DD" clearIcon={true} disabledDate={true}
-                  allowClear={true} value={this.state.from} onChange={(val) => this.setState({ from: val })}></DatePicker> */}
                 <TimePicker name='from' showSecond={false} format={"HH:mm"} disabledHours={this.disabledHours} disabledMinutes={this.disabledMinutes} className="form-control"
                   minuteStep={15} onChange={(val) => this.setState({ from: val })} onSelect={(val) => this.setState({ from: val })} value={this.state.from}></TimePicker>
               </div>
             </div>
-            <div className="col-sm-2">
+            <div className="col-sm-3">
               <div className="form-group form-focus focused">
                 <label className="focus-label">To</label>
                 <TimePicker name='to' showSecond={false} format={"HH:mm"} disabledHours={this.disabledHours} disabledMinutes={this.disabledMinutes} className="form-control"

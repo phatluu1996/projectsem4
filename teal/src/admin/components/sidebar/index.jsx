@@ -73,10 +73,10 @@ class SidebarNav extends Component {
 
 
               {localStorage.getItem("userRole") == DOCTOR &&
-                <>                  
+                <>
                   <li className="menu-title">DOCTOR</li>
-                  <MenuItem to="/doctor/schedules" icon="far fa-calendar-check" title="Schedules" />
                   <MenuItem to="/doctor/appointments" icon="far fa-calendar-alt" title="Appointments" />
+                  <MenuItem to="/doctor/schedules" icon="far fa-calendar-check" title="Schedules" />
                 </>}
 
 

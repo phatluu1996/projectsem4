@@ -25,7 +25,6 @@ class AboutUs extends Component {
       <>
         {/* Content */}
         <div className="main-content">
-          {/* Page Header */}
           <div className="page-header">
             <div className="container">
               <div className="row">

@@ -15,7 +15,7 @@ class Profile extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      loading: false,
+      loading: true,
       crrValue: "",
       countries: countries,
       countrySelect: null,
@@ -85,7 +85,7 @@ class Profile extends Component {
         onOk: () => {
           this.props.history.replace("/");
         }
-      });     
+      });
     }, (err) => notify('error', "Error"), tmp);
   }
 
@@ -140,7 +140,7 @@ class Profile extends Component {
         break;
 
       case 'confirm':
-        this.setState({confirm : value});
+        this.setState({ confirm: value });
         break;
     }
     this.setState({ data: tmp });
@@ -203,7 +203,7 @@ class Profile extends Component {
   render() {
     //rounded-circle
     // rounded-thumbnail
-    return (!this.state.loading &&
+    return (
       <>
         {/* Content */}
         <div className="main-content account-content">
@@ -229,7 +229,7 @@ class Profile extends Component {
                         >
                           {this.state.data.imageByteArr ? (
                             <>
-                              <img className='patient-avatar'
+                              {!this.state.loading && <img className='patient-avatar'
                                 style={
                                   {
                                     border: "2px solid #E7E9EB",
@@ -241,7 +241,7 @@ class Profile extends Component {
                                 src={this.state.data.imageByteArr}
                                 onMouseEnter={() => this.setState({ imgFade: true })}
                                 onMouseLeave={() => this.setState({ imgFade: false })}
-                              />
+                              />}
                               {this.state.imgFade && <EditOutlined style={{
                                 top: "45%",
                                 left: "45%",

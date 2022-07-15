@@ -82,7 +82,7 @@ class AddSchedule extends Component {
 
     axiosAction("/schedules", ADD, (res) => {
       notify('success', '', 'Success')
-      this.props.history.push("/admin/schedules");
+      this.props.history.push(this.props.pushBack);
     }, (err) => notify('error', '', 'Error'), this.state.data);
   }
 
@@ -92,7 +92,6 @@ class AddSchedule extends Component {
       method: GET,
       callback: (res) => {
         this.setState({
-          loading: false,
           doctors: res.data
         });
       },
@@ -100,7 +99,7 @@ class AddSchedule extends Component {
     }
 
     const doctorParam = {
-      url: `/doctors/${localStorage.getItem("userName")}`,
+      url: `/doctors-user/${localStorage.getItem("userName")}`,
       method: GET,
       callback: (res) => {
         const tmp = {...this.state.data};
@@ -113,8 +112,7 @@ class AddSchedule extends Component {
       data: {}
     }
 
-    const param = this.props.isDoctor ? doctorParam : doctorsParam;
-    axiosActions([param]);
+    axiosActions([doctorsParam, doctorParam]);
   }
 
   render() {
@@ -180,7 +178,7 @@ class AddSchedule extends Component {
                 </div>
                 <div className="m-t-20 text-center">
                   <button className="btn btn-primary submit-btn" type='submit'>Create Schedule</button>
-                  <button className="btn btn-danger submit-btn" onClick={() => this.props.history.push("/admin/schedules")}>Back</button>
+                  <button className="btn btn-danger submit-btn" onClick={() => this.props.history.push(this.props.pushBack)}>Back</button>
                 </div>
               </form>
             </div>

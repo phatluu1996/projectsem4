@@ -9,8 +9,6 @@ import OpenChat from "../../sidebar/openchatheader";
 import { GET } from '../../../../constants';
 import { axiosActions, notify } from '../../../../actions';
 import moment from 'moment';
-import { toMoment } from '../../../../utils';
-import { countries } from '../../../../address';
 import { Popconfirm, Typography } from 'antd';
 import { CheckOutlined, ClearOutlined, HistoryOutlined, LocalDiningOutlined } from '@material-ui/icons';
 
@@ -35,7 +33,7 @@ class Calendar extends React.Component {
 
 	cancelAppointment = () => {
 		const appointmentParam = {
-			url: "/appointments-doctor/cancel/" + this.state.selectAppointment.id,
+			url: `/appointments/cancel/${this.state.selectAppointment.id}`,
 			method: GET,
 			callback: (res) => {
 				notify('success', '', 'Success');
@@ -51,7 +49,7 @@ class Calendar extends React.Component {
 	fetchAppointment() {
 		const id = 1;
 		const fetchReq = {
-			url: "/appointments-doctor/" + id,
+			url: `/appointments-doctor/${localStorage.getItem("userName")}`,
 			method: GET,
 			callback: (res) => {
 				// 

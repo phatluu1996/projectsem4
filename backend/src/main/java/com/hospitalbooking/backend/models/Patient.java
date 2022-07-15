@@ -7,6 +7,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "patient")
@@ -46,6 +47,13 @@ public class Patient extends UserProfile{
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public List<Appointment> getAppointments(boolean includeRetired) {
+        if(includeRetired){
+            return appointments;
+        }
+        return appointments.stream().filter(m -> !m.isRetired()).collect(Collectors.toList());
     }
 
     public List<Appointment> getAppointments() {

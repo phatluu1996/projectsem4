@@ -97,12 +97,26 @@ public class Doctor{
         return doctorSchedules;
     }
 
+    public List<DoctorSchedule> getDoctorSchedules(boolean includeRetired) {
+        if(includeRetired){
+            return doctorSchedules;
+        }
+        return doctorSchedules.stream().filter(m -> !m.isRetired()).collect(Collectors.toList());
+    }
+
     public void setDoctorSchedules(List<DoctorSchedule> doctorSchedules) {
         this.doctorSchedules = doctorSchedules;
     }
 
     public List<Appointment> getAppointments() {
         return appointments;
+    }
+
+    public List<Appointment> getAppointments(boolean includeRetired) {
+        if(includeRetired){
+            return appointments;
+        }
+        return appointments.stream().filter(m -> !m.isRetired()).collect(Collectors.toList());
     }
 
     public void setAppointments(List<Appointment> appointments) {

@@ -194,6 +194,7 @@ import ReceptionAppointments from "./admin/components/reception-appointments/ind
 import ReceptionPendingAppointments from "./admin/components/reception-appointments/pending/index.jsx";
 import { ADMIN, DOCTOR, PATIENT, RECEPTION } from "./constants.js";
 import DoctorSchedule from "./admin/components/doctor-schedule/index.jsx";
+import PatientCalendar from "./user/components/user-appointment/index.jsx";
 
 
 
@@ -227,6 +228,7 @@ class AppUniversal extends Component {
             <BusinessRoute restricted={localStorage.getItem("userToken") == null} path="/login" exact component={Login}/>
             <BusinessRoute restricted={localStorage.getItem("userToken") == null} component={Register} path="/register" exact />
             <BusinessRoute component={Profile} path="/profile" exact role={PATIENT} />
+            <BusinessRoute component={PatientCalendar} path="/appointments" exact role={PATIENT} />
             <BusinessRoute component={AboutUs} path="/aboutus" exact restricted={true} />
             <BusinessRoute component={Departments} path="/departments" exact restricted={true} />
             <BusinessRoute component={Doctor} path="/doctors" exact restricted={true} />
@@ -239,8 +241,8 @@ class AppUniversal extends Component {
             <AdminRoute component={AdminAddDoctor} path="/admin/doctors/add" exact restricted={false} role={ADMIN} />
             <AdminRoute component={AdminEditDoctor} path="/admin/doctors/update/:id" exact restricted={false} role={ADMIN} />
             <AdminRoute component={AdminSchedules} path="/admin/schedules" exact restricted={false} role={ADMIN} />
-            <AdminRoute component={AdminAddSchedule} path="/admin/schedules/add" exact restricted={false} role={ADMIN} />
-            <AdminRoute component={AdminEditSchedule} path="/admin/schedules/update/:id" exact restricted={false} role={ADMIN} />
+            <AdminRoute component={AdminAddSchedule} path="/admin/schedules/add" exact pushBack="/admin/schedules" restricted={false} role={ADMIN} />
+            <AdminRoute component={AdminEditSchedule} path="/admin/schedules/update/:id" pushBack="/admin/schedules" exact restricted={false} role={ADMIN} />
             <AdminRoute component={AdminPatients} path="/admin/patients" exact restricted={false} role={ADMIN} />
             <AdminRoute component={AdminAddPatient} path="/admin/patients/add" exact restricted={false} role={ADMIN} />
             <AdminRoute component={AdminEditPatient} path="/admin/patients/update/:id" exact restricted={false} role={ADMIN} />

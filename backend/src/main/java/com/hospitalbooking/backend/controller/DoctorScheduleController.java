@@ -2,6 +2,7 @@ package com.hospitalbooking.backend.controller;
 
 import com.hospitalbooking.backend.models.DoctorSchedule;
 import com.hospitalbooking.backend.repository.DoctorScheduleRepos;
+import com.hospitalbooking.backend.repository.UserRepos;
 import com.hospitalbooking.backend.specification.DBSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
@@ -19,6 +20,9 @@ public class DoctorScheduleController {
     @Autowired
     DoctorScheduleRepos doctorScheduleRepos;
 
+    @Autowired
+    UserRepos userRepos;
+
     @GetMapping("/schedules/{id}")
     public ResponseEntity<DoctorSchedule> one(@PathVariable Long id){
         return doctorScheduleRepos.findById(id).map(doctorSchedule -> new ResponseEntity<>(doctorSchedule, HttpStatus.OK))
@@ -29,6 +33,13 @@ public class DoctorScheduleController {
     public ResponseEntity<List<DoctorSchedule>> all(){
         Specification<?> spec = DBSpecification.createSpecification(Boolean.FALSE);
         return new ResponseEntity<>(doctorScheduleRepos.findAll(spec), HttpStatus.OK);
+    }
+
+    @GetMapping("/schedules-doctor/{username}")
+    public ResponseEntity<List<DoctorSchedule>> allByDoctorUsername(@PathVariable String username){
+        return userRepos.findByUsername(username).map(user ->
+            new ResponseEntity<>(user.getEmployee().getDoctor().getDoctorSchedules(false), HttpStatus.OK))
+                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     @PostMapping("/schedules")

@@ -131,9 +131,10 @@ class Header extends Component {
                                 <Link className="dropdown-item" to="/forgot-password">Forgot Password</Link>
                               </> : <>
                                 {localStorage.getItem("userRole") == ADMIN && <Link className="dropdown-item" to="/admin">Go to Admin</Link>}
-                                {localStorage.getItem("userRole") == DOCTOR && <Link className="dropdown-item" to="/doctor/appointments">Calendar</Link>}
+                                {localStorage.getItem("userRole") == DOCTOR && <Link className="dropdown-item" to="/doctor/appointments">Workplace</Link>}
                                 {localStorage.getItem("userRole") == RECEPTION && <Link className="dropdown-item" to="/reception/appointments">Workplace</Link>}
                                 {localStorage.getItem("userRole") == PATIENT && <Link className="dropdown-item" to="/profile">User Profile</Link>}
+                                {localStorage.getItem("userRole") == PATIENT && <Link className="dropdown-item" to="/appointments">My Appointments</Link>}
                                 <a className="dropdown-item" onClick={this.handleLogout}>Logout</a>
                               </>}
                             {/* <Link className="dropdown-item" to="/404">404</Link> */}

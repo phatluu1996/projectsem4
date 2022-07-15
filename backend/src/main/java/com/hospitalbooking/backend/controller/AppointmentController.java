@@ -6,6 +6,7 @@ import com.hospitalbooking.backend.models.Doctor;
 import com.hospitalbooking.backend.models.Patient;
 import com.hospitalbooking.backend.repository.AppointmentRepos;
 import com.hospitalbooking.backend.repository.PatientRepos;
+import com.hospitalbooking.backend.repository.UserRepos;
 import com.hospitalbooking.backend.specification.DBSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
@@ -27,6 +28,9 @@ public class AppointmentController {
     @Autowired
     private PatientRepos patientRepos;
 
+    @Autowired
+    private UserRepos userRepos;
+
     @GetMapping("/appointments/{id}")
     public ResponseEntity<Appointment> one(@PathVariable Long id){
         return appointmentRepos.findById(id).map(appointment -> new ResponseEntity<>(appointment, HttpStatus.OK))
@@ -39,15 +43,21 @@ public class AppointmentController {
         return new ResponseEntity<List<Appointment>>(appointmentRepos.findAll(spec), HttpStatus.OK);
     }
 
-    @GetMapping("/appointments-doctor/{id}")
-    public ResponseEntity<List<Appointment>> allByDoctor(@PathVariable Long id){
-        Specification<?> spec = DBSpecification.createSpecification(Boolean.FALSE)
-                .and((root, cq, cb) -> cb.equal(root.get("doctor").get("id"), id))
-                .and((root, cq, cb) -> cb.or(cb.equal(root.get("status"), AppointmentStatus.APPROVED), cb.equal(root.get("status"),  AppointmentStatus.CANCELED)));
-        return new ResponseEntity<List<Appointment>>(appointmentRepos.findAll(spec), HttpStatus.OK);
+    @GetMapping("/appointments-doctor/{username}")
+    public ResponseEntity<List<Appointment>> allByDoctor(@PathVariable String username){
+        return userRepos.findByUsername(username).map(user ->
+                        new ResponseEntity<>(user.getEmployee().getDoctor().getAppointments(false), HttpStatus.OK))
+                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
-    @GetMapping("/appointments-doctor/cancel/{id}")
+    @GetMapping("/appointments-patient/{username}")
+    public ResponseEntity<List<Appointment>> allByPatient(@PathVariable String username){
+        return userRepos.findByUsername(username).map(user ->
+                        new ResponseEntity<>(user.getPatient().getAppointments(false), HttpStatus.OK))
+                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
+
+    @GetMapping("/appointments/cancel/{id}")
     public ResponseEntity<Appointment> cancelByDoctor(@PathVariable Long id) {
         Optional<Appointment> optional = appointmentRepos.findById(id);
         return optional.map(model -> {
