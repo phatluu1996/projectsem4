@@ -240,12 +240,12 @@ class EditPatient extends Component {
                     <label className="gen-label">Gender<span className="text-danger">*</span></label>
                     <div className="form-check-inline">
                       <label className="form-check-label">
-                        <input type="radio" name="gender" value={true} defaultChecked={this.state.data?.gender} className="form-check-input" onChange={(e) => this.onChange(e)} />Male
+                        <input type="radio" name="gender" value={"Male"} defaultChecked={this.state.data?.gender} className="form-check-input" onChange={(e) => this.onChange(e)} />Male
                       </label>
                     </div>
                     <div className="form-check-inline">
                       <label className="form-check-label">
-                        <input type="radio" name="gender" value={false} defaultChecked={!this.state.data?.gender} className="form-check-input" onChange={(e) => this.onChange(e)} />Female
+                        <input type="radio" name="gender" value={"Femmale"} defaultChecked={!this.state.data?.gender} className="form-check-input" onChange={(e) => this.onChange(e)} />Female
                       </label>
                     </div>
                   </div>

@@ -213,12 +213,12 @@ class AddPatient extends Component {
                       <label className="gen-label">Gender</label>
                       <div className="form-check-inline">
                         <label className="form-check-label">
-                          <input type="radio" name="gender" value={true} className="form-check-input" onChange={(e) => this.onChange(e)} />Male
+                          <input type="radio" name="gender" value={"Male"} className="form-check-input" onChange={(e) => this.onChange(e)} />Male
                         </label>
                       </div>
                       <div className="form-check-inline">
                         <label className="form-check-label">
-                          <input type="radio" name="gender" value={false} className="form-check-input" onChange={(e) => this.onChange(e)} />Female
+                          <input type="radio" name="gender" value={"Female"} className="form-check-input" onChange={(e) => this.onChange(e)} />Female
                         </label>
                       </div>
                     </div>

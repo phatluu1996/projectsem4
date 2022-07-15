@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import OpenChat from "../../../sidebar/openchatheader"
 import { Logo_Dark } from "../../../imagepath"
 import { axiosActions } from "../../../../../actions";
-import { GET } from "../../../../../constants";
+import { employeeRoles, GET } from "../../../../../constants";
 import { toMoment } from "../../../../../utils";
 import 'number-to-words';
 import { toWords } from "number-to-words";
@@ -138,9 +138,9 @@ class SalaryView extends Component {
                         <li>
                           <h5 className="m-b-0">Name: <strong>{this.state.data.employee.lastName + " " + this.state.data.employee.firstName}</strong></h5>
                         </li>
-                        <li>Role: <span>Nurse</span></li>
+                        <li>Role: <span>{employeeRoles.find(e => e.value == this.state.data.employee.employeeRole).label}</span></li>
                         <li>Employee ID: {"EMP-" + this.state.data.employee.id}</li>
-                        <li>Joining Date: {toMoment(this.state.data.employee.joiningDate).format("DD MMMM, YYYY")}</li>
+                        <li>Joining Date: {toMoment(this.state.data.employee.joiningDate)?.format("DD MMMM, YYYY")}</li>
                       </ul>
                     </div>
                   </div>
