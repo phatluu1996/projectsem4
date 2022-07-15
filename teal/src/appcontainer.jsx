@@ -194,7 +194,7 @@ import ReceptionAppointments from "./admin/components/reception-appointments/ind
 import ReceptionPendingAppointments from "./admin/components/reception-appointments/pending/index.jsx";
 import { ADMIN, DOCTOR, PATIENT, RECEPTION } from "./constants.js";
 import DoctorSchedule from "./admin/components/doctor-schedule/index.jsx";
-import PatientCalendar from "./user/components/user-appointment/index.jsx";
+import PatientCalendar from "./user/components/patient-appointment/index.jsx";
 
 
 

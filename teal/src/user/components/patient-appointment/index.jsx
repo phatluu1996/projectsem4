@@ -223,7 +223,7 @@ class PatientCalendar extends React.Component {
 													selectMirror={true}
 													expandRows={true}
 													dayMaxEvents={true}
-													contentHeight={1000}													
+													contentHeight={600}													
 													weekends={this.state.weekendsVisible}
 													// initialEvents={defaultEvents}
 													// select={this.handleDateSelect}

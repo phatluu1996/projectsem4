@@ -66,11 +66,6 @@ public class AppointmentController {
         }).orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
-    @GetMapping("/appointments-patient/{id}")
-    public ResponseEntity<List<Appointment>> allByPatient(@PathVariable Long id){
-        Specification<?> spec = DBSpecification.createSpecification(Boolean.FALSE).and((root, cq, cb) -> cb.equal(root.get("patient").get("id"), id));;
-        return new ResponseEntity<List<Appointment>>(appointmentRepos.findAll(spec), HttpStatus.OK);
-    }
 
     @GetMapping("/appointments-pending")
     public ResponseEntity<List<Appointment>> allPending(){
