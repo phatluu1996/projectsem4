@@ -232,7 +232,7 @@ const TableBasic = () => {
                                             <th>Firstname</th>
                                             <th>Lastname</th>
                                             <th>Age</th>
-                                            <th>City</th>
+                                            <th>District</th>
                                             <th>Country</th>
                                         </tr>
                                     </thead>

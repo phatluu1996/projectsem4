@@ -44,7 +44,7 @@ class Setting extends Component{
                       </div>
                       <div className="col-sm-6 col-md-6 col-lg-3">
                         <div className="form-group">
-                          <label>City</label>
+                          <label>District</label>
                           <input className="form-control" defaultValue="Sherman Oaks" type="text" />
                         </div>
                       </div>

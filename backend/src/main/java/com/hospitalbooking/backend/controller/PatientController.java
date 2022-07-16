@@ -1,5 +1,6 @@
 package com.hospitalbooking.backend.controller;
 
+import com.hospitalbooking.backend.constant.UserRole;
 import com.hospitalbooking.backend.models.Patient;
 import com.hospitalbooking.backend.models.User;
 import com.hospitalbooking.backend.repository.AddressRepos;
@@ -36,14 +37,26 @@ public class PatientController {
     @Autowired
     private PasswordEncoder encoder;
 
-
+    @GetMapping("/get-patient/{username}")
+    public ResponseEntity<Patient> getByUserId(@PathVariable String username){
+        User user = userRepos.getUserByUsername(username);
+        if(!user.isRetired()){
+            Patient patient = patientRepos.getPatientByUser(user);
+            return new ResponseEntity<>(patient, HttpStatus.OK);
+        }else
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
 
     @GetMapping("/patients/{id}")
     public ResponseEntity<Patient> one(@PathVariable Long id){
         return patientRepos.findById(id).map(patient -> new ResponseEntity<>(patient, HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
-
+    @GetMapping("/patients-user/{username}")
+    public ResponseEntity<Patient> oneByUsername(@PathVariable String username){
+        return userRepos.findByUsername(username).map(user -> new ResponseEntity<>(user.getPatient(), HttpStatus.OK))
+                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
     @GetMapping("/patients")
     public ResponseEntity<List<Patient>> all(){
         Specification<?> spec = DBSpecification.createSpecification(Boolean.FALSE);
@@ -62,9 +75,9 @@ public class PatientController {
         addressRepos.save(patient.getAddress());
         User user = patient.getUser();
         user.setPassword(encoder.encode(user.getPassword()));
+        user.setRole(UserRole.PATIENT);
         User savedUser = userRepos.save(user);
         patient.setUser(savedUser);
-
         return new ResponseEntity<>(patientRepos.save(patient), HttpStatus.OK);
     }
 
@@ -74,7 +87,7 @@ public class PatientController {
         return patientById.map(model -> {
             patient.setId(model.getId());
             //img update
-            if(patient.getImage() != null && !patient.getImage().isEmpty()){
+            if(patient.getImage() != null && !patient.getImage().isEmpty() && !patient.getImage().equals(model.getImage())){
                 try {
                     String fileName =patient.getFirstName()+patient.getLastName()+patient.getcId()+".png";
                     String filePath = FileUploadUtil.UPLOAD_DIR + fileName;
@@ -87,7 +100,11 @@ public class PatientController {
             }
             //user update
             User user = patient.getUser();
-            user.setPassword(encoder.encode(user.getPassword()));
+            addressRepos.save(patient.getAddress());
+            if(!user.getPassword().equals(model.getUser().getPassword())){
+                user.setPassword(encoder.encode(user.getPassword()));
+            }
+            user.setRole(UserRole.PATIENT);
             User savedUser = userRepos.save(user);
             patient.setUser(savedUser);
             //address update

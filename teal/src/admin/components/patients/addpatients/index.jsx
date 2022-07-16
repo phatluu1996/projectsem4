@@ -30,7 +30,7 @@ class AddPatient extends Component {
           province: null,
           line: null,
           country: null,
-          city: null
+          district: null
         },
         user: {
           username: null,
@@ -121,8 +121,8 @@ class AddPatient extends Component {
       case 'cId':
         tmp.cId = value;
         break;
-      case 'city':
-        tmp.address.city = value;
+      case 'district':
+        tmp.address.district = value;
         break;
       case 'line':
         tmp.address.line = value;
@@ -213,12 +213,12 @@ class AddPatient extends Component {
                       <label className="gen-label">Gender</label>
                       <div className="form-check-inline">
                         <label className="form-check-label">
-                          <input type="radio" name="gender" value={true} className="form-check-input" onChange={(e) => this.onChange(e)} />Male
+                          <input type="radio" name="gender" value={"Male"} className="form-check-input" onChange={(e) => this.onChange(e)} />Male
                         </label>
                       </div>
                       <div className="form-check-inline">
                         <label className="form-check-label">
-                          <input type="radio" name="gender" value={false} className="form-check-input" onChange={(e) => this.onChange(e)} />Female
+                          <input type="radio" name="gender" value={"Female"} className="form-check-input" onChange={(e) => this.onChange(e)} />Female
                         </label>
                       </div>
                     </div>
@@ -273,13 +273,13 @@ class AddPatient extends Component {
                             })}
                           </Select>
                         </div>}
-                        <div className="invalid-feedback">Please select state cannot be empty</div>
+                        <div className="invalid-feedback">State cannot be empty</div>
                       </div>
                       <div className="col-sm-6 col-md-6 col-lg-3">
                         <div className="form-group">
-                          <label>City<span className="text-danger">*</span></label>
-                          <input type="text" name='city' className={isValid(this.state.data.address.city)} onChange={(e) => this.onChange(e)} />
-                          <div className="invalid-feedback">Please select city cannot be empty</div>
+                          <label>District<span className="text-danger">*</span></label>
+                          <input type="text" name='district' className={isValid(this.state.data.address.district)} onChange={(e) => this.onChange(e)} />
+                          <div className="invalid-feedback">District cannot be empty</div>
                         </div>
                       </div>
                       <div className="col-sm-6 col-md-6 col-lg-3">
@@ -294,7 +294,7 @@ class AddPatient extends Component {
                   <div className="col-sm-6">
                     <div className="form-group">
                       <label>Phone <span className="text-danger">*</span></label>
-                      <input className={isValid(this.state.data.phoneNumber)} name='phoneNumber' type="text" onChange={(e) => this.onChange(e)} />
+                      <input className={isValid(this.state.data.phoneNumber)} name='phoneNumber' type="tel" onChange={(e) => this.onChange(e)} />
                       <div className="invalid-feedback">Phone number code cannot be empty</div>
                     </div>
                   </div>

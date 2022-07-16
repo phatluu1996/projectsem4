@@ -33,8 +33,8 @@ class EditDoctor extends Component {
           "gender": null,
           "dateOfBirth": null,
           "email": null,
-          "image" : null,
-          "imageByteArr" : null,
+          "image": null,
+          "imageByteArr": null,
           "phoneNumber": null,
           "status": true,
           "remainingLeave": 0,
@@ -43,7 +43,7 @@ class EditDoctor extends Component {
             "line": null,
             "postalCode": null,
             "province": null,
-            "city": null,
+            "district": null,
             "country": null,
             "retired": false
           },
@@ -225,7 +225,7 @@ class EditDoctor extends Component {
       "country": "",
       "start": "",
       "end": "",
-      "jopPosition": "",
+      "jobPosition": "",
       "retired": false,
     }
     const tmp = { ...this.state.data };
@@ -280,8 +280,8 @@ class EditDoctor extends Component {
         tmp.employee.address.line = val;
         break;
 
-      case "city":
-        tmp.employee.address.city = val;
+      case "district":
+        tmp.employee.address.district = val;
         break;
       case "postal":
         tmp.employee.address.postalCode = val;
@@ -327,7 +327,11 @@ class EditDoctor extends Component {
     if (!isFormValid(e)) return;
     axiosAction(`/doctors/${this.id}`, UPDATE, (res) => {
       notify('success', '', 'Success')
-      this.props.history.push("/admin/doctors");
+      if (res.data.employee.user.username == localStorage.getItem("userName")) {
+        localStorage.setItem('userAvatar', res.data.employee.imageByteArr);
+      }
+
+      this.props.history.goBack();
     }, (err) => notify('error', '', 'Error'), this.state.data);
   }
 
@@ -445,7 +449,7 @@ class EditDoctor extends Component {
         render: (text, record) => (
           <div>
             <Select aria-autocomplete='none' showSearch={true} bordered={false} size={"small"} style={{ width: '100%' }} name='country'
-              className={isValid(record.country)} onChange={(e) => this.onChangeExperience(record, e, "country")}>
+              className={isValid(record.country)} onChange={(e) => this.onChangeExperience(record, e, "country")} value={record.country}>
               {this.state.countries?.map((ctr, idx) => {
                 return (<Option key={idx} value={ctr.name}>{ctr.name}</Option>)
               })}
@@ -460,7 +464,7 @@ class EditDoctor extends Component {
           <div>
             <DatePicker className={isValid(record.start)} name='start' disabledTime={true}
               showTime={false} format="YYYY-MM-DD" clearIcon={true}
-              allowClear={true} value={record.start} onChange={(value, e) => this.onChangeExperience(record, value, "start")}></DatePicker>
+              allowClear={true} value={toMoment(record.start)} onChange={(value, e) => this.onChangeExperience(record, value, "start")}></DatePicker>
             <div className="invalid-feedback">Cannot be left empty</div>
           </div>
         ),
@@ -471,7 +475,7 @@ class EditDoctor extends Component {
           <div>
             <DatePicker className={isValid(record.end)} name='end' disabledTime={true}
               showTime={false} format="YYYY-MM-DD" clearIcon={true}
-              allowClear={true} value={record.end} onSelect={(value) => this.onChangeExperience(record, value, "end")}></DatePicker>
+              allowClear={true} value={toMoment(record.end)} onSelect={(value) => this.onChangeExperience(record, value, "end")}></DatePicker>
             <div className="invalid-feedback">Cannot be left empty</div>
           </div>
         ),
@@ -567,7 +571,7 @@ class EditDoctor extends Component {
                   <div className="col-sm-6">
                     <div className="form-group">
                       <label>Phone </label>
-                      <input name="phone" className={isValid(this.state.data.employee.phoneNumber)} type="number" onChange={this.onChange} value={this.state.data.employee.phoneNumber} />
+                      <input name="phone" className={isValid(this.state.data.employee.phoneNumber)} type="tel" onChange={this.onChange} value={this.state.data.employee.phoneNumber} />
                       <div className="invalid-feedback">Phone cannot be empty</div>
                     </div>
                   </div>
@@ -647,9 +651,9 @@ class EditDoctor extends Component {
                       </div>
                       <div className="col-sm-6">
                         <div className="form-group">
-                          <label>City<span className="text-danger">*</span></label>
-                          <input name="city" type="text" className={isValid(this.state.data.employee.address?.city)} onChange={this.onChange} value={this.state.data.employee.address?.city} />
-                          <div className="invalid-feedback">City cannot be empty</div>
+                          <label>District<span className="text-danger">*</span></label>
+                          <input name="district" type="text" className={isValid(this.state.data.employee.address?.district)} onChange={this.onChange} value={this.state.data.employee.address?.district} />
+                          <div className="invalid-feedback">District cannot be empty</div>
                         </div>
                       </div>
                       <div className="col-sm-6">
@@ -696,7 +700,7 @@ class EditDoctor extends Component {
                 </div>
                 <div className="m-t-20 text-center">
                   <button className="btn btn-primary submit-btn">Save</button>
-                  <button className="btn btn-danger submit-btn" onClick={() => this.props.history.push("/admin/doctors")}>Back</button>
+                  <button className="btn btn-danger submit-btn" onClick={() => this.props.history.goBack()}>Back</button>
                 </div>
               </form>
             </div>

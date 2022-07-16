@@ -82,7 +82,7 @@ class AddSchedule extends Component {
 
     axiosAction("/schedules", ADD, (res) => {
       notify('success', '', 'Success')
-      this.props.history.push("/admin/schedules");
+      this.props.history.push(this.props.pushBack);
     }, (err) => notify('error', '', 'Error'), this.state.data);
   }
 
@@ -92,14 +92,27 @@ class AddSchedule extends Component {
       method: GET,
       callback: (res) => {
         this.setState({
-          loading: false,
           doctors: res.data
         });
       },
       data: {}
     }
 
-    axiosActions([doctorsParam]);
+    const doctorParam = {
+      url: `/doctors-user/${localStorage.getItem("userName")}`,
+      method: GET,
+      callback: (res) => {
+        const tmp = {...this.state.data};
+        tmp.doctor = res.data;
+        this.setState({
+          loading: false,
+          data: tmp
+        });
+      },
+      data: {}
+    }
+
+    axiosActions([doctorsParam, doctorParam]);
   }
 
   render() {
@@ -119,7 +132,7 @@ class AddSchedule extends Component {
                   <div className="col-md-6">
                     <div className="form-group">
                       <label>Doctor Name</label>
-                      <Select name='doctor' bordered={false} size={"small"} style={{ width: '100%' }}
+                      <Select name='doctor' bordered={false} size={"small"} style={{ width: '100%' }} value={this.state.data.doctor.id} disabled={this.props.isDoctor}
                         className={this.state.data.doctor != null ? "form-control is-valid" : "form-control is-invalid"} onChange={this.onChangeDoctor}>
                         {this.state.doctors?.map(doctor => {
                           return (<Option key={doctor.id} value={doctor.id}>{doctor.employee.firstName + " " + doctor.employee.lastName}</Option>)
@@ -165,7 +178,7 @@ class AddSchedule extends Component {
                 </div>
                 <div className="m-t-20 text-center">
                   <button className="btn btn-primary submit-btn" type='submit'>Create Schedule</button>
-                  <button className="btn btn-danger submit-btn" onClick={() => this.props.history.push("/admin/schedules")}>Back</button>
+                  <button className="btn btn-danger submit-btn" onClick={() => this.props.history.push(this.props.pushBack)}>Back</button>
                 </div>
               </form>
             </div>

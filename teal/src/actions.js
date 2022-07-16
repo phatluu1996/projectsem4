@@ -1,7 +1,12 @@
 import axios from 'axios';
 import { api, ADD, DELETE, UPDATE, GET } from './constants';
 import moment from "moment";
-import { notification } from 'antd';
+import { notification, Button, Modal, Space } from 'antd';
+import { InfoOutlined } from '@material-ui/icons';
+import React, { Component } from "react";
+
+
+const { confirm } = Modal;
 
 export const axiosAction = (url, method, successCallback, errorCallback, data = {}) => {
     const response = undefined;
@@ -46,7 +51,7 @@ export const axiosAction = (url, method, successCallback, errorCallback, data = 
             api.get(url).then(res => {
                 successCallback(res);
             }).catch(err => {
-                console.log(err);
+                console.error(err);
                 errorCallback(err);
             });
             break;
@@ -91,7 +96,7 @@ export const axiosActions = (params = [{
         })
     }).catch(errArr => {
         notify('error', "Technical error !", "Error", 500, () => {
-            console.log(errArr);
+            console.error(errArr);
         });
     });
 }
@@ -147,7 +152,7 @@ export const numberSort = (value1, value2) => {
     return value1 - value2;
 }
 
-export const dateSort = (value1, value2) => {    
+export const dateSort = (value1, value2) => {
     // return moment.utc(value1.timeStamp).diff(moment.utc(value2.timeStamp));
     return moment(value1).diff(moment(value2))
 }
@@ -157,13 +162,68 @@ export const momentSort = (value1, value2) => {
     return value1.diff(value2)
 }
 
-export const encodeBase64 = (file,callback) =>{
-      // Encode the file using the FileReader API
-      const reader = new FileReader();
-      reader.onloadend = () => {
+export const encodeBase64 = (file, callback) => {
+    // Encode the file using the FileReader API
+    const reader = new FileReader();
+    reader.onloadend = () => {
         callback(reader.result);
         // console.log(reader.result);
         // Logs data:<type>;base64,wL2dvYWwgbW9yZ...
-      };
-      reader.readAsDataURL(file);
+    };
+    reader.readAsDataURL(file);
+}
+
+export const showConfirm = (title, content, onOk, onCancel) => {
+    confirm({
+        title: title,
+        icon: <InfoOutlined />,
+        content: content,
+
+        onOk() {
+            if (onOk) {
+                onOk();
+            }
+        },
+
+        onCancel() {
+            if (onCancel) {
+                onCancel();
+            }
+        },
+    });
+};
+
+export const logout = (onOk) => {
+    showConfirm("Are you sure ?",
+        "All the changes without saving could be lost !",
+        () => {
+            localStorage.removeItem('userToken');
+            localStorage.removeItem('headerName');
+            localStorage.removeItem('userName');
+            localStorage.removeItem('userId');
+            localStorage.removeItem('userRole');
+            localStorage.removeItem('userAvatar');            
+            onOk();
+        }
+    );
+
+
+}
+
+export const valid_email_regex = new RegExp(/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+.[a-zA-Z]$/);
+export const valid_password_regex = new RegExp(/^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,16}$/);
+export const valid_number_regex = new RegExp('^[0-9]*$');
+
+export const isValidWithRegex = (val, type) => {
+    switch (type.toLowerCase().trim()) {
+        case "password":
+            return valid_password_regex.test(val);
+        case "email":
+            return valid_email_regex.test(val);
+        case "identity":
+            return valid_number_regex.test(val);
+
+        default:
+            return false;
+    }
 }

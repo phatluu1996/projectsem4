@@ -2,180 +2,273 @@ import React, { Component } from 'react';
 import { Doctor_03 } from "../../imagepath"
 import OpenChat from "../../sidebar/openchatheader";
 import { Link } from 'react-router-dom';
+import { countries } from '../../../../address';
+import { ADMIN, DOCTOR, GET, RECEPTION, UPDATE } from "../../../../constants";
+import { Avatar, DatePicker, Modal, Select, Spin, Upload } from 'antd';
+import { AddOutlined, Edit, EditOutlined, Person, PersonOutline, RemoveRedEyeOutlined } from '@material-ui/icons';
 
-class Profile extends Component{
+import { toMoment } from '../../../../utils';
+import { isFormValid, isValid, notify, axiosAction, encodeBase64 } from '../../../../actions';
+import { invalid } from 'moment';
+import { User_img } from "../../imagepath"
+import moment from 'moment';
 
-    componentDidMount(){
-        if ($('.datetimepicker').length > 0) {
-          $('.datetimepicker').datetimepicker({
-              format: 'DD/MM/YYYY'
-          });
-        }
-        if ($('.floating').length > 0) {
-                $('.floating').on('focus blur', function(e) {
-                    $(this).parents('.form-focus').toggleClass('focused', (e.type === 'focus' || this.value.length > 0));
-                }).trigger('blur');
-            }
-      }
-    render(){
-     
-        return(
-            <div className="page-wrapper">
-            <div className="content">
-              <div className="row">
-                <div className="col-sm-7 col-4">
-                  <h4 className="page-title">My Profile</h4>
+class AdminProfile extends Component {
+
+  username = localStorage.getItem("userName")
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      edit: false,
+      loading: false,
+      data: {
+        id: null,
+        firstName: null,
+        remainingLeave: null,
+        status: null,
+        lastName: null,
+        employeeRole: null,
+        gender: null,
+        dateOfBirth: null,
+        email: null,
+        phoneNumber: null,
+        image: null,
+        imageByteArr: null,
+        cId: null,
+        doctor: {
+          id: null,
+          educationDetails: [{
+            "key": 0,
+            "instiution": "",
+            "subject": "",
+            "start": "",
+            "end": "",
+            "degree": "",
+            "grade": "",
+            "retired": false,
+          }],
+          experienceDetails: [{
+            "key": 0,
+            "officeName": "",
+            "country": "",
+            "start": "",
+            "end": "",
+            "jobPosition": "",
+            "retired": false,
+          }]
+        },
+        address: {
+          postalCode: null,
+          province: null,
+          line: null,
+          country: null,
+          district: null
+        },
+        user: {
+          id: null,
+          username: null,
+          password: null,
+          role: null
+        },
+      },
+    };
+    this.fetchData = this.fetchData.bind(this);
+    this.changeAction = this.changeAction.bind(this);
+  }
+
+  componentDidMount() {
+    // if ($('.floating').length > 0) {
+    //   $('.floating').on('focus blur', function (e) {
+    //     $(this).parents('.form-focus').toggleClass('focused', (e.type === 'focus' || this.value.length > 0));
+    //   }).trigger('blur');
+    // }
+    this.fetchData();
+  }
+
+  fetchData = () => {
+    axiosAction("/employees-user/" + this.username, GET, res => {
+      this.setState({
+        data: res.data,
+        loading: false,
+      });
+    }, (err) => notify('error', "Error"));
+  }
+
+  changeAction = () => {
+    let role = this.state.data.user.role;
+    if (role == "DOCTOR") {
+      this.props.history.push("/doctor/profile/update/" + this.state.data.doctor.id);
+    } else if (role == "RECEPTIONIST") {
+      this.props.history.push("/reception/profile/update/" + this.state.data.id);
+    } else if (role == "ADMIN") {
+      this.props.history.push("/admin/profile/update/" + this.state.data.id);
+    }
+  }
+
+
+
+
+  render() {
+    const { data } = this.state
+
+    return (!this.state.loading &&
+      <div className="page-wrapper">
+        <div className="content">
+          <div className="row">
+            <div className="col-sm-7">
+              <h4 className="page-title">My Profile</h4>
+            </div>
+            <div className="col-sm-5 col-8 text-right m-b-30">
+              <button className="btn btn-primary btn-rounded" onClick={this.changeAction}><i className="fas fa-plus" /> Edit Profile </button>
+            </div>
+          </div>
+          <div className="card-box">
+            <h3 className="card-title">Basic Informations</h3>
+            <div className="row">
+              <div className="col-md-12">
+                <div className="profile-img-wrap">
+                  <img className="inline-block" src={data.imageByteArr ? data.imageByteArr : User_img}
+                    alt="user"
+                    style={
+                      {
+                        border: "2px solid #E7E9EB",
+                        borderRadius: "4px"
+                      }} />
                 </div>
-                <div className="col-sm-5 col-8 text-right m-b-30">
-                  <Link to="/edit-profile" className="btn btn-primary btn-rounded"><i className="fas fa-plus" /> Edit Profile</Link>
-                </div>
-              </div>
-              <div className="card-box profile-header">
-                <div className="row">
-                  <div className="col-md-12">
-                    <div className="profile-view">
-                      <div className="profile-img-wrap">
-                        <div className="profile-img">
-                          <a href="#"><img className="avatar" src={Doctor_03} alt="" /></a>
-                        </div>
+                <div className="profile-basic">
+                  <div className="row">
+                    <div className="col-md-6">
+                      <div className="form-group form-focus focused">
+                        <label className="focus-label">First Name</label>
+                        <input type="text" className="form-control floating" value={data.firstName} readOnly />
                       </div>
-                      <div className="profile-basic">
-                        <div className="row">
-                          <div className="col-md-5">
-                            <div className="profile-info-left">
-                              <h3 className="user-name m-t-0 m-b-0">Cristina Groves</h3>
-                              <small className="text-muted">Gynecologist</small>
-                              <div className="staff-id">Employee ID : DR-0001</div>
-                              <div className="staff-msg"><a href="/admin-template/chat" className="btn btn-primary">Send Message</a></div>
-                            </div>
-                          </div>
-                          <div className="col-md-7">
-                            <ul className="personal-info">
-                              <li>
-                                <span className="title">Phone:</span>
-                                <span className="text"><a href="">770-889-6484</a></span>
-                              </li>
-                              <li>
-                                <span className="title">Email:</span>
-                                <span className="text"><a href="">cristinagroves@example.com</a></span>
-                              </li>
-                              <li>
-                                <span className="title">Birthday:</span>
-                                <span className="text">3rd March</span>
-                              </li>
-                              <li>
-                                <span className="title">Address:</span>
-                                <span className="text">714 Burwell Heights Road, Bridge City, TX, 77611</span>
-                              </li>
-                              <li>
-                                <span className="title">Gender:</span>
-                                <span className="text">Female</span>
-                              </li>
-                            </ul>
-                          </div>
+                    </div>
+                    <div className="col-md-6">
+                      <div className="form-group form-focus focused">
+                        <label className="focus-label">Last Name</label>
+                        <input type="text" className="form-control floating" value={data.lastName} readOnly />
+                      </div>
+                    </div>
+                    <div className="col-md-6">
+                      <div className="form-group form-focus focused">
+                        <label className="focus-label">Birth Date</label>
+                        <div className="cal-icon">
+                          <input className="form-control floating" type="text" value={moment(data.dateOfBirth, false).format("DD-MM-YYYY")} readOnly />
+
                         </div>
                       </div>
                     </div>
-                  </div>
-                </div>
-              </div>
-              <div className="profile-tabs">
-                <ul className="nav nav-tabs nav-tabs-bottom">
-                  <li className="nav-item"><a className="nav-link active" href="#about-cont" data-toggle="tab">About</a></li>
-                  <li className="nav-item"><a className="nav-link" href="#bottom-tab2" data-toggle="tab">Profile</a></li>
-                  <li className="nav-item"><a className="nav-link" href="#bottom-tab3" data-toggle="tab">Messages</a></li>
-                </ul>
-                <div className="tab-content">
-                  <div className="tab-pane show active" id="about-cont">
-                    <div className="row">
-                      <div className="col-md-12">
-                        <div className="card-box">
-                          <h3 className="card-title">Education Informations</h3>
-                          <div className="experience-box">
-                            <ul className="experience-list">
-                              <li>
-                                <div className="experience-user">
-                                  <div className="before-circle" />
-                                </div>
-                                <div className="experience-content">
-                                  <div className="timeline-content">
-                                    <a href="#/" className="name">International College of Medical Science (UG)</a>
-                                    <div>MBBS</div>
-                                    <span className="time">2001 - 2003</span>
-                                  </div>
-                                </div>
-                              </li>
-                              <li>
-                                <div className="experience-user">
-                                  <div className="before-circle" />
-                                </div>
-                                <div className="experience-content">
-                                  <div className="timeline-content">
-                                    <a href="#/" className="name">International College of Medical Science (PG)</a>
-                                    <div>MD - Obstetrics &amp; Gynaecology</div>
-                                    <span className="time">1997 - 2001</span>
-                                  </div>
-                                </div>
-                              </li>
-                            </ul>
-                          </div>
-                        </div>
-                        <div className="card-box m-b-0">
-                          <h3 className="card-title">Experience</h3>
-                          <div className="experience-box">
-                            <ul className="experience-list">
-                              <li>
-                                <div className="experience-user">
-                                  <div className="before-circle" />
-                                </div>
-                                <div className="experience-content">
-                                  <div className="timeline-content">
-                                    <a href="#/" className="name">Consultant Gynecologist</a>
-                                    <span className="time">Jan 2014 - Present (4 years 8 months)</span>
-                                  </div>
-                                </div>
-                              </li>
-                              <li>
-                                <div className="experience-user">
-                                  <div className="before-circle" />
-                                </div>
-                                <div className="experience-content">
-                                  <div className="timeline-content">
-                                    <a href="#/" className="name">Consultant Gynecologist</a>
-                                    <span className="time">Jan 2009 - Present (6 years 1 month)</span>
-                                  </div>
-                                </div>
-                              </li>
-                              <li>
-                                <div className="experience-user">
-                                  <div className="before-circle" />
-                                </div>
-                                <div className="experience-content">
-                                  <div className="timeline-content">
-                                    <a href="#/" className="name">Consultant Gynecologist</a>
-                                    <span className="time">Jan 2004 - Present (5 years 2 months)</span>
-                                  </div>
-                                </div>
-                              </li>
-                            </ul>
-                          </div>
-                        </div>
+                    <div className="col-md-6">
+                      <div className="form-group form-focus focused">
+                        <label className="focus-label">Gender</label>
+                        <input type="text" className="form-control floating" value={data.gender} readOnly />
                       </div>
                     </div>
-                  </div>
-                  <div className="tab-pane" id="bottom-tab2">
-                    Tab content 2
-                  </div>
-                  <div className="tab-pane" id="bottom-tab3">
-                    Tab content 3
                   </div>
                 </div>
               </div>
             </div>
-            <OpenChat/>
           </div>
-        );
+          <div className="card-box">
+            <h3 className="card-title">Contact Informations</h3>
+            <div className="row">
+            <div className="col-md-4">
+                <div className="form-group form-focus focused">
+                  <label className="focus-label">Identity Number</label>
+                  <input type="text" className="form-control floating" value={data.cId} readOnly />
+                </div>
+              </div>
+              <div className="col-md-4">
+                <div className="form-group form-focus focused">
+                  <label className="focus-label">Email</label>
+                  <input type="text" className="form-control floating" value={data.email} readOnly />
+                </div>
+              </div>
+              <div className="col-md-4">
+                <div className="form-group form-focus focused">
+                  <label className="focus-label">Phone Number</label>
+                  <input type="text" className="form-control floating" value={data.phoneNumber} readOnly />
+                </div>
+              </div>
+              <div className="col-md-12">
+                <div className="form-group form-focus focused">
+                  <label className="focus-label">Address</label>
+                  <input type="text" className="form-control floating" value={data.address?.line} readOnly />
+                </div>
+              </div>
+              <div className="col-md-6">
+                <div className="form-group form-focus focused">
+                  <label className="focus-label">State</label>
+                  <input type="text" className="form-control floating" value={data.address?.province} readOnly />
+                </div>
+              </div>
+              <div className="col-md-6">
+                <div className="form-group form-focus focused">
+                  <label className="focus-label">Country</label>
+                  <input type="text" className="form-control floating" value={data.address?.country} readOnly />
+                </div>
+              </div>
+              <div className="col-md-6">
+                <div className="form-group form-focus focused">
+                  <label className="focus-label">Postal Code</label>
+                  <input type="text" className="form-control floating" value={data.address?.postalCode} readOnly />
+                </div>
+              </div>
+              <div className="col-md-6">
+                <div className="form-group form-focus focused">
+                  <label className="focus-label">District</label>
+                  <input type="text" className="form-control floating" defaultValue={data.address?.district} readOnly />
+                </div>
+              </div>
+            </div>
+          </div>
+          {data.doctor != null && data.doctor.educationDetails.filter(e => !e.retired).length > 0 && <div className="card-box">
+            <h3 className="card-title">Education Informations</h3>
+            <div className="experience-box">
+              <ul className="experience-list">
+                {data.doctor.educationDetails.filter(e => !e.retired).map(e => {
+                  return (<li>
+                    <div className="experience-user">
+                      <div className="before-circle" />
+                    </div>
+                    <div className="experience-content">
+                      <div className="timeline-content">
+                        <a className="name">{e.instiution}</a>
+                        <div>{e.degree}</div>
+                        <span className="time">{moment(e.start).format("DD-MM-YYYY")}-{moment(e.end).format("DD-MM-YYYY")}</span>
+                      </div>
+                    </div>
+                  </li>)
+                })}                
+              </ul>
+            </div>
+          </div>}
+          {data.doctor != null && data.doctor.experienceDetails.filter(e => !e.retired).length > 0 && <div className="card-box m-b-0">
+            <h3 className="card-title">Experience Informations</h3>
+            <div className="experience-box">
+              <ul className="experience-list">
+                {data.doctor.experienceDetails.filter(e => !e.retired).map(e => {
+                  return (<li>
+                    <div className="experience-user">
+                      <div className="before-circle" />
+                    </div>
+                    <div className="experience-content">
+                      <div className="timeline-content">
+                        <a className="name">{e.officeName}</a>
+                        <div>{e.officeName}({e.jobPosition})</div>
+                        <span className="time">{moment(e.start).format("DD-MM-YYYY")}-{moment(e.end).format("DD-MM-YYYY")}</span>
+                      </div>
+                    </div>
+                  </li>)
+                })}
+              </ul>
+            </div>
+          </div>}
+        </div>
+      </div >
+    );
 
-   }
-};   
-export default Profile
+  }
+};
+export default AdminProfile

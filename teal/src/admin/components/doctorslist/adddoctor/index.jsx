@@ -41,7 +41,7 @@ class AddDoctor extends Component {
             "line": null,
             "postalCode": null,
             "province": null,
-            "city": null,
+            "district": null,
             "country": null,
             "retired": false
           },
@@ -213,7 +213,7 @@ class AddDoctor extends Component {
       "country": "",
       "start": "",
       "end": "",
-      "jopPosition": "",
+      "jobPosition": "",
       "retired": false,
     }
     const tmp = { ...this.state.data };
@@ -264,12 +264,11 @@ class AddDoctor extends Component {
         tmp.employee.gender = val;
         break;
 
-      case "line":
+    case "line":
         tmp.employee.address.line = val;
         break;
-
-      case "city":
-        tmp.employee.address.city = val;
+      case "district":
+        tmp.employee.address.district = val;
         break;
       case "postal":
         tmp.employee.address.postalCode = val;
@@ -542,7 +541,7 @@ class AddDoctor extends Component {
                   <div className="col-sm-6">
                     <div className="form-group">
                       <label>Phone </label>
-                      <input name="phone" className={isValid(this.state.data.employee.phoneNumber)} type="number" onChange={this.onChange} />
+                      <input name="phone" className={isValid(this.state.data.employee.phoneNumber)} type="tel" onChange={this.onChange} />
                       <div className="invalid-feedback">Phone cannot be empty</div>
                     </div>
                   </div>
@@ -622,9 +621,9 @@ class AddDoctor extends Component {
                       </div>
                       <div className="col-sm-6">
                         <div className="form-group">
-                          <label>City<span className="text-danger">*</span></label>
-                          <input name="city" type="text" className={isValid(this.state.data.employee.address?.city)} onChange={this.onChange} />
-                          <div className="invalid-feedback">City cannot be empty</div>
+                          <label>District<span className="text-danger">*</span></label>
+                          <input name="district" type="text" className={isValid(this.state.data.employee.address?.district)} onChange={this.onChange} />
+                          <div className="invalid-feedback">District cannot be empty</div>
                         </div>
                       </div>
                       <div className="col-sm-6">

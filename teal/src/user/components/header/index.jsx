@@ -2,8 +2,17 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import { Logo } from './../imagepath';
 import $ from "jquery"
+import { logout } from "../../../actions";
+import { ADMIN, DOCTOR, PATIENT, RECEPTION } from "../../../constants";
+import { Modal } from "antd";
 
 class Header extends Component {
+  constructor(props) {
+    super(props);
+    this.handleLogout = this.handleLogout.bind(this);
+    this.handleAppointment = this.handleAppointment.bind(this);
+  }
+
   componentDidMount() {
     // Mobile menu overlay
 
@@ -46,6 +55,30 @@ class Header extends Component {
         });
     }
   }
+
+  handleLogout() {
+    logout(() => setTimeout(() => { this.props.history.replace("/") }, 250));
+  }
+
+  handleAppointment() {
+    if (localStorage.getItem("userToken") && localStorage.getItem("userRole") == PATIENT) {
+      this.props.history.push("/appointment");
+    } else {
+      Modal.info({
+        title: `Information`,
+        content: (
+          <>
+            For your convenience, please register an account or log in.
+            Thank you.
+          </>
+        ),
+        onOk: () => {
+          this.props.history.push("/login");
+        }
+      });
+    }
+  }
+
   render() {
     const pathname = this.props.location.pathname.split("/")[1];
 
@@ -86,14 +119,24 @@ class Header extends Component {
                           <Link to="/contact-us" className="nav-link">Contact Us</Link>
                         </li>
                         <li className={`${pathname === "/" || pathname === "appointments" ? "active" : ""} nav-item`}>
-                          <Link to="/appointment" className="btn btn-primary appoint-btn nav-link">Appointment</Link>
+                          <a onClick={this.handleAppointment} className="btn btn-primary appoint-btn nav-link" hidden={localStorage.getItem("userRole") != PATIENT && localStorage.getItem("userRole") != null}>Appointment</a>
                         </li>
                         <li className="dropdown nav-item">
                           <a className="dropdown-toggle settings-icon nav-link" data-toggle="dropdown"><i className="fas fa-cog" /></a>
                           <div className="dropdown-menu dropdown-menu-right">
-                            <Link className="dropdown-item" to="/login">Login</Link>
-                            <Link className="dropdown-item" to="/register">Register</Link>
-                            <Link className="dropdown-item" to="/forgot-password">Forgot Password</Link>
+                            {!localStorage.getItem('userToken') ?
+                              <>
+                                <a className="dropdown-item" href="/login">Login</a>
+                                <Link className="dropdown-item" to="/register">Register</Link>
+                                <Link className="dropdown-item" to="/forgot-password">Forgot Password</Link>
+                              </> : <>
+                                {localStorage.getItem("userRole") == ADMIN && <Link className="dropdown-item" to="/admin">Go to Admin</Link>}
+                                {localStorage.getItem("userRole") == DOCTOR && <Link className="dropdown-item" to="/doctor/appointments">Workplace</Link>}
+                                {localStorage.getItem("userRole") == RECEPTION && <Link className="dropdown-item" to="/reception/appointments">Workplace</Link>}
+                                {localStorage.getItem("userRole") == PATIENT && <Link className="dropdown-item" to="/profile">User Profile</Link>}
+                                {localStorage.getItem("userRole") == PATIENT && <Link className="dropdown-item" to="/appointments">My Appointments</Link>}
+                                <a className="dropdown-item" onClick={this.handleLogout}>Logout</a>
+                              </>}
                             {/* <Link className="dropdown-item" to="/404">404</Link> */}
                           </div>
                         </li>
@@ -104,7 +147,7 @@ class Header extends Component {
               </div>
             </div>
           </div>
-        </header>        
+        </header>
       </>
     );
   }

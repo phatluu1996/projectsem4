@@ -7,6 +7,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "patient")
@@ -31,12 +32,14 @@ public class Patient extends UserProfile{
         super();
     }
 
-    public Patient(List<Appointment> appointments) {
+    public Patient(User user, List<Appointment> appointments) {
+        this.user = user;
         this.appointments = appointments;
     }
 
-    public Patient(Long id, String cId, String firstName, String lastName, String gender, Date dateOfBirth, String email, String phoneNumber , String image,String imageByteArr, Address address, boolean retired, List<Appointment> appointments) {
-        super(id, cId, firstName, lastName, gender, dateOfBirth, email, phoneNumber,image,imageByteArr, address, retired);
+    public Patient(Long id, String cId, String firstName, String lastName, String gender, Date dateOfBirth, String email, String phoneNumber, String image, String imageByteArr, Address address, boolean retired, User user, List<Appointment> appointments) {
+        super(id, cId, firstName, lastName, gender, dateOfBirth, email, phoneNumber, image, imageByteArr, address, retired);
+        this.user = user;
         this.appointments = appointments;
     }
 
@@ -46,6 +49,13 @@ public class Patient extends UserProfile{
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public List<Appointment> getAppointments(boolean includeRetired) {
+        if(includeRetired){
+            return appointments;
+        }
+        return appointments.stream().filter(m -> !m.isRetired()).collect(Collectors.toList());
     }
 
     public List<Appointment> getAppointments() {

@@ -15,14 +15,17 @@ export const UPDATE = "update";
 export const DELETE = "delete";
 export const outOfficeHours = [1, 2, 3, 4, 5, 6, 7, 18, 19, 20, 21, 22, 23, 24];
 export const DayOptions = [
-    { value: '1', label: 'Sunday', shortLabel: 'sun' },
-    { value: '2', label: 'Monday', shortLabel: 'mon' },
-    { value: '3', label: 'Tuesday', shortLabel: 'tue' },
-    { value: '4', label: 'Wednesday', shortLabel: 'wed' },
-    { value: '5', label: 'Thursday', shortLabel: 'thur' },
-    { value: '6', label: 'Friday', shortLabel: 'fri' },
-    { value: '7', label: 'Saturday', shortLabel: 'sat' },
+    { value: '0', label: 'Sunday', shortLabel: 'sun' },
+    { value: '1', label: 'Monday', shortLabel: 'mon' },
+    { value: '2', label: 'Tuesday', shortLabel: 'tue' },
+    { value: '3', label: 'Wednesday', shortLabel: 'wed' },
+    { value: '4', label: 'Thursday', shortLabel: 'thur' },
+    { value: '5', label: 'Friday', shortLabel: 'fri' },
+    { value: '6', label: 'Saturday', shortLabel: 'sat' },
 ]
+
+
+
 export const disabledHoursFromNow = () => {
     const hours = [];
     for (let i = 0; i < moment().hour(); i += 1) {
@@ -86,4 +89,18 @@ export const leave_status = [
     { value: 'approved', label: 'Approved', color: "green" },
     { value: 'rejected', label: 'Rejected', color: "red" }
 ]
+
+export const appointment_status = [
+    { value: 'pending', label: 'Pending', color: "purple", next_status: [{ value: 'approved', label: 'Approved', color: "green" }, { value: 'rejected', label: 'Rejected', color: "red" }] },
+    { value: 'approved', label: 'Approved', color: "green", next_status: [{ value: 'canceled', label: 'Canceled', color: "yellow" }] },
+    { value: 'rejected', label: 'Rejected', color: "red", next_status: [] },
+    { value: 'canceled', label: 'Canceled', color: "yellow", next_status: [] },
+]
+
+export const ADMIN = "ROLE_ADMIN";
+export const PATIENT = "ROLE_PATIENT";
+export const RECEPTION = "ROLE_RECEPTION";
+export const DOCTOR = "ROLE_DOCTOR";
+
+
 

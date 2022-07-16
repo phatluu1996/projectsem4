@@ -23,10 +23,6 @@ public class Doctor{
     @JoinColumn(name = "department_id", referencedColumnName = "id")
     private Department department;
 
-//    @ManyToOne
-//    @JoinColumn(name = "employee_id", referencedColumnName = "id")
-//    private Employee employee;
-
     @OneToOne
     @JsonIgnoreProperties(value = "doctor", allowSetters = true)
     private Employee employee;
@@ -37,7 +33,7 @@ public class Doctor{
     private List<DoctorSchedule> doctorSchedules;
     @OneToMany
     @JoinColumn(name = "doctor_id", referencedColumnName = "id")
-    @JsonIgnoreProperties({"doctor", "employee"})
+    @JsonIgnoreProperties(value = {"doctor", "employee"}, allowSetters = true)
     private List<Appointment> appointments;
     @OneToMany
     @JoinColumn(name = "doctor_id", referencedColumnName = "id")
@@ -101,12 +97,26 @@ public class Doctor{
         return doctorSchedules;
     }
 
+    public List<DoctorSchedule> getDoctorSchedules(boolean includeRetired) {
+        if(includeRetired){
+            return doctorSchedules;
+        }
+        return doctorSchedules.stream().filter(m -> !m.isRetired()).collect(Collectors.toList());
+    }
+
     public void setDoctorSchedules(List<DoctorSchedule> doctorSchedules) {
         this.doctorSchedules = doctorSchedules;
     }
 
     public List<Appointment> getAppointments() {
         return appointments;
+    }
+
+    public List<Appointment> getAppointments(boolean includeRetired) {
+        if(includeRetired){
+            return appointments;
+        }
+        return appointments.stream().filter(m -> !m.isRetired()).collect(Collectors.toList());
     }
 
     public void setAppointments(List<Appointment> appointments) {

@@ -1,13 +1,14 @@
 import React, { Component } from 'react';
 import OpenChat from "../../sidebar/openchatheader"
 import { DatePicker, Select } from 'antd';
-import { ADD, GET, UPDATE } from '../../../../constants';
+import { ADD, appointment_status, GET, UPDATE } from '../../../../constants';
 import { axiosAction, axiosActions, isFormValid, isValid, notify } from '../../../../actions';
 import moment from 'moment';
 import { toMoment } from '../../../../utils';
 import $ from 'jquery';
 import { NotificationContainer, NotificationManager } from 'react-notifications';
 const { Option } = Select;
+const { RangePicker } = DatePicker;
 
 class AddAppointment extends Component {
   constructor(props) {
@@ -20,7 +21,8 @@ class AddAppointment extends Component {
         patient: null,
         doctor: null,
         date: null,
-        status: true,
+        dateEnd: null,
+        status: 'approved',
         message: null,
         retired: false
       },
@@ -38,6 +40,7 @@ class AddAppointment extends Component {
     this.showNotify = this.showNotify.bind(this);
     this.disabledHours = this.disabledHours.bind(this);
     this.disabledMinutes = this.disabledMinutes.bind(this);
+    this.onChangeStatus = this.onChangeStatus.bind(this);
   }
 
   disabledHours() {
@@ -92,9 +95,9 @@ class AddAppointment extends Component {
 
   onSubmit(e) {
     e.preventDefault();
-    if(!isFormValid(e)) return;
+    if (!isFormValid(e)) return;
     axiosAction("/appointments", ADD, (res) => {
-      notify('success', '','Success')
+      notify('success', '', 'Success')
       this.props.history.push("/admin/appointments");
     }, (err) => notify('error', '', 'Error'), this.state.data);
   }
@@ -108,8 +111,8 @@ class AddAppointment extends Component {
   onChangeDepartment(value) {
     const tmp = { ...this.state.data };
     tmp.department = this.state.departments.filter(elt => elt.id === value)[0];
-    if(tmp.doctor && tmp.doctor.department && tmp.doctor.department.id != tmp.department.id){
-      tmp.doctor = null;      
+    if (tmp.doctor && tmp.doctor.department && tmp.doctor.department.id != tmp.department.id) {
+      tmp.doctor = null;
     }
     this.setState({ data: tmp });
   }
@@ -123,32 +126,43 @@ class AddAppointment extends Component {
 
   onChangeDate(value) {
     const tmp = { ...this.state.data };
-    tmp.date = value;
+    tmp.date = value[0];
+    tmp.dateEnd = value[1]
     this.setState({ data: tmp });
   }
 
   onChange(e) {
     const tmp = { ...this.state.data };
-    const value = e.target.value;
     switch (e.target.name) {
       case 'email':
-        tmp.patient.email = value;
+        tmp.patient.email = e.target.value;
         break;
 
       case 'phone':
-        tmp.patient.phoneNumber = value;
+        tmp.patient.phoneNumber = e.target.value;
         break;
 
       case 'message':
-        tmp.message = value;
+        tmp.message = e.target.value;
         break;
     }
+    this.setState({ data: tmp });
+  }
+
+  onChangeStatus(value) {
+    const tmp = { ...this.state.data };
+    tmp.status = value;
     this.setState({ data: tmp });
   }
 
   showNotify() {
     console.log(this.props);
   }
+
+  disabledDate = (current) => {
+    // Can not select days before today and today
+    return current && current < moment().endOf('day');
+  };
 
   render() {
     return (!this.state.loading &&
@@ -190,8 +204,9 @@ class AddAppointment extends Component {
                   <div className="col-md-6">
                     <div className="form-group">
                       <label>Doctor</label>
-                      <Select bordered={false} size={"small"} style={{ width: '100%' }} name='doctor' className={isValid(this.state.data.doctor != null)} onChange={this.onChangeDoctor} value={this.state.data.doctor ? this.state.data.doctor.id : "" }>
-                        {this.state.doctors?.filter(doc => doc.department?.id == this.state.data.department?.id) ?.map(doctor => {
+                      <Select bordered={false} size={"small"} style={{ width: '100%' }} name='doctor' className={isValid(this.state.data.doctor != null)}
+                        onChange={this.onChangeDoctor} value={this.state.data.doctor ? this.state.data.doctor.id : ""}>
+                        {this.state.doctors?.filter(doc => doc.department?.id == this.state.data.department?.id)?.map(doctor => {
                           return (<Option key={doctor.id} value={doctor.id}>{doctor.employee.firstName + " " + doctor.employee.lastName}</Option>)
                         })}
                       </Select>
@@ -200,12 +215,12 @@ class AddAppointment extends Component {
                   </div>
                   <div className="col-md-6">
                     <div className="form-group">
-                      <label>Date</label>
-                      <DatePicker name='date' className={isValid(this.state.data.date != null)}
-                        showTime={true} minuteStep={15} showSecond={false} format="YYYY-MM-DD HH:mm" clearIcon={true}
-                        allowClear={true} onChange={this.onChangeDate} onSelect={this.onChangeDate} inputReadOnly={true} 
-                        disabledHours={this.disabledHours} disabledMinutes={this.disabledMinutes}></DatePicker>
-                      <div className="invalid-feedback">Date cannot be empty</div>
+                      <label>Time Range</label>
+                      <RangePicker name='date' className={isValid(this.state.data.date && this.state.data.dateEnd)} value={[this.state.data.date ?? "", this.state.data.dateEnd ?? ""]}
+                        showTime={{ defaultValue: moment('00:00:00', 'HH:mm:ss') }} minuteStep={30} showSecond={false} format="YYYY-MM-DD HH:mm" clearIcon={true}
+                        allowClear={true} onChange={this.onChangeDate} onSelect={this.onChangeDate} inputReadOnly={true}
+                        disabledHours={this.disabledHours} disabledMinutes={this.disabledMinutes}></RangePicker>
+                      <div className="invalid-feedback">Time Range cannot be empty</div>
                     </div>
                   </div>
                 </div>
@@ -229,15 +244,26 @@ class AddAppointment extends Component {
                   <label>Message</label>
                   <textarea name='message' cols={30} rows={4} className="form-control" onChange={this.onChange} />
                 </div>
+                {!this.props.isReception && <div className="form-group">
+                  <label>Status<span className="text-danger">*</span></label>
+                  <Select bordered={false} size={"small"} style={{ width: '100%' }} value={this.state.data.status}
+                    className={isValid(this.state.data.status)} onChange={this.onChangeStatus}>
+                    {appointment_status.map((type, idx) => {
+                      return (<Option key={idx} value={type.value}>{type.label}</Option>);
+                    })}
+                  </Select>
+                  <div className="invalid-feedback">Status cannot be empty</div>
+                </div>}
+
                 <div className="m-t-20 text-center">
                   <button className="btn btn-primary submit-btn" type='submit'>Create Appointment</button>
-                  <button className="btn btn-danger submit-btn" onClick={() => this.props.history.push("/admin/appointments")}>Back</button>
+                  <button className="btn btn-danger submit-btn" onClick={() => this.props.history.push(this.props.pushBack)}>Back</button>
                 </div>
               </form>
             </div>
           </div>
         </div>
-        <OpenChat/>
+        <OpenChat />
       </div>
     );
   }

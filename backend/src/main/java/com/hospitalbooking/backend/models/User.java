@@ -40,11 +40,14 @@ public class User {
     private boolean retired;
 
     public User() {
+        retired = false;
     }
 
-    public User(String username, String password) {
+    public User(String username, String password, String role) {
         this.username = username;
         this.password = password;
+        this.role = role;
+        retired = false;
     }
 
     public User(Long id, String username, String password, String role, String resetPassword, Employee employee, Patient patient, boolean retired) {

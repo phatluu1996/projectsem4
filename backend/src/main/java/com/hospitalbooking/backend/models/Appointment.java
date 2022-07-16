@@ -25,13 +25,17 @@ public class Appointment {
     private Patient patient;
     @ManyToOne
     @JoinColumn(name = "doctor_id", referencedColumnName = "id")
-    @JsonIgnoreProperties({"appointments","doctorSchedules"})
+    @JsonIgnoreProperties(value = {"appointments","doctorSchedules"}, allowSetters = true)
     private Doctor doctor;
     @Column(name = "date")
     @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX")
     private Date date;
+
+    @Column(name = "date_end")
+    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX")
+    private Date dateEnd;
     @Column(name = "status")
-    private boolean status;
+    private String status;  
 
     @Column(name = "message", columnDefinition = "text")
     private String message;
@@ -41,7 +45,7 @@ public class Appointment {
     public Appointment() {
     }
 
-    public Appointment(Long id, Patient patient, Doctor doctor, Date date, boolean status, boolean retired) {
+    public Appointment(Long id, Patient patient, Doctor doctor, Date date, String status, boolean retired) {
         this.id = id;
         this.patient = patient;
         this.doctor = doctor;
@@ -50,7 +54,7 @@ public class Appointment {
         this.retired = retired;
     }
 
-    public Appointment(Long id, Department department, Patient patient, Doctor doctor, Date date, boolean status, boolean retired) {
+    public Appointment(Long id, Department department, Patient patient, Doctor doctor, Date date, String status, boolean retired) {
         this.id = id;
         this.department = department;
         this.patient = patient;
@@ -60,7 +64,7 @@ public class Appointment {
         this.retired = retired;
     }
 
-    public Appointment(Long id, Department department, Patient patient, Doctor doctor, Date date, boolean status, String message, boolean retired) {
+    public Appointment(Long id, Department department, Patient patient, Doctor doctor, Date date, String status, String message, boolean retired) {
         this.id = id;
         this.department = department;
         this.patient = patient;
@@ -111,11 +115,11 @@ public class Appointment {
         this.date = date;
     }
 
-    public boolean isStatus() {
+    public String getStatus() {
         return status;
     }
 
-    public void setStatus(boolean status) {
+    public void setStatus(String status) {
         this.status = status;
     }
 
@@ -133,5 +137,13 @@ public class Appointment {
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public Date getDateEnd() {
+        return dateEnd;
+    }
+
+    public void setDateEnd(Date dateEnd) {
+        this.dateEnd = dateEnd;
     }
 }

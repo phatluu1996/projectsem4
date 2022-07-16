@@ -108,7 +108,7 @@ class EditSchedule extends Component {
     // updateData.doctor = {id : updateData.doctor.id}
     axiosAction(`/schedules/${this.id}`, UPDATE, (res) => {
       notify('success', '', 'Success')
-      this.props.history.push("/admin/schedules");
+      this.props.history.push(this.props.pushBack);
     }, (err) => notify('error', '', 'Error'), this.state.data);
   }
 
@@ -156,7 +156,7 @@ class EditSchedule extends Component {
                   <div className="col-md-6">
                     <div className="form-group">
                       <label>Doctor Name</label>
-                      <Select name='doctor' bordered={false} size={"small"} style={{ width: '100%' }}
+                      <Select name='doctor' bordered={false} size={"small"} style={{ width: '100%' }} disabled={this.props.isDoctor}
                         className={this.state.data.doctor != null ? "form-control is-valid" : "form-control is-invalid"} onChange={this.onChangeDoctor} value={this.state.data.doctor?.id}>
                         {this.state.doctors?.map(doctor => {
                           return (<Option key={doctor.id} value={doctor.id}>{doctor.employee.firstName + " " + doctor.employee.lastName}</Option>)
@@ -204,7 +204,7 @@ class EditSchedule extends Component {
                 </div>
                 <div className="m-t-20 text-center">
                   <button className="btn btn-primary submit-btn" type='submit'>Save</button>
-                  <button className="btn btn-danger submit-btn" onClick={() => this.props.history.push("/admin/schedules")}>Back</button>
+                  <button className="btn btn-danger submit-btn" onClick={() => this.props.history.push(this.props.pushBack)}>Back</button>
                 </div>
               </form>
             </div>

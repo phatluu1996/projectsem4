@@ -31,7 +31,7 @@ class EditPatient extends Component {
           province: null,
           line: null,
           country: null,
-          city: null
+          district: null
         },
         user: {
           username: null,
@@ -49,9 +49,6 @@ class EditPatient extends Component {
 
 
   componentDidMount() {
-    this.setState({
-      loading: true
-    });
     this.fetchData();
   }
 
@@ -62,10 +59,6 @@ class EditPatient extends Component {
 
   fetchData = () => {
     axiosAction("/patients/" + this.id, GET, res => {
-      console.log(res.data);
-      // const blob = new Blob([res.data.imageByteArr], { type: "image/jpeg" });
-      // const imageUrl = URL.createObjectURL(blob);
-      // console.log(imageUrl);
       this.setState({
         data: res.data,
         img:res.data.imageByteArr, 
@@ -81,7 +74,6 @@ class EditPatient extends Component {
       tmp.address.province = "";
     }
     tmp.address.country = this.state.countries[value].name
-    console.log(tmp.address.country);
     this.setState({
       crrValue: null,
       countrySelect: this.state.countries[value],
@@ -145,8 +137,8 @@ class EditPatient extends Component {
       case 'cId':
         tmp.cId = value;
         break;
-      case 'city':
-        tmp.address.city = value;
+      case 'district':
+        tmp.address.district = value;
         break;
       case 'line':
         tmp.address.line = value;
@@ -168,6 +160,8 @@ class EditPatient extends Component {
       data: tmp
     });
   }
+
+
 
 
   render() {
@@ -238,12 +232,12 @@ class EditPatient extends Component {
                     <label className="gen-label">Gender<span className="text-danger">*</span></label>
                     <div className="form-check-inline">
                       <label className="form-check-label">
-                        <input type="radio" name="gender" value={true} defaultChecked={this.state.data?.gender} className="form-check-input" onChange={(e) => this.onChange(e)} />Male
+                        <input type="radio" name="gender" value={"Male"} defaultChecked={this.state.data?.gender} className="form-check-input" onChange={(e) => this.onChange(e)} />Male
                       </label>
                     </div>
                     <div className="form-check-inline">
                       <label className="form-check-label">
-                        <input type="radio" name="gender" value={false} defaultChecked={!this.state.data?.gender} className="form-check-input" onChange={(e) => this.onChange(e)} />Female
+                        <input type="radio" name="gender" value={"Femmale"} defaultChecked={!this.state.data?.gender} className="form-check-input" onChange={(e) => this.onChange(e)} />Female
                       </label>
                     </div>
                   </div>
@@ -302,9 +296,9 @@ class EditPatient extends Component {
                     </div>
                     <div className="col-sm-6 col-md-6 col-lg-3">
                       <div className="form-group">
-                        <label>City <span className="text-danger">*</span></label>
-                        <input type="text" name='city' className="form-control" onChange={(e) => this.onChange(e)} defaultValue={this.state.data?.address?.city} />
-                        <div className="invalid-feedback">Please input city.</div>
+                        <label>District <span className="text-danger">*</span></label>
+                        <input type="text" name='district' className="form-control" onChange={(e) => this.onChange(e)} defaultValue={this.state.data?.address?.district} />
+                        <div className="invalid-feedback">Please input district.</div>
                       </div>
                     </div>
                     <div className="col-sm-6 col-md-6 col-lg-3">

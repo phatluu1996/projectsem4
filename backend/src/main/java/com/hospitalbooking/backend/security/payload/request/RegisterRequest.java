@@ -1,10 +1,12 @@
 package com.hospitalbooking.backend.security.payload.request;
 
 import com.hospitalbooking.backend.models.Address;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+import java.util.Date;
 
 public class RegisterRequest {
     @NotBlank
@@ -25,6 +27,14 @@ public class RegisterRequest {
     @Size(max = 50)
     @Email
     private String email;
+
+    @NotBlank
+    @Size(max = 50)
+    private String gender;
+
+    @NotBlank
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private Date dateOfBirth;
 
     @NotBlank
     private String phone;
@@ -107,5 +117,21 @@ public class RegisterRequest {
 
     public void setRole(String role) {
         this.role = role;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
+    public Date getDateOfBirth() {
+        return dateOfBirth;
+    }
+
+    public void setDateOfBirth(Date dateOfBirth) {
+        this.dateOfBirth = dateOfBirth;
     }
 }

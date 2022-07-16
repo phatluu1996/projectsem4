@@ -1,6 +1,7 @@
 package com.hospitalbooking.backend.controller;
 
 import com.hospitalbooking.backend.constant.EmployeeRole;
+import com.hospitalbooking.backend.models.Doctor;
 import com.hospitalbooking.backend.models.Employee;
 import com.hospitalbooking.backend.models.User;
 import com.hospitalbooking.backend.repository.AddressRepos;
@@ -43,14 +44,26 @@ public class EmployeeController {
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
+    @GetMapping("/employees-user/{username}")
+    public ResponseEntity<Employee> oneByUsername(@PathVariable String username){
+        return userRepos.findByUsername(username).map(user -> new ResponseEntity<>(user.getEmployee(), HttpStatus.OK))
+                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
+
     @GetMapping("/employees")
     public ResponseEntity<List<Employee>> allExceptDoctor(){
         Specification<?> spec = DBSpecification.createSpecification(Boolean.FALSE).and((root, cq, cb) -> cb.notEqual(root.get("employeeRole"), EmployeeRole.DOCTOR));
         return new ResponseEntity<>(employeeRepos.findAll(spec), HttpStatus.OK);
     }
 
+    @GetMapping("/employees-admin")
+    public ResponseEntity<List<Employee>> allForAdmin(){
+        Specification<?> spec = DBSpecification.createSpecification(Boolean.FALSE).and((root, cq, cb) -> cb.notEqual(root.get("employeeRole"), EmployeeRole.ADMIN)).and((root, cq, cb) -> cb.notEqual(root.get("employeeRole"), EmployeeRole.DOCTOR));
+        return new ResponseEntity<>(employeeRepos.findAll(spec), HttpStatus.OK);
+    }
+
     @GetMapping("/employees-doctors")
-    public ResponseEntity<List<Employee>> all(){
+    public ResponseEntity<List<Employee>> allIncludeDoctor(){
         Specification<?> spec = DBSpecification.createSpecification(Boolean.FALSE);
         return new ResponseEntity<>(employeeRepos.findAll(spec), HttpStatus.OK);
     }
@@ -78,7 +91,7 @@ public class EmployeeController {
     public ResponseEntity<Employee> update(@RequestBody Employee employee, @PathVariable Long id){
         Optional<Employee> optional = employeeRepos.findById(id);
         return optional.map(model -> {
-            if(employee.getImage() != null && !employee.getImage().isEmpty()){
+            if(employee.getImage() != null && !employee.getImage().isEmpty() && !employee.getImage().equals(model.getImage())){
                 try {
                     String fileName = employee.getFirstName()+employee.getLastName()+employee.getcId()+".png";
                     String filePath = FileUploadUtil.UPLOAD_DIR + fileName;
@@ -92,7 +105,9 @@ public class EmployeeController {
             employee.setId(model.getId());
             addressRepos.save(employee.getAddress());
             User user = employee.getUser();
-            user.setPassword(encoder.encode(user.getPassword()));
+            if(!user.getPassword().equals(model.getUser().getPassword())){
+                user.setPassword(encoder.encode(user.getPassword()));
+            }
             User savedUser = userRepos.save(user);
             employee.setUser(savedUser);
             Employee savedEmployee = employeeRepos.save(employee);

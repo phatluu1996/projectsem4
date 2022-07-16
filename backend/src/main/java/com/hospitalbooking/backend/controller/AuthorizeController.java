@@ -1,5 +1,7 @@
 package com.hospitalbooking.backend.controller;
 
+import com.hospitalbooking.backend.constant.EmployeeRole;
+import com.hospitalbooking.backend.constant.UserRole;
 import com.hospitalbooking.backend.models.*;
 import com.hospitalbooking.backend.repository.*;
 import com.hospitalbooking.backend.security.jwt.JwtUtils;
@@ -47,69 +49,69 @@ public class AuthorizeController {
 
     @PostMapping("/login")
     public ResponseEntity<?> authorize(@Valid @RequestBody LoginRequest loginRequest) {
+        try{
+            Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
 
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+            String jwt = jwtUtils.generateJwtToken(authentication);
 
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        String jwt = jwtUtils.generateJwtToken(authentication);
+            UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
 
-        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+            User optional = userRepos.getById(userDetails.getId());
 
-        User optional = userRepos.getById(userDetails.getId());
+            String headerName = "";
+            List<String> roles = userDetails.getAuthorities().stream()
+                    .map(item -> item.getAuthority())
+                    .collect(Collectors.toList());
 
-        String headerName = "";
-        List<String> roles = userDetails.getAuthorities().stream()
-                .map(item -> item.getAuthority())
-                .collect(Collectors.toList());
+            String avatar = "";
 
-        if(roles.get(0).equals("ROLE_ADMIN")){
-            headerName = "Admin";
-        }else if(roles.get(0).equals("ROLE_DOCTOR")){
-            headerName = optional.getEmployee().getFirstName() + " " + optional.getEmployee().getLastName();
-        }else if(roles.get(0).equals("ROLE_USER")){
-            headerName = optional.getPatient().getFirstName() + " " + optional.getPatient().getLastName();
-        }else {
-            return ResponseEntity.ok(new MessageResponse("Error authorize !", false));
+            if(roles.get(0).equals("ROLE_ADMIN")){
+                headerName = optional.getEmployee().getLastName() + " " + optional.getEmployee().getFirstName();
+                avatar = optional.getEmployee().getImageByteArr();
+            }else if(roles.get(0).equals("ROLE_DOCTOR") || roles.get(0).equals("ROLE_RECEPTION")){
+                headerName = optional.getEmployee().getLastName() + " " + optional.getEmployee().getFirstName();
+                avatar = optional.getEmployee().getImageByteArr();
+            }else if(roles.get(0).equals("ROLE_PATIENT")){
+                headerName = optional.getPatient().getLastName() + " " + optional.getPatient().getFirstName();
+                avatar = optional.getPatient().getImageByteArr();
+            }else {
+                return ResponseEntity.ok(new MessageResponse("Error authorize !", false));
+            }
+
+            return ResponseEntity.ok(new JwtResponse(jwt,
+                    userDetails.getId(),
+                    userDetails.getUsername(),
+                    headerName,
+                    avatar != null ? avatar :"" ,
+                    roles));
+        }catch(Exception e){
+            return ResponseEntity.ok(new MessageResponse("Wrong username or password !", false));
         }
-
-        return ResponseEntity.ok(new JwtResponse(jwt,
-                userDetails.getId(),
-                userDetails.getUsername(),
-                headerName,
-                roles));
     }
 
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@Valid @RequestBody RegisterRequest registerRequest) {
         if (userRepos.existsByUsername(registerRequest.getUsername())) {
-            return ResponseEntity
-                    .ok()
-                    .body(new MessageResponse("Username is already in use!", false));
+            return ResponseEntity.ok(new MessageResponse("Username is already in use!", false));
         }
 
         if (patientRepos.existsByEmail(registerRequest.getEmail()) || employeeRepos.existsByEmail(registerRequest.getEmail())) {
-            return ResponseEntity
-                    .ok()
-                    .body(new MessageResponse("Email is already in use!",false));
+            return ResponseEntity.ok(new MessageResponse("Email is already in use!",false));
         }
 
         // Create new user's account
         Patient patient;
 
-        User user = new User(registerRequest.getUsername(),
-            encoder.encode(registerRequest.getPassword())
-        );
+        User user = new User(registerRequest.getUsername(), encoder.encode(registerRequest.getPassword()), "");
         user.setRetired(false);
 
         String strRoles = registerRequest.getRole();
         if (strRoles == null) {
-            return ResponseEntity
-                    .ok()
-                    .body(new MessageResponse("Role is not found.",false));
+            return ResponseEntity.ok(new MessageResponse("Role is not found.",false));
         } else {
-            user.setRole("USER");
-
+            user.setRole(UserRole.PATIENT);
             patient = new Patient();
             patient.setFirstName(registerRequest.getFirstName());
             patient.setLastName(registerRequest.getLastName());
@@ -117,6 +119,8 @@ public class AuthorizeController {
             patient.setEmail(registerRequest.getEmail());
             patient.setAddress(registerRequest.getAddress());
             patient.setPhoneNumber(registerRequest.getPhone());
+            patient.setDateOfBirth(registerRequest.getDateOfBirth());
+            patient.setGender(registerRequest.getGender());
             patient.setUser(user);
 
             addressRepos.save(patient.getAddress());

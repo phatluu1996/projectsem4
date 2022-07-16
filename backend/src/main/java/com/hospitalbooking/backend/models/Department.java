@@ -24,6 +24,13 @@ public class Department {
     public Department() {
     }
 
+    public Department(String name, String description, boolean status, boolean retired) {
+        this.name = name;
+        this.description = description;
+        this.status = status;
+        this.retired = retired;
+    }
+
     public Department(Long id, String name, String description, boolean status, boolean retired) {
         this.id = id;
         this.name = name;

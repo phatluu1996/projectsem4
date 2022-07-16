@@ -1,10 +1,12 @@
 package com.hospitalbooking.backend.controller;
 
+import com.hospitalbooking.backend.constant.AppointmentStatus;
 import com.hospitalbooking.backend.models.Appointment;
 import com.hospitalbooking.backend.models.Doctor;
 import com.hospitalbooking.backend.models.Patient;
 import com.hospitalbooking.backend.repository.AppointmentRepos;
 import com.hospitalbooking.backend.repository.PatientRepos;
+import com.hospitalbooking.backend.repository.UserRepos;
 import com.hospitalbooking.backend.specification.DBSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
@@ -26,6 +28,9 @@ public class AppointmentController {
     @Autowired
     private PatientRepos patientRepos;
 
+    @Autowired
+    private UserRepos userRepos;
+
     @GetMapping("/appointments/{id}")
     public ResponseEntity<Appointment> one(@PathVariable Long id){
         return appointmentRepos.findById(id).map(appointment -> new ResponseEntity<>(appointment, HttpStatus.OK))
@@ -35,6 +40,36 @@ public class AppointmentController {
     @GetMapping("/appointments")
     public ResponseEntity<List<Appointment>> all(){
         Specification<?> spec = DBSpecification.createSpecification(Boolean.FALSE);
+        return new ResponseEntity<List<Appointment>>(appointmentRepos.findAll(spec), HttpStatus.OK);
+    }
+
+    @GetMapping("/appointments-doctor/{username}")
+    public ResponseEntity<List<Appointment>> allByDoctor(@PathVariable String username){
+        return userRepos.findByUsername(username).map(user ->
+                        new ResponseEntity<>(user.getEmployee().getDoctor().getAppointments(false), HttpStatus.OK))
+                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
+
+    @GetMapping("/appointments-patient/{username}")
+    public ResponseEntity<List<Appointment>> allByPatient(@PathVariable String username){
+        return userRepos.findByUsername(username).map(user ->
+                        new ResponseEntity<>(user.getPatient().getAppointments(false), HttpStatus.OK))
+                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
+
+    @GetMapping("/appointments/cancel/{id}")
+    public ResponseEntity<Appointment> cancelByDoctor(@PathVariable Long id) {
+        Optional<Appointment> optional = appointmentRepos.findById(id);
+        return optional.map(model -> {
+            model.setStatus(AppointmentStatus.CANCELED);
+            return new ResponseEntity<>(appointmentRepos.save(model), HttpStatus.OK);
+        }).orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
+
+
+    @GetMapping("/appointments-pending")
+    public ResponseEntity<List<Appointment>> allPending(){
+        Specification<?> spec = DBSpecification.createSpecification(Boolean.FALSE).and((root, cq, cb) -> cb.equal(root.get("status"), AppointmentStatus.PENDING));
         return new ResponseEntity<List<Appointment>>(appointmentRepos.findAll(spec), HttpStatus.OK);
     }
 
@@ -67,4 +102,6 @@ public class AppointmentController {
             return new ResponseEntity<>(appointmentRepos.save(model), HttpStatus.OK);
         }).orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
+
+
 }
