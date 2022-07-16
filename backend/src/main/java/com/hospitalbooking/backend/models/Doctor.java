@@ -37,11 +37,11 @@ public class Doctor{
     private List<Appointment> appointments;
     @OneToMany
     @JoinColumn(name = "doctor_id", referencedColumnName = "id")
-    @JsonIgnoreProperties({"doctor", "employee"})
+    @JsonIgnoreProperties(value = {"doctor", "employee"},allowSetters = true)
     private List<DoctorEducationDetail> educationDetails;
     @OneToMany
     @JoinColumn(name = "doctor_id", referencedColumnName = "id")
-    @JsonIgnoreProperties("doctor")
+    @JsonIgnoreProperties(value = "doctor", allowSetters = true)
     private List<DoctorExperienceDetail> experienceDetails;
     @Column(name = "retired")
     private boolean retired;
