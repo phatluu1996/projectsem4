@@ -33,8 +33,8 @@ class EditDoctor extends Component {
           "gender": null,
           "dateOfBirth": null,
           "email": null,
-          "image" : null,
-          "imageByteArr" : null,
+          "image": null,
+          "imageByteArr": null,
           "phoneNumber": null,
           "status": true,
           "remainingLeave": 0,
@@ -327,6 +327,10 @@ class EditDoctor extends Component {
     if (!isFormValid(e)) return;
     axiosAction(`/doctors/${this.id}`, UPDATE, (res) => {
       notify('success', '', 'Success')
+      if (res.data.employee.user.username == localStorage.getItem("userName")) {
+        localStorage.setItem('userAvatar', res.data.employee.imageByteArr);
+      }
+
       this.props.history.goBack();
     }, (err) => notify('error', '', 'Error'), this.state.data);
   }
@@ -567,7 +571,7 @@ class EditDoctor extends Component {
                   <div className="col-sm-6">
                     <div className="form-group">
                       <label>Phone </label>
-                      <input name="phone" className={isValid(this.state.data.employee.phoneNumber)} type="number" onChange={this.onChange} value={this.state.data.employee.phoneNumber} />
+                      <input name="phone" className={isValid(this.state.data.employee.phoneNumber)} type="tel" onChange={this.onChange} value={this.state.data.employee.phoneNumber} />
                       <div className="invalid-feedback">Phone cannot be empty</div>
                     </div>
                   </div>
@@ -696,7 +700,7 @@ class EditDoctor extends Component {
                 </div>
                 <div className="m-t-20 text-center">
                   <button className="btn btn-primary submit-btn">Save</button>
-                  <button className="btn btn-danger submit-btn" onClick={() => this.props.history.push("/admin/doctors")}>Back</button>
+                  <button className="btn btn-danger submit-btn" onClick={() => this.props.history.goBack()}>Back</button>
                 </div>
               </form>
             </div>

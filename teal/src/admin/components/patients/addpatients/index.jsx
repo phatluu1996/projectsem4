@@ -294,7 +294,7 @@ class AddPatient extends Component {
                   <div className="col-sm-6">
                     <div className="form-group">
                       <label>Phone <span className="text-danger">*</span></label>
-                      <input className={isValid(this.state.data.phoneNumber)} name='phoneNumber' type="text" onChange={(e) => this.onChange(e)} />
+                      <input className={isValid(this.state.data.phoneNumber)} name='phoneNumber' type="tel" onChange={(e) => this.onChange(e)} />
                       <div className="invalid-feedback">Phone number code cannot be empty</div>
                     </div>
                   </div>

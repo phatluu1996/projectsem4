@@ -4,9 +4,10 @@ import { Logo_Hospital, User_img } from './../imagepath.jsx';
 import $ from "jquery"
 import { logout } from "../../../actions.js";
 import { Modal } from "antd";
+import { ADMIN, DOCTOR, RECEPTION } from "../../../constants.js";
 
 class Header extends Component {
-  constructor(props){
+  constructor(props) {
     super(props)
     this.handleLogout = this.handleLogout.bind(this);
   }
@@ -57,7 +58,7 @@ class Header extends Component {
   }
 
   handleLogout() {
-    logout(() => setTimeout(()=>{this.props.history.replace("/")}, 250) );
+    logout(() => this.props.history.push("/login"));
   }
 
   render() {
@@ -157,13 +158,15 @@ class Header extends Component {
           <li className="nav-item dropdown has-arrow">
             <a href="#" className="dropdown-toggle nav-link user-link" data-toggle="dropdown">
               <span className="user-img">
-                <img className="rounded-circle" src={localStorage.getItem("userAvatar")? localStorage.getItem("userAvatar")  : User_img} width={24} alt="Admin" />
+                <img className="rounded-circle" src={localStorage.getItem("userAvatar") ? localStorage.getItem("userAvatar") : User_img} width={24} alt="Admin" />
                 <span className="status online" />
               </span>
               <span>{localStorage.getItem("headerName")}</span>
             </a>
             <div className="dropdown-menu">
-              <Link className="dropdown-item" to="/employee/profile">Profile</Link>
+              {localStorage.getItem("userRole") == DOCTOR && <Link className="dropdown-item" to="/doctor/profile">Profile</Link>}
+              {localStorage.getItem("userRole") == ADMIN && <Link className="dropdown-item" to="/admin/profile">Profile</Link>}
+              {localStorage.getItem("userRole") == RECEPTION && <Link className="dropdown-item" to="/reception/profile">Profile</Link>}
               <Link className="dropdown-item" to="/">Back</Link>
               <a className="dropdown-item" onClick={this.handleLogout}>Logout</a>
             </div>

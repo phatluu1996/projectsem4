@@ -73,7 +73,7 @@ class Header extends Component {
           </>
         ),
         onOk: () => {
-          setTimeout(() => { this.props.history.push("/login") }, 150)
+          this.props.history.push("/login");
         }
       });
     }
@@ -126,7 +126,7 @@ class Header extends Component {
                           <div className="dropdown-menu dropdown-menu-right">
                             {!localStorage.getItem('userToken') ?
                               <>
-                                <Link className="dropdown-item" to="/login">Login</Link>
+                                <a className="dropdown-item" href="/login">Login</a>
                                 <Link className="dropdown-item" to="/register">Register</Link>
                                 <Link className="dropdown-item" to="/forgot-password">Forgot Password</Link>
                               </> : <>

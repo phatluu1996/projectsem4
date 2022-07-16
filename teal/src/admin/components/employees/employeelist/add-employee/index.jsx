@@ -200,7 +200,7 @@ class AddEmployee extends Component {
                   <div className="col-sm-6">
                     <div className="form-group">
                       <label>Phone<span className="text"></span></label>
-                      <input className={isValid(this.state.data.phoneNumber)} type="text" value={this.state.data.phoneNumber} onChange={(arg) => this.onChange(arg, "phone")} />
+                      <input className={isValid(this.state.data.phoneNumber)} type="tel" value={this.state.data.phoneNumber} onChange={(arg) => this.onChange(arg, "phone")} />
                       <div className="invalid-feedback">Phone cannot be empty</div>
                     </div>
                   </div>

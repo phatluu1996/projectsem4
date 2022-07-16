@@ -327,7 +327,7 @@ class Profile extends Component {
                           <div className="form-group">
                             <label>Mobile Number</label>
                             <input
-                              type="number"
+                              type="tel"
                               defaultValue={this.state.data?.phoneNumber}
                               // style={this.inputBorder(this.state.data.phone != null, this.state.data.phone && this.state.statusChange.phone)}
                               className={this.inputClassname(this.state.data?.phoneNumber)}

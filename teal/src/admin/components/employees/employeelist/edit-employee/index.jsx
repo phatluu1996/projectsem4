@@ -139,6 +139,7 @@ class EditEmployee extends Component {
     if (!isFormValid(e)) return;
     axiosAction(`/employees/${this.id}`, UPDATE, (res) => {
       notify('success', '', 'Success')
+      localStorage.setItem('userAvatar',res.data.imageByteArr);
       this.props.history.goBack();
     }, (err) => notify('error', '', 'Error'), this.state.data);
   }
@@ -213,7 +214,7 @@ class EditEmployee extends Component {
                   <div className="col-sm-6">
                     <div className="form-group">
                       <label>Phone<span className="text"></span></label>
-                      <input className={isValid(this.state.data.phoneNumber)} type="text" value={this.state.data.phoneNumber} onChange={(arg) => this.onChange(arg, "phone")} />
+                      <input className={isValid(this.state.data.phoneNumber)} type="tel" value={this.state.data.phoneNumber} onChange={(arg) => this.onChange(arg, "phone")} />
                       <div className="invalid-feedback">Phone cannot be empty</div>
                     </div>
                   </div>
@@ -337,7 +338,7 @@ class EditEmployee extends Component {
 
                 <div className="m-t-20 text-center">
                   <button className="btn btn-primary submit-btn">Save</button>
-                  <button className="btn btn-danger submit-btn" onClick={() => this.props.history.push("/admin/employees")}>Back</button>
+                  <button className="btn btn-danger submit-btn" onClick={() => this.props.history.goBack()}>Back</button>
                 </div>
               </form>
             </div>

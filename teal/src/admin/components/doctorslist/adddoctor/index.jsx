@@ -541,7 +541,7 @@ class AddDoctor extends Component {
                   <div className="col-sm-6">
                     <div className="form-group">
                       <label>Phone </label>
-                      <input name="phone" className={isValid(this.state.data.employee.phoneNumber)} type="number" onChange={this.onChange} />
+                      <input name="phone" className={isValid(this.state.data.employee.phoneNumber)} type="tel" onChange={this.onChange} />
                       <div className="invalid-feedback">Phone cannot be empty</div>
                     </div>
                   </div>
