@@ -35,7 +35,7 @@ public class Appointment {
     @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX")
     private Date dateEnd;
     @Column(name = "status")
-    private String status;
+    private String status;  
 
     @Column(name = "message", columnDefinition = "text")
     private String message;

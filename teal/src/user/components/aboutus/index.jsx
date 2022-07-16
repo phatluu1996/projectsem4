@@ -48,11 +48,12 @@ class AboutUs extends Component {
               </div>
               <div className="row">
                 <div className="col-md-12 about-desc">
-                  <p><b>Mediapp</b> was founded by <b>Dr Kharle De Arch</b> in 2000 with a group of French doctors who shared the vision of bringing world class healthcare into Vietnam. Located in the burgeoning District 3 of Ho Chi Minh City has evolved into a full-service, one stop provider of quality care for the local population in and around Ho Chi Minh City.
+                  <p>&emsp;<b>Mediapp</b> was founded by <b>Dr Kharle De Arch</b> in 2000 with a group of French doctors who shared the vision of bringing world class healthcare into Vietnam. Located in the burgeoning District 3 of Ho Chi Minh City has evolved into a full-service, one stop provider of quality care for the local population in and around Ho Chi Minh City.
 
-                    As the first JCI accredited hospital in South Vietnam,<b>Mediapp</b> is known for its international standard of care, commitment to clinical quality and patient centric service.
+                    As the first JCI accredited hospital in South Vietnam,<b>Mediapp</b> is known for its international standard of care, commitment to clinical quality and patient centric service.</p>
 
-                    With over 950 service staff, including 130 Vietnamese and expatriate doctors and provides care across more than 30 medical specialties at its 220-bed hub hospital. It also operates an outpatient clinic at the heart of District 1, Ho Chi Minh City’s traditional business district. In addition to catering for the local Vietnamese population, also receives patients from neighbouring countries of Cambodia, Laos and Myanmar..</p>
+
+                  <p> &emsp;With over 950 service staff, including 130 Vietnamese and expatriate doctors and provides care across more than 30 medical specialties at its 220-bed hub hospital. It also operates an outpatient clinic at the heart of District 1, Ho Chi Minh City’s traditional business district. In addition to catering for the local Vietnamese population, also receives patients from neighbouring countries of Cambodia, Laos and Myanmar..</p>
                 </div>
               </div>
               <div className="about-content">
