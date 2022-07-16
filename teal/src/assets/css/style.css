@@ -161,6 +161,7 @@ Version      : 1.3
 }
 #business .dropdown-menu {
 	font-size:14px;
+	margin-top: -5px;
 }
 #business .main-nav .dropdown-menu {
 	border-top: 0;
