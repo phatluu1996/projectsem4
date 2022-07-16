@@ -1,9 +1,9 @@
 import React, { Component } from "react";
-import { GET } from '../../../constants';
-import { axiosActions, axiosAction } from '../../../actions';
-import { DatePicker, Radio, Select } from "antd";
+import { ADD, GET } from '../../../constants';
+import { axiosActions, axiosAction, isFormValid, notify, isFormValidNoNotify } from '../../../actions';
+import { DatePicker, Modal, Radio, Select } from "antd";
 import moment from "moment";
-const {Option} = Select;
+const { Option } = Select;
 
 class Appointment extends Component {
 
@@ -120,7 +120,7 @@ class Appointment extends Component {
         doctor: null,
         date: null,
         dateEnd: null,
-        status: '',
+        status: 'pending',
         message: null,
         retired: false
       },
@@ -140,31 +140,32 @@ class Appointment extends Component {
     this.disabledDate = this.disabledDate.bind(this);
     this.disableTime = this.disableTime.bind(this);
     this.handleChangeTime = this.handleChangeTime.bind(this);
-
+    this.handleSubmit = this.handleSubmit.bind(this);
+    this.onChangeMessage = this.onChangeMessage.bind(this);
   }
 
   handleChangeDepartment = (value) => {
-    const tmp = { ...this.state.data };    
+    const tmp = { ...this.state.data };
     tmp.department = this.state.departments.filter(elt => elt.id === value)[0];
     if (tmp.doctor && tmp.doctor.department && tmp.doctor.department.id != tmp.department.id) {
       tmp.doctor = null;
     }
-    const datetime = {...this.state.dateTime}
+    const datetime = { ...this.state.dateTime }
     datetime.date = '';
     datetime.day = null;
     datetime.time = null;
-    this.setState({ data: tmp, dateTime : datetime });
+    this.setState({ data: tmp, dateTime: datetime });
   }
 
   handleChangeDoctor = (value) => {
     const tmp = { ...this.state.data };
     tmp.doctor = this.state.doctors.filter(elt => elt.id === value)[0];
     tmp.date = null;
-    const datetime = {...this.state.dateTime}
+    const datetime = { ...this.state.dateTime }
     datetime.date = '';
     datetime.day = null;
     datetime.time = null;
-    this.setState({ data: tmp, dateTime : datetime });
+    this.setState({ data: tmp, dateTime: datetime });
   }
 
   handleChangeDate = (value) => {
@@ -178,17 +179,50 @@ class Appointment extends Component {
 
   handleChangeTime = (e) => {
     const tmp = { ...this.state.data };
-    const datetime = {...this.state.dateTime};    
+    const datetime = { ...this.state.dateTime };
     const value = e.target.value;
     datetime.time = value;
     tmp.date = moment(this.state.dateTime.date).set("hour", value.split(":")[0]).set("minute", value.split(":")[1]).set("second", 0);
     tmp.dateEnd = moment(this.state.dateTime.date).set("hour", value.split(":")[0]).set("minute", parseInt(value.split(":")[1]) + 30).set("second", 0);
 
-    this.setState({ data: tmp, dateTime : datetime });
+    this.setState({ data: tmp, dateTime: datetime });
+  }
+
+  onChangeMessage(e){
+    const tmp = { ...this.state.data };
+    tmp.message = e.target.value;
+    this.setState({ data: tmp});
   }
 
   handleSubmit = (e) => {
     e.preventDefault();
+    if (!isFormValidNoNotify(e)) {
+      Modal.error({
+        title: `Request Fail!`,
+        content: (
+          <>
+            Your appointment request is not qualified enough to submit.
+            Please try again.
+          </>
+        )
+      });
+    } else {
+      axiosAction("/appointments", ADD, (res) => {
+        Modal.success({
+          title: `Request Successfully !`,
+          content: (
+            <>
+              Your appointment has been submitted and waiting for approval.
+              Our receptionist will contact you to get confirmation.
+              Thank you.
+            </>
+          ),
+          onOk: () => {
+            this.props.history.push("/appointments");
+          }
+        });
+      }, (err) => notify('error', '', 'Error'), this.state.data);
+    }
   }
 
   componentDidMount() {
@@ -197,8 +231,11 @@ class Appointment extends Component {
       url: `/get-patient/${this.username}`,
       method: GET,
       callback: (res) => {
+        const tmp = { ...this.state.data };
+        tmp.patient = res.data;
         this.setState({
           loading: false,
+          data: tmp,
           patient: res.data
         });
       },
@@ -244,7 +281,7 @@ class Appointment extends Component {
               <div id="appointment-box" className="account-box">
                 <div className="appointment">
                   <h2 style={{ textAlign: "center", margin: "20px" }}><strong>APPOINTMENT</strong></h2>
-                  <form>
+                  <form onSubmit={this.handleSubmit} className="needs-validation" noValidate>
                     <div className="row">
                       <div className="col-sm-6">
                         <div className="row">
@@ -272,8 +309,8 @@ class Appointment extends Component {
                         <div className="form-group">
                           <label>Select Consultation Type <span className="text-red">*</span>
                           </label>
-                          <Select
-                            bordered={true}
+                          <Select className={this.state.data.department ? "form-control is-valid" : "form-control is-invalid"}
+                            bordered={false}
                             size="large"
                             style={{ width: '100%' }}
                             name='department'
@@ -282,11 +319,12 @@ class Appointment extends Component {
                               return (<Option key={department.id} value={department.id}>{department.name}</Option>)
                             })}
                           </Select>
+                          <div className="invalid-feedback">Please choose your consultation type !</div>
                         </div>
                         <div className="form-group">
                           <label>Choose the Doctor</label> <span className="text-red">*</span>
-                          <Select
-                            bordered={true}
+                          <Select className={this.state.data.doctor ? "form-control is-valid" : "form-control is-invalid"}
+                            bordered={false}
                             size="large"
                             style={{ width: '100%' }}
                             name='doctor'
@@ -298,10 +336,11 @@ class Appointment extends Component {
                               return (<Option key={doctor.id} value={doctor.id}>{doctor.employee.firstName + " " + doctor.employee.lastName}</Option>)
                             })}
                           </Select>
+                          <div className="invalid-feedback">Please input choose a doctor !</div>
                         </div>
                         <div className="form-group">
                           <label>Message (optional)</label>
-                          <textarea name="message" className="form-control" defaultValue={""} />
+                          <textarea name="message" className="form-control" onChange={this.onChangeMessage} />
                         </div>
                       </div>
 
@@ -311,13 +350,15 @@ class Appointment extends Component {
                           </label>
                           <div className="calendar">
                             <div className="input-wrapper">
-                              <DatePicker
+                              <DatePicker className={this.state.dateTime.date ? "form-control is-valid" : "form-control is-invalid"}
                                 style={{ width: '100%' }}
                                 disabled={!this.state.data.doctor}
                                 onChange={this.handleChangeDate}
                                 value={this.state.dateTime.date}
                                 disabledDate={this.disabledDate}
+                                bordered={false}
                               />
+                              <div className="invalid-feedback">Please input your appointment date !</div>
                             </div>
                           </div>
                         </div>
@@ -326,16 +367,17 @@ class Appointment extends Component {
                           <Radio.Group
                             size="large"
                             marginTop="20px"
-                            className="appoint-time"
+                            className={`form-control ${this.state.dateTime.time ? "is-valid" : "is-invalid"}`}
                             // options={this.options}   
                             onChange={this.handleChangeTime}
                             value={this.state.dateTime.time}
-                            optionType='button'
+                            optionType='button'                            
                           >
                             {this.options.map((option, idx) => {
                               return (<Radio.Button key={idx} value={option.value} disabled={this.disableTime(option)}>{option.label}</Radio.Button>)
                             })}
                           </Radio.Group>
+                          <div className="invalid-feedback">Please input your appointment time !</div>
                         </div>
                         <div className="form-group text-center m-t-3">
                           <button className="btn btn-primary account-btn" type="submit">Confirm Booking</button>

@@ -139,7 +139,7 @@ class Appointments extends Component {
         render: (text, record) => (
           <div className="table-avatar">
             <a href="#0" className="avatar avatar-sm mr-2">
-            {record.patient.imageByteArr && <img alt="" src={record.patient.imageByteArr} />}
+            {record.patient?.imageByteArr && <img alt="" src={record.patient?.imageByteArr} />}
             </a>
             {record.patient?.lastName + " " + record.patient?.firstName}
           </div>

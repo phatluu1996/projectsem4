@@ -35,6 +35,9 @@ public class DoctorController {
     private DocEducationRepos docEducationRepos;
     @Autowired
     private DocExperienceRepos docExperienceRepos;
+
+    @Autowired
+    private DoctorScheduleRepos doctorSchedule;
     @Autowired
     private UserRepos userRepos;
     @Autowired
@@ -137,7 +140,18 @@ public class DoctorController {
     public ResponseEntity<Doctor> delete(@PathVariable Long id){
         Optional<Doctor> optional = doctorRepos.findById(id);
         return optional.map(model -> {
+            Employee employee = model.getEmployee();
+            employee.setRetired(true);
+            employeeRepos.save(employee);
+            User user = model.getEmployee().getUser();
+            user.setRetired(true);
+            userRepos.save(user);
             model.setRetired(true);
+            for (int i = 0; i < model.getDoctorSchedules().size(); i++) {
+                DoctorSchedule schedule = model.getDoctorSchedules().get(i);
+                schedule.setRetired(true);
+                doctorSchedule.save(schedule);
+            }
             return new ResponseEntity<>(doctorRepos.save(model), HttpStatus.OK);
         }).orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }

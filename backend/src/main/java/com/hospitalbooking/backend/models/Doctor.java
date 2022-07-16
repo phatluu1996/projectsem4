@@ -94,7 +94,7 @@ public class Doctor{
     }
 
     public List<DoctorSchedule> getDoctorSchedules() {
-        return doctorSchedules;
+        return doctorSchedules.stream().filter(m -> !m.isRetired()).collect(Collectors.toList());
     }
 
     public List<DoctorSchedule> getDoctorSchedules(boolean includeRetired) {
@@ -109,7 +109,7 @@ public class Doctor{
     }
 
     public List<Appointment> getAppointments() {
-        return appointments;
+        return appointments.stream().filter(m -> !m.isRetired()).collect(Collectors.toList());
     }
 
     public List<Appointment> getAppointments(boolean includeRetired) {

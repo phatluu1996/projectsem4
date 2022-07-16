@@ -131,6 +131,25 @@ export const isFormValid = (e) => {
     return true;
 }
 
+export const isFormValidNoNotify = (e) => {
+    let idx = 0;
+    const invalidFormControls = e.target.getElementsByClassName("form-control");
+    const invalideFormChecks = e.target.getElementsByClassName("form-check-input");
+    for (idx = 0; idx < invalidFormControls.length; ++idx) {
+        if (invalidFormControls[idx].className.includes("is-invalid")) {
+            return false;
+        }
+    }
+
+    for (idx = 0; idx < invalideFormChecks.length; ++idx) {
+        if (invalideFormChecks[idx].className.includes("is-invalid")) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
 export const isValid = (condition) => {
     return condition ? "form-control is-valid" : "form-control is-invalid";
 }

@@ -59,7 +59,7 @@ class Calendar extends React.Component {
 					event.title = appointment.patient.lastName + " " + appointment.patient.firstName;
 					event.start = new Date(appointment.date).setSeconds(0);
 					event.end = new Date(appointment.dateEnd).setSeconds(0);
-					event.className = appointment.status == "canceled" ? 'bg-danger' : moment(appointment.date).isBefore(moment()) ? 'bg-success' : 'bg-primary';
+					event.className = appointment.status == "canceled" || appointment.status == "rejected" ? 'bg-danger' : moment(appointment.date).isBefore(moment()) ? 'bg-success' : 'bg-primary';
 					event.data = appointment;
 					list.push(event);
 				});
@@ -76,7 +76,7 @@ class Calendar extends React.Component {
 	}
 
 	renderEventContent = (eventInfo) => {
-		return (eventInfo.event.extendedProps.data.status == "canceled" ?
+		return (eventInfo.event.extendedProps.data.status == "canceled" || eventInfo.event.extendedProps.data.status == "rejected" ?
 			<Typography.Text delete>
 				<i><ClearOutlined /><b>{moment(eventInfo.event.start).format("HH:mm") + " - " + moment(eventInfo.event.end).format("HH:mm")}</b></i>				
 			</Typography.Text> :
@@ -366,7 +366,7 @@ class Calendar extends React.Component {
 						</div>
 					</Modal.Body>
 					<Modal.Footer>
-						{moment(this.state.selectAppointment?.date).isAfter(moment()) && this.state.selectAppointment.status != "canceled" &&
+						{moment(this.state.selectAppointment?.date).isAfter(moment()) && this.state.selectAppointment.status != "canceled" && this.state.selectAppointment.status != "rejected" &&
 							<Popconfirm className='btn btn-warning submit-btn delete-event centered' data-dismiss="modal"
 								title="Sure to cancel?" onConfirm={() => this.cancelAppointment(this.state.selectAppointment.id)}>
 								<a>Cancel</a>

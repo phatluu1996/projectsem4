@@ -34,6 +34,7 @@ class EditSchedule extends Component {
     this.onSubmit = this.onSubmit.bind(this);
     this.availableDaysDisplay = this.availableDaysDisplay.bind(this);
     this.disabledHours = this.disabledHours.bind(this);
+    this.disabledHours2 = this.disabledHours2.bind(this);
     this.disabledMinutes = this.disabledMinutes.bind(this);
   }
 
@@ -71,6 +72,9 @@ class EditSchedule extends Component {
 
   onChangeEndTime(val) {
     const tmp = { ...this.state.data };
+    if(val.hour() == 18){
+      val.set("minute", 0);
+    }
     tmp.end = val
     this.setState({ data: tmp });
   }
@@ -83,6 +87,10 @@ class EditSchedule extends Component {
 
   disabledHours() {
     return [0, 1, 2, 3, 4, 5, 6, 7, 19, 20, 21, 22, 23, 24];
+  }
+
+  disabledHours2() {
+    return [0, 1, 2, 3, 4, 5, 6, 7, 18, 19, 20, 21, 22, 23, 24];
   }
 
   disabledMinutes(selectHour) {
@@ -183,8 +191,8 @@ class EditSchedule extends Component {
                   <div className="col-md-6">
                     <div className="form-group">
                       <label>Start Time</label>
-                      <TimePicker name='start' showSecond={false} format={"HH:mm"} disabledHours={this.disabledHours} disabledMinutes={this.disabledMinutes} className={this.state.data.start ? "form-control is-valid" : "form-control is-invalid"}
-                        minuteStep={15} onChange={this.onChangeStartTime} onSelect={this.onChangeStartTime} value={toMoment(this.state.data.start)}></TimePicker>
+                      <TimePicker name='start' showSecond={false} format={"HH:mm"} disabledHours={this.disabledHours2} disabledMinutes={this.disabledMinutes} className={this.state.data.start ? "form-control is-valid" : "form-control is-invalid"}
+                        minuteStep={30} onChange={this.onChangeStartTime} onSelect={this.onChangeStartTime} value={toMoment(this.state.data.start)}></TimePicker>
                       <div className="invalid-feedback">Start time cannot be empty</div>
                     </div>
                   </div>
@@ -192,7 +200,7 @@ class EditSchedule extends Component {
                     <div className="form-group">
                       <label>End Time</label>
                       <TimePicker name='end' showSecond={false} format={"HH:mm"} disabledHours={this.disabledHours} disabledMinutes={this.disabledMinutes} className={this.state.data.end ? "form-control is-valid" : "form-control is-invalid"}
-                        minuteStep={15} onChange={this.onChangeEndTime} onSelect={this.onChangeEndTime} value={toMoment(this.state.data.end)} 
+                        minuteStep={30} onChange={this.onChangeEndTime} onSelect={this.onChangeEndTime} value={toMoment(this.state.data.end)} 
                         ></TimePicker>
                       <div className="invalid-feedback">End time cannot be empty</div>
                     </div>

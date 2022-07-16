@@ -5,6 +5,7 @@ import com.hospitalbooking.backend.models.Doctor;
 import com.hospitalbooking.backend.models.Employee;
 import com.hospitalbooking.backend.models.User;
 import com.hospitalbooking.backend.repository.AddressRepos;
+import com.hospitalbooking.backend.repository.DoctorRepos;
 import com.hospitalbooking.backend.repository.EmployeeRepos;
 import com.hospitalbooking.backend.repository.UserRepos;
 import com.hospitalbooking.backend.specification.DBSpecification;
@@ -16,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.print.Doc;
 import java.io.IOException;
 import java.util.Date;
 import java.util.List;
@@ -34,6 +36,9 @@ public class EmployeeController {
 
     @Autowired
     private AddressRepos addressRepos;
+
+    @Autowired
+    private DoctorRepos doctorRepos;
 
     @Autowired
     private PasswordEncoder encoder;
@@ -119,6 +124,14 @@ public class EmployeeController {
     public ResponseEntity<Employee> delete(@PathVariable Long id){
         Optional<Employee> optional = employeeRepos.findById(id);
         return optional.map(model -> {
+            if(model.getDoctor() != null){
+                Doctor doctor = model.getDoctor();
+                doctor.setRetired(true);
+                doctorRepos.save(doctor);
+            }
+            User user = model.getUser();
+            user.setRetired(true);
+            userRepos.save(user);
             model.setRetired(true);
             return new ResponseEntity<>(employeeRepos.save(model), HttpStatus.OK);
         }).orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));

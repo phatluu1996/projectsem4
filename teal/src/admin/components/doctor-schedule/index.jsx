@@ -37,7 +37,7 @@ class DoctorSchedule extends Component {
 
   disabledMinutes(selectHour) {
     if (selectHour == 18)
-      return [0, 15, 30, 45];
+      return [0];
   }
 
   filterData(e) {
@@ -276,14 +276,14 @@ class DoctorSchedule extends Component {
               <div className="form-group form-focus focused">
                 <label className="focus-label">From</label>
                 <TimePicker name='from' showSecond={false} format={"HH:mm"} disabledHours={this.disabledHours} disabledMinutes={this.disabledMinutes} className="form-control"
-                  minuteStep={15} onChange={(val) => this.setState({ from: val })} onSelect={(val) => this.setState({ from: val })} value={this.state.from}></TimePicker>
+                  minuteStep={30} onChange={(val) => this.setState({ from: val })} onSelect={(val) => this.setState({ from: val })} value={this.state.from}></TimePicker>
               </div>
             </div>
             <div className="col-sm-3">
               <div className="form-group form-focus focused">
                 <label className="focus-label">To</label>
                 <TimePicker name='to' showSecond={false} format={"HH:mm"} disabledHours={this.disabledHours} disabledMinutes={this.disabledMinutes} className="form-control"
-                  minuteStep={15} onChange={(val) => this.setState({ to: val })} onSelect={(val) => this.setState({ to: val })} value={this.state.to}></TimePicker>
+                  minuteStep={30} onChange={(val) => this.setState({ to: val })} onSelect={(val) => this.setState({ to: val })} value={this.state.to}></TimePicker>
               </div>
             </div>
             <div className="col-sm-1">

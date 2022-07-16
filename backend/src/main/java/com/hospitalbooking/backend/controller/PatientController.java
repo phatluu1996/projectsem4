@@ -117,6 +117,9 @@ public class PatientController {
     public ResponseEntity<Patient> delete(@PathVariable Long id){
         Optional<Patient> optional = patientRepos.findById(id);
         return optional.map(model -> {
+            User user = model.getUser();
+            user.setRetired(true);
+            userRepos.save(user);
             model.setRetired(true);
             return new ResponseEntity<>(patientRepos.save(model), HttpStatus.OK);
         }).orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
