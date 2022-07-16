@@ -195,6 +195,7 @@ import ReceptionPendingAppointments from "./admin/components/reception-appointme
 import { ADMIN, DOCTOR, PATIENT, RECEPTION } from "./constants.js";
 import DoctorSchedule from "./admin/components/doctor-schedule/index.jsx";
 import PatientCalendar from "./user/components/patient-appointment/index.jsx";
+import ResetPassword from "./user/components/resetpassword/index.jsx";
 
 
 
@@ -235,6 +236,7 @@ class AppUniversal extends Component {
             <BusinessRoute component={DoctorDetails} path="/doctordetails" exact restricted={true} />
             <BusinessRoute component={ContactUs} path="/contact-us" exact restricted={true} />
             <BusinessRoute component={ForgotPassword} path="/forgot-password" exact restricted={true} />
+            <BusinessRoute component={ResetPassword} path="/resetPassword/:id/:token" exact restricted={true} />
 
             <AdminRoute component={AdminDashboard} path="/admin" exact restricted={false} role={ADMIN} />
             <AdminRoute component={AdminProfile} path="/employee/profile" exact restricted={true} />

@@ -4,11 +4,13 @@ import com.hospitalbooking.backend.constant.EmployeeRole;
 import com.hospitalbooking.backend.constant.UserRole;
 import com.hospitalbooking.backend.models.*;
 import com.hospitalbooking.backend.repository.*;
+import com.hospitalbooking.backend.security.RandomStringToken;
 import com.hospitalbooking.backend.security.jwt.JwtUtils;
 import com.hospitalbooking.backend.security.payload.request.LoginRequest;
 import com.hospitalbooking.backend.security.payload.request.RegisterRequest;
 import com.hospitalbooking.backend.security.payload.response.JwtResponse;
 import com.hospitalbooking.backend.security.payload.response.MessageResponse;
+import com.hospitalbooking.backend.security.services.EmailService;
 import com.hospitalbooking.backend.security.services.UserDetailsImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +22,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @RestController
@@ -46,6 +48,9 @@ public class AuthorizeController {
 
     @Autowired
     private JwtUtils jwtUtils;
+
+    @Autowired
+    private EmailService emailService;
 
     @PostMapping("/login")
     public ResponseEntity<?> authorize(@Valid @RequestBody LoginRequest loginRequest) {
@@ -141,5 +146,67 @@ public class AuthorizeController {
 //        emailService.sendSimpleMessage(signUpRequest.getEmail(), null, "Confirm account", templateHtml);
 
         return ResponseEntity.ok(new MessageResponse("User registered successfully!", true));
+    }
+
+    @PostMapping("/forgetPassword")
+    public ResponseEntity<?> forgetPassword (@Valid @RequestParam("email") String email,@RequestBody String body){
+       System.out.print(employeeRepos.existsByEmail(email));
+        if(employeeRepos.existsByEmail(email)){
+             Employee employee = employeeRepos.getEmpByEmail(email);
+             User  user = userRepos.getById(employee.getUser().getId());
+            if(user.isRetired()){
+                return ResponseEntity.ok().body(new MessageResponse("User has been deactivated!", false));
+            }else {
+                String token = new RandomStringToken().generateRandomString(10);
+                user.setResetPassword(token);
+
+                User result = userRepos.save(user);
+                StringBuilder linkReset = new StringBuilder();
+                linkReset.append("http://localhost:3000/resetPassword/");
+                linkReset.append(result.getId());
+                linkReset.append("/");
+                linkReset.append(result.getResetPassword());
+
+                Map<String, Object> emailMap = new HashMap<>();
+//                emailMap.put("role", employee.getEmployeeRole());
+//                emailMap.put("firstname", employee.getFirstName());
+//                emailMap.put("lastname", employee.getLastName());
+                emailMap.put("changePasswordlink", linkReset.toString());
+
+                String templateHtml = emailService.templateResolve("forget_password", emailMap);
+                emailService.sendSimpleMessage(email, null, "Forget Password", templateHtml);
+
+                return ResponseEntity.ok(new MessageResponse("Successfully! Please check your email.", true));
+            }
+        }else {
+            return ResponseEntity.ok().body(new MessageResponse("We don't have an user with this email!", false));
+        }
+    }
+    @GetMapping("/getUserForget/{id}/{token}")
+    public ResponseEntity<?> getUserForget (@PathVariable Long id, @PathVariable String token){
+        if(userRepos.existsById(id)){
+            if(userRepos.existsByResetPassword(token)){
+                User user = userRepos.getByResetPassword(token);
+                return ResponseEntity.ok().body(user);
+            }else {
+                return ResponseEntity.ok().body(new MessageResponse("Wrong! Please check email again.", false));
+            }
+        }else {
+            return ResponseEntity.ok().body(new MessageResponse("Wrong! Please check email again.", false));
+        }
+    }
+
+    @PostMapping("/changePasswordForget")
+    public ResponseEntity<?> getUserForget (@Valid @RequestBody Object body){
+        System.out.print(body);
+        String password = ((LinkedHashMap) body).get("password").toString();
+        String token = ((LinkedHashMap) body).get("token").toString();
+        User newUser = userRepos.getByResetPassword(token);
+        newUser.setResetPassword("");
+        newUser.setPassword(encoder.encode(password));
+
+        userRepos.save(newUser);
+
+        return ResponseEntity.ok().body(new MessageResponse("Change Password success.", true));
     }
 }

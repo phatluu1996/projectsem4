@@ -61,6 +61,10 @@ public class User {
         this.retired = retired;
     }
 
+    public User(User user) {
+
+    }
+
     public Long getId() {
         return id;
     }
