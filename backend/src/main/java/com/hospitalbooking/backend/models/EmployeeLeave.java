@@ -36,7 +36,7 @@ public class EmployeeLeave {
 
     @ManyToOne
     @JoinColumn(name = "employee_id", referencedColumnName = "id")
-    @JsonIgnoreProperties("leaves")
+    @JsonIgnoreProperties(value = "leaves", allowSetters = true)
     private Employee employee;
 
     public EmployeeLeave() {

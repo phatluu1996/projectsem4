@@ -60,7 +60,7 @@ class Doctor extends Component {
                         </li>
                       </ul>
                       <div className="view-profie"> 
-                        <Link to="/doctor-details">View Profile</Link>
+                        
                       </div>
                     </div>
                   </div>
@@ -92,7 +92,7 @@ class Doctor extends Component {
                           <a className="g-plus" href="#"><i className="fab fa-google-plus-g" /></a>
                         </li>
                       </ul>
-                      <div className="view-profie"> <Link to="/doctor-details">View Profile</Link>
+                      <div className="view-profie"> 
                       </div>
                     </div>
                   </div>
@@ -124,7 +124,7 @@ class Doctor extends Component {
                         </li>
                       </ul>
                       <div className="view-profie"> 
-                        <Link to="/doctor-details">View Profile</Link>
+                        
                       </div>
                     </div>
                   </div>
@@ -156,7 +156,7 @@ class Doctor extends Component {
                         </li>
                       </ul>
                       <div className="view-profie"> 
-                        <Link to="/doctor-details">View Profile</Link>
+                        
                       </div>
                     </div>
                   </div>
@@ -190,7 +190,7 @@ class Doctor extends Component {
                         </li>
                       </ul>
                       <div className="view-profie"> 
-                        <Link to="/doctor-details">View Profile</Link>
+                        
                       </div>
                     </div>
                   </div>
@@ -224,7 +224,7 @@ class Doctor extends Component {
                         </li>
                       </ul>
                       <div className="view-profie">
-                        <Link to="/doctor-details">View Profile</Link>
+                        
                       </div>
                     </div>
                   </div>
@@ -258,7 +258,7 @@ class Doctor extends Component {
                         </li>
                       </ul>
                       <div className="view-profie"> 
-                        <Link to="/doctor-details">View Profile</Link>
+                        
                       </div>
                     </div>
                   </div>
@@ -292,7 +292,7 @@ class Doctor extends Component {
                         </li>
                       </ul>
                       <div className="view-profie">
-                        <Link to="/doctor-details">View Profile</Link>
+                        
                       </div>
                     </div>
                   </div>
@@ -326,7 +326,7 @@ class Doctor extends Component {
                         </li>
                       </ul>
                       <div className="view-profie">
-                        <Link to="/doctor-details">View Profile</Link>
+                        
                       </div>
                     </div>
                   </div>
