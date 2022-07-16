@@ -32,12 +32,14 @@ public class Patient extends UserProfile{
         super();
     }
 
-    public Patient(List<Appointment> appointments) {
+    public Patient(User user, List<Appointment> appointments) {
+        this.user = user;
         this.appointments = appointments;
     }
 
-    public Patient(Long id, String cId, String firstName, String lastName, String gender, Date dateOfBirth, String email, String phoneNumber , String image,String imageByteArr, Address address, boolean retired, List<Appointment> appointments) {
-        super(id, cId, firstName, lastName, gender, dateOfBirth, email, phoneNumber,image,imageByteArr, address, retired);
+    public Patient(Long id, String cId, String firstName, String lastName, String gender, Date dateOfBirth, String email, String phoneNumber, String image, String imageByteArr, Address address, boolean retired, User user, List<Appointment> appointments) {
+        super(id, cId, firstName, lastName, gender, dateOfBirth, email, phoneNumber, image, imageByteArr, address, retired);
+        this.user = user;
         this.appointments = appointments;
     }
 
