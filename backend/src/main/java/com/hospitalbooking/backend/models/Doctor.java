@@ -29,7 +29,7 @@ public class Doctor{
 
     @OneToMany
     @JoinColumn(name = "doctor_id", referencedColumnName = "id")
-    @JsonIgnoreProperties({"doctor", "employee"})
+    @JsonIgnoreProperties(value = {"doctor", "employee"}, allowSetters = true)
     private List<DoctorSchedule> doctorSchedules;
     @OneToMany
     @JoinColumn(name = "doctor_id", referencedColumnName = "id")

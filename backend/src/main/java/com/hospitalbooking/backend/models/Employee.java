@@ -25,7 +25,7 @@ public class Employee  extends UserProfile{
     @OneToOne(cascade =  CascadeType.ALL,
             mappedBy = "employee")
     @JoinColumn(name = "doctor_id", nullable = true)
-    @JsonIgnoreProperties({"employee", "appointments"})
+    @JsonIgnoreProperties(value = {"employee", "appointments"}, allowSetters = true)
     private Doctor doctor;
 
     @OneToOne
@@ -34,7 +34,7 @@ public class Employee  extends UserProfile{
 
     @OneToMany
     @JoinColumn(name = "employee_id", referencedColumnName = "id")
-    @JsonIgnoreProperties({"employee","user"})
+    @JsonIgnoreProperties(value = {"employee","user"}, allowSetters = true)
     private List<EmployeeLeave> leaves;
 
     public Employee() {
