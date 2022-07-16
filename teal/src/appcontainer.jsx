@@ -185,16 +185,16 @@ import "./assets/js/bootstrap-datetimepicker.min.js";
 import "./assets/plugins/light-gallery/js/lightgallery-all.min.js";
 import "./assets/js/app.js";
 
-import {NotificationContainer, NotificationManager} from 'react-notifications';
+import { NotificationContainer, NotificationManager } from 'react-notifications';
 import 'react-notifications/lib/notifications.css';
 
 class AppUniversal extends Component {
 
-  constructor(props){
+  constructor(props) {
     super(props);
   }
 
-  
+
 
   render() {
     const url = this.props.location.pathname.split("/")[1];
@@ -203,43 +203,18 @@ class AppUniversal extends Component {
     }
     return (
       <Router basename="/">
-        <div className="main-wrapper"> 
+        <div className="main-wrapper">
           <Switch>
-            {/* <PublicRoute restricted={false} path="/" exact component={Home} />
-            <PublicRoute restricted={false} path="/departments" exact component={Departments} />
-            <PublicRoute restricted={false} path="/department-details" exact component={DepartmentDetails} />
-            <PublicRoute restricted={false} path="/services" exact component={Service} />
-            <PublicRoute restricted={false} path="/service-details" exact component={ServiceDetails} />
-            <PublicRoute restricted={false} path="/doctors" exact component={Doctor} />
-            <PublicRoute restricted={false} path="/doctor-details" exact component={DoctorDetails} />
-            <PublicRoute restricted={false} path="/blog" exact component={Blog} />
-            <PublicRoute restricted={false} path="/blog-left-sidebar" exact component={BlogLeftSidebar} />
-            <PublicRoute restricted={false} path="/blog-full-width" exact component={BlogFullWidth} />
-            <PublicRoute restricted={false} path="/blog-grid" exact component={BlogGrid} />
-            <PublicRoute restricted={false} path="/blog-details" exact component={BlogDetails} />
-            <PublicRoute restricted={false} path="/about-us" exact component={AboutUs} />
-            <PublicRoute restricted={false} path="/contact-us" exact component={ContactUs} />
-            <PublicRoute restricted={false} path="/appointment" exact component={Appointment} />
-            
-            <PublicRoute restricted={false} path="/register" exact component={Register} />
-            <PublicRoute restricted={false} path="/forgot-password" exact component={ForgotPassword} />
-            <PublicRoute restricted={false} path="/404" exact component={Error404} /> */}
-
-            {/* <PublicRoute restricted={false} component={Home} path="/" exact />
-            <PublicRoute restricted={true} component={Login} path="/login" exact />
-            
-            <PublicRoute restricted={true} component={ForgotPassword} path="/forgot-password" exact /> */}
-
-            {/* <PrivateRoute component={AdminDashboard} path="/admin/dashboard" exact /> */}
-            <BusinessRoute component={Home} path="/" exact/>
+            <BusinessRoute component={Home} path="/" exact />
             <BusinessRoute restricted={false} path="/appointment" exact component={Appointment} />
-            
+
             <BusinessRoute restricted={false} path="/login" exact component={Login} />
             <BusinessRoute restricted={true} component={Register} path="/register" exact />
             <BusinessRoute component={AboutUs} path="/aboutus" exact />
             <BusinessRoute component={Departments} path="/departments" exact />
+            <BusinessRoute component={DepartmentDetails} path="/department-details/:id" exact />
             <BusinessRoute component={Doctor} path="/doctors" exact />
-            <BusinessRoute component={DoctorDetails} path="/doctordetails" exact />
+            <BusinessRoute component={DoctorDetails} path="/doctor-details/:id" exact />
             <BusinessRoute component={ContactUs} path="/contact-us" exact />
             <BusinessRoute component={ForgotPassword} path="/forgot-password" exact />
 
@@ -275,11 +250,11 @@ class AppUniversal extends Component {
             <AdminRoute component={AdminSalaryView} path="/admin/salaries/export/:id" exact />
 
             <AdminRoute component={AdminCalendar} path="/doctor/schedules" exact />
-            
+
 
           </Switch>
         </div>
-        
+
       </Router>
     );
   };
