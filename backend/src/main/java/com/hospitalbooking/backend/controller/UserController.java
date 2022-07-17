@@ -4,9 +4,11 @@ import com.hospitalbooking.backend.models.User;
 import com.hospitalbooking.backend.repository.EmployeeRepos;
 import com.hospitalbooking.backend.repository.PatientRepos;
 import com.hospitalbooking.backend.repository.UserRepos;
+import com.hospitalbooking.backend.security.payload.response.MessageResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,6 +20,9 @@ import java.util.Optional;
 public class UserController {
     @Autowired
     private UserRepos userRepos;
+
+    @Autowired
+    PasswordEncoder encoder;
 
     @GetMapping("/users/{id}")
     public ResponseEntity<User> one(@PathVariable Long id){
@@ -52,4 +57,18 @@ public class UserController {
             return new ResponseEntity<>(userRepos.save(model), HttpStatus.OK);
         }).orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
+
+
+    @PutMapping("/changePassword")
+    public ResponseEntity<?> changePassword(@RequestBody User user){
+        User userWithNewPassword = userRepos.getUserByUsername(user.getUsername());
+        if(userWithNewPassword != null){
+            if(encoder.matches(userWithNewPassword.getPassword(),user.getPassword())){
+                userWithNewPassword.setPassword(encoder.encode(user.getResetPassword()));
+                User result = userRepos.save(userWithNewPassword);
+                return ResponseEntity.ok().body(result);
+            }else return ResponseEntity.badRequest().body(new MessageResponse("Wrong Password.", false));
+        }else return ResponseEntity.badRequest().body(new MessageResponse("Account not found.", false));
+    }
+
 }
