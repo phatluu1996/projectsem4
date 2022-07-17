@@ -192,6 +192,16 @@ export const encodeBase64 = (file, callback) => {
     reader.readAsDataURL(file);
 }
 
+export const range = (start, end) => {
+    const result = [];
+
+    for (let i = start; i < end; i++) {
+        result.push(i);
+    }
+
+    return result;
+};
+
 export const showConfirm = (title, content, onOk, onCancel) => {
     confirm({
         title: title,
@@ -221,7 +231,7 @@ export const logout = (onOk) => {
             localStorage.removeItem('userName');
             localStorage.removeItem('userId');
             localStorage.removeItem('userRole');
-            localStorage.removeItem('userAvatar');            
+            localStorage.removeItem('userAvatar');
             onOk();
         }
     );

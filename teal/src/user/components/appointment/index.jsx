@@ -33,80 +33,7 @@ class Appointment extends Component {
     return result;
   }
 
-  options = [
-    {
-      value: "08:00",
-      label: "08:00am - 08:30am",
-    },
-    {
-      value: "08:30",
-      label: "08:30am - 09:00am",
-    },
-    {
-      value: "09:00",
-      label: "09:00am - 09:30am",
-    },
-    {
-      value: "09:30",
-      label: "09:30am - 10:00am",
-    },
-    {
-      value: "10:00",
-      label: "10:00am - 10:30am",
-    },
-    {
-      value: "10:30",
-      label: "10:30am - 11:00am",
-    },
-    {
-      value: "11:00",
-      label: "11:00am - 11:30am",
-    },
-    {
-      value: "11:30",
-      label: "11:30am - 12:00am",
-    },
-    {
-      value: "13:00",
-      label: "01:00pm - 01:30pm",
-    },
-    {
-      value: "13:30",
-      label: "01:30pm - 02:00pm",
-    },
-    {
-      value: "14:00",
-      label: "02:00pm - 02:30pm",
-    },
-    {
-      value: "14:30",
-      label: "02:30pm - 03:00pm",
-    },
-    {
-      value: "15:00",
-      label: "03:00pm - 03:30pm",
-    },
-    {
-      value: "15:30",
-      label: "03:30pm - 04:00pm",
-    },
-    {
-      value: "16:00",
-      label: "04:00pm - 04:30pm",
-    },
-    {
-      value: "16:30",
-      label: "04:30pm - 05:00pm",
-    },
-    {
-      value: "17:00",
-      label: "05:00pm - 05:30pm",
-    },
-    {
-      value: "17:30",
-      label: "05:30pm - 06:00pm",
-    },
-  ];
+  
 
   constructor(props) {
     super(props);
@@ -373,7 +300,7 @@ class Appointment extends Component {
                             value={this.state.dateTime.time}
                             optionType='button'                            
                           >
-                            {this.options.map((option, idx) => {
+                            {appointment_timeranges.map((option, idx) => {
                               return (<Radio.Button key={idx} value={option.value} disabled={this.disableTime(option)}>{option.label}</Radio.Button>)
                             })}
                           </Radio.Group>

@@ -103,6 +103,7 @@ class Appointments extends Component {
         notify('success', '', 'Success');
         this.setState({
           data: res.data,
+          filterData: res.data,
           loading: false,
           selectdId: 0
         });
@@ -139,7 +140,7 @@ class Appointments extends Component {
         render: (text, record) => (
           <div className="table-avatar">
             <a href="#0" className="avatar avatar-sm mr-2">
-            {record.patient?.imageByteArr && <img alt="" src={record.patient?.imageByteArr} />}
+              {record.patient?.imageByteArr && <img alt="" src={record.patient?.imageByteArr} />}
             </a>
             {record.patient?.lastName + " " + record.patient?.firstName}
           </div>
@@ -151,7 +152,7 @@ class Appointments extends Component {
         render: (text, record) => (
           <div className="table-avatar">
             <a href="#0" className="avatar avatar-sm mr-2">
-            {record.doctor.employee.imageByteArr && <img alt="" src={record.doctor.employee.imageByteArr} />}
+              {record.doctor.employee.imageByteArr && <img alt="" src={record.doctor.employee.imageByteArr} />}
             </a>
             {record.doctor?.employee.lastName + " " + record.doctor?.employee.firstName}
           </div>
@@ -231,20 +232,20 @@ class Appointments extends Component {
                 <label className="focus-label">Doctor Name</label>
                 <input type="text" className="form-control floating" name="doctorName" />
               </div>
-            </div>            
+            </div>
             <div className="col-sm-2">
               <div className="form-group form-focus focused">
                 <label className="focus-label">From</label>
-                <DatePicker name='from' showSecond={false} format={"YYYY-MM-DD HH:mm"} showHour={true} showMinute={true} showTime={true} 
-                  className="form-control" minuteStep={15} onChange={(val) => this.setState({ from: val })} 
+                <DatePicker name='from' showSecond={false} format={"YYYY-MM-DD HH:mm"} showHour={true} showMinute={true} showTime={true}
+                  className="form-control" minuteStep={15} onChange={(val) => this.setState({ from: val })}
                   onSelect={(val) => this.setState({ from: val })} value={this.state.from}></DatePicker>
               </div>
             </div>
             <div className="col-sm-2">
               <div className="form-group form-focus focused">
                 <label className="focus-label">To</label>
-                <DatePicker name='to' showSecond={false} format={"YYYY-MM-DD HH:mm"} showHour={true} showMinute={true} showTime={true} 
-                  className="form-control" minuteStep={15} onChange={(val) => this.setState({ to: val })} 
+                <DatePicker name='to' showSecond={false} format={"YYYY-MM-DD HH:mm"} showHour={true} showMinute={true} showTime={true}
+                  className="form-control" minuteStep={15} onChange={(val) => this.setState({ to: val })}
                   onSelect={(val) => this.setState({ to: val })} value={this.state.to}></DatePicker>
               </div>
             </div>

@@ -164,7 +164,7 @@ class EditSchedule extends Component {
                   <div className="col-md-6">
                     <div className="form-group">
                       <label>Doctor Name</label>
-                      <Select name='doctor' bordered={false} size={"small"} style={{ width: '100%' }} disabled={this.props.isDoctor}
+                      <Select name='doctor' bordered={false} size={"small"} style={{ width: '100%' }} disabled={true}
                         className={this.state.data.doctor != null ? "form-control is-valid" : "form-control is-invalid"} onChange={this.onChangeDoctor} value={this.state.data.doctor?.id}>
                         {this.state.doctors?.map(doctor => {
                           return (<Option key={doctor.id} value={doctor.id}>{doctor.employee.firstName + " " + doctor.employee.lastName}</Option>)
