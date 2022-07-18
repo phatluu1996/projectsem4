@@ -58,17 +58,15 @@ public class DatabaseController {
     @Autowired
     private Environment env;
 
-    //http://localhost:8080/api/all-data
-    @GetMapping("/all-data")
+    //http://localhost:8080/api/admin-data
+    @GetMapping("/admin-data")
     public ResponseEntity initAllData(){
         initAdminData();
         ImportSampleData.importAll(addressRepos, userRepos, doctorRepos, patientRepos, employeeRepos, doctorScheduleRepos, encoder);
         return new ResponseEntity<>("Done !", HttpStatus.OK);
     }
 
-    //http://localhost:8080/api/admin-data
-    @GetMapping("/admin-data")
-    public ResponseEntity initAdminData() {
+    public void initAdminData() {
         //Department
         Department[] departments = new Department[] {
                 new Department((long)1,"Neurosurgery", "Neurosurgery or neurological surgery, known in common parlance as brain surgery, is the medical specialty concerned with the surgical treatment of disorders which affect any portion of the nervous system including the brain, spinal cord and peripheral nervous system", true, false),
@@ -126,8 +124,6 @@ public class DatabaseController {
             Doctor doctor = doctorRepos.save(new Doctor(null, "", savedDepartment.get(0), doctorEmployee, null, null, null, null, false));
 //            doctorScheduleRepos.save(new DoctorSchedule(null, doctor, "start", "end", "", "", false));
         }
-
-        return new ResponseEntity<>("Done !", HttpStatus.OK);
     }
 
     //http://localhost:8080/api/drop-all-table?dbtype=mysql
