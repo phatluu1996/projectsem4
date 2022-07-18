@@ -241,15 +241,20 @@ export const logout = (onOk) => {
 
 export const valid_email_regex = new RegExp(/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+.[a-zA-Z]$/);
 export const valid_password_regex = new RegExp(/^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,16}$/);
-export const valid_number_regex = new RegExp('^[0-9]*$');
+export const valid_number_regex = new RegExp(/\D?[- ]/);
 
-export const isValidWithRegex = (val, type) => {
+export const validReg = (val, type) => {
     switch (type.toLowerCase().trim()) {
         case "password":
             return valid_password_regex.test(val);
+
         case "email":
             return valid_email_regex.test(val);
+        
         case "identity":
+            return valid_number_regex.test(val);
+
+        case "phone":
             return valid_number_regex.test(val);
 
         default:

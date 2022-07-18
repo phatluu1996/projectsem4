@@ -3,7 +3,7 @@ import OpenChat from "../../../sidebar/openchatheader"
 import $ from "jquery"
 import { countries } from '../../../../../address';
 import { DatePicker, Select } from 'antd';
-import { isValid, isFormValid, axiosAction, axiosActions, notify, encodeBase64 } from '../../../../../actions'
+import { isValid, isFormValid, axiosAction, axiosActions, notify, encodeBase64, validReg } from '../../../../../actions'
 const { Option } = Select;
 import { ADD, GET, employeeRoles, UPDATE } from '../../../../../constants';
 import { toMoment } from '../../../../../utils';
@@ -207,14 +207,14 @@ class EditEmployee extends Component {
                   <div className="col-sm-6">
                     <div className="form-group">
                       <label>Email <span className="text-danger">*</span></label>
-                      <input className={isValid(this.state.data.email)} type="email" value={this.state.data.email} onChange={(arg) => this.onChange(arg, "email")} />
+                      <input className={isValid(this.state.data.email && validReg(this.state.data.email, "email"))} type="email" value={this.state.data.email} onChange={(arg) => this.onChange(arg, "email")} />
                       <div className="invalid-feedback">Email cannot be empty</div>
                     </div>
                   </div>
                   <div className="col-sm-6">
                     <div className="form-group">
                       <label>Phone<span className="text"></span></label>
-                      <input className={isValid(this.state.data.phoneNumber)} type="tel" value={this.state.data.phoneNumber} onChange={(arg) => this.onChange(arg, "phone")} />
+                      <input className={isValid(this.state.data.phoneNumber && validReg(this.state.data.phoneNumber, "phone"))} type="tel" value={this.state.data.phoneNumber} onChange={(arg) => this.onChange(arg, "phone")} />
                       <div className="invalid-feedback">Phone cannot be empty</div>
                     </div>
                   </div>
@@ -274,7 +274,7 @@ class EditEmployee extends Component {
                   {this.state.data.employeeRole == 'RECEPTIONIST' && <><div className="col-sm-6">
                     <div className="form-group">
                       <label>Username <span className="text-danger">*</span></label>
-                      <input className={isValid(this.state.data.user.username)} type="text" value={this.state.data.user.username} onChange={(arg) => this.onChange(arg, "username")} />
+                      <input disabled={true} className={isValid(this.state.data.user.username)} type="text" value={this.state.data.user.username} onChange={(arg) => this.onChange(arg, "username")} />
                       <div className="invalid-feedback">Username cannot be empty</div>
                     </div>
                   </div>

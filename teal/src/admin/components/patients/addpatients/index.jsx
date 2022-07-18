@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import OpenChat from "../../sidebar/openchatheader";
 import { User_image } from "../../imagepath";
-import { axiosAction, encodeBase64, isFormValid, isValid, notify } from '../../../../actions';
+import { axiosAction, encodeBase64, isFormValid, isValid, notify, validReg, valid_email_regex } from '../../../../actions';
 import { GET, ADD } from "../../../../constants";
 import { DatePicker, Select } from 'antd';
 import { countries } from '../../../../address/index';
+const { Option } = Select;
 
 
 class AddPatient extends Component {
@@ -15,7 +16,6 @@ class AddPatient extends Component {
       crrValue: "",
       countries: countries,
       countrySelect: null,
-      img:null,
       data: {
         firstName: null,
         lastName: null,
@@ -66,7 +66,7 @@ class AddPatient extends Component {
       data: tmp
     });
   }
- 
+
   onSelectState = (value) => {
     const tmp = { ...this.state.data };
     tmp.address.province = value;
@@ -78,9 +78,9 @@ class AddPatient extends Component {
     var file = e.target.files[0];
     encodeBase64(file, (res) => {
       tmp.image = res;
+      tmp.imageByteArray = res;
       this.setState({
-        data: tmp,
-        img:URL.createObjectURL(file)
+        data: tmp
       })
     })
   }
@@ -190,8 +190,8 @@ class AddPatient extends Component {
                   <div className="col-sm-6">
                     <div className="form-group">
                       <label>Email <span className="text-danger">*</span></label>
-                      <input className={isValid(this.state.data.email)} name='email' type="email" onChange={(e) => this.onChange(e)} />
-                      <div className="invalid-feedback">Email cannot be empty</div>
+                      <input className={isValid(this.state.data.email && validReg(this.state.data.email, "email"))} name='email' type="email" onChange={(e) => this.onChange(e)} />
+                      <div className="invalid-feedback">Email is invalid or left empty</div>
                     </div>
                   </div>
                   <div className="col-sm-6">
@@ -254,11 +254,11 @@ class AddPatient extends Component {
                               return (<Select.Option key={index} value={country.name}>{country.name}</Select.Option>)
                             })}
                           </Select>
-                          <div className="invalid-feedback">Please select country cannot be empty</div>
+                          <div className="invalid-feedback">Country cannot be empty</div>
                         </div>
                       </div>
                       <div className="col-sm-6 col-md-6 col-lg-3">
-                        {this.state.countrySelect?.states.length > 0 && <div className="form-group">
+                        {this.state.countries?.filter(ctr => ctr.name === this.state.data.address?.country)[0]?.states.length > 0 && <div className="form-group">
                           <label>State/Province<span className="text-danger">*</span></label>
                           <Select
                             showSearch={true}
@@ -268,12 +268,12 @@ class AddPatient extends Component {
                             name='state'
                             className={isValid(this.state.data.address.province)}
                             onChange={this.onSelectState}>
-                            {this.state.countrySelect?.states?.map((state, index) => {
-                              return (<Select.Option key={index} value={state.name}>{state.name}</Select.Option>)
+                            {this.state.countries?.find(ctr => ctr.name === this.state.data.address?.country)?.states?.map((st, idx) => {
+                              return (<Option key={idx} value={st.name}>{st.name}</Option>)
                             })}
                           </Select>
+                          <div className="invalid-feedback">State cannot be empty</div>
                         </div>}
-                        <div className="invalid-feedback">State cannot be empty</div>
                       </div>
                       <div className="col-sm-6 col-md-6 col-lg-3">
                         <div className="form-group">
@@ -281,7 +281,7 @@ class AddPatient extends Component {
                           <input type="text" name='district' className={isValid(this.state.data.address.district)} onChange={(e) => this.onChange(e)} />
                           <div className="invalid-feedback">District cannot be empty</div>
                         </div>
-                    </div>
+                      </div>
                       <div className="col-sm-6 col-md-6 col-lg-3">
                         <div className="form-group">
                           <label>Postal Code<span className="text-danger">*</span></label>
@@ -293,9 +293,9 @@ class AddPatient extends Component {
                   </div>
                   <div className="col-sm-6">
                     <div className="form-group">
-                      <label>Phone <span className="text-danger">*</span></label>
-                      <input className={isValid(this.state.data.phoneNumber)} name='phoneNumber' type="tel" onChange={(e) => this.onChange(e)} />
-                      <div className="invalid-feedback">Phone number code cannot be empty</div>
+                      <label>Phone<span className="text-danger">*</span></label>
+                      <input className={isValid(this.state.data.phoneNumber && validReg(this.state.data.phoneNumber, "phone"))} name='phoneNumber' type="tel" onChange={(e) => this.onChange(e)} />
+                      <div className="invalid-feedback">Phone number is invalid or left empty</div>
                     </div>
                   </div>
                   <div className="col-sm-6">
@@ -303,7 +303,7 @@ class AddPatient extends Component {
                       <label>Avatar</label>
                       <div className="profile-upload">
                         <div className="upload-img">
-                          <img alt="" src={this.state.data?.image} />
+                          <img alt="" src={this.state.data?.imageByteArray} />
                         </div>
                         <div className="upload-input">
                           <input

@@ -3,7 +3,7 @@ import { Select, DatePicker, TimePicker } from 'antd';
 import OpenChat from "../../sidebar/openchatheader"
 import $ from "jquery"
 import { toMoment } from '../../../../utils';
-import { axiosActions, isFormValid, axiosAction, notify } from '../../../../actions';
+import { axiosActions, isFormValid, axiosAction, notify, isValid } from '../../../../actions';
 import { GET, ADD, DayOptions, UPDATE } from '../../../../constants';
 const { Option } = Select;
 
@@ -50,7 +50,6 @@ class EditSchedule extends Component {
   onChangeDoctor(val) {
     const tmp = { ...this.state.data };
     tmp.doctor = this.state.doctors.filter(doc => doc.id === val)[0];
-    // tmp.doctor = {id : val}
     this.setState({ data: tmp });
   }
 
@@ -165,7 +164,7 @@ class EditSchedule extends Component {
                     <div className="form-group">
                       <label>Doctor Name</label>
                       <Select name='doctor' bordered={false} size={"small"} style={{ width: '100%' }} disabled={true}
-                        className={this.state.data.doctor != null ? "form-control is-valid" : "form-control is-invalid"} onChange={this.onChangeDoctor} value={this.state.data.doctor?.id}>
+                        className={isValid(this.state.data.doctor != null)} onChange={this.onChangeDoctor} value={this.state.data.doctor?.id}>
                         {this.state.doctors?.map(doctor => {
                           return (<Option key={doctor.id} value={doctor.id}>{doctor.employee.firstName + " " + doctor.employee.lastName}</Option>)
                         })}
@@ -177,7 +176,7 @@ class EditSchedule extends Component {
                     <div className="form-group">
                       <label>Available Days</label>
                       <Select name='availableDays' maxLength={7} mode='multiple' bordered={false} size={"small"} style={{ width: '100%' }}
-                        className={this.state.data.availableDays ? "form-control is-valid" : "form-control is-invalid"}
+                        className={isValid(this.state.data.availableDays)}
                         optionLabelProp="label" onChange={this.onChangeAvailableDays} value={this.availableDaysDisplay(this.state.data.availableDays)}>
                         {DayOptions?.map((day, idx) => {
                           return (<Option key={idx} value={day.value} label={day.shortLabel} >{day.label}</Option>)

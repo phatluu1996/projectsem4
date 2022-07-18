@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Select, DatePicker, TimePicker } from 'antd';
 import OpenChat from "../../sidebar/openchatheader"
 import $ from "jquery"
-import { axiosActions, isFormValid, axiosAction, notify } from '../../../../actions';
+import { axiosActions, isFormValid, axiosAction, notify, isValid } from '../../../../actions';
 import { GET, ADD, DayOptions } from '../../../../constants';
 const { Option } = Select;
 
@@ -133,7 +133,7 @@ class AddSchedule extends Component {
                     <div className="form-group">
                       <label>Doctor Name</label>
                       <Select name='doctor' bordered={false} size={"small"} style={{ width: '100%' }} value={this.state.data.doctor.id} disabled={this.props.isDoctor}
-                        className={this.state.data.doctor != null ? "form-control is-valid" : "form-control is-invalid"} onChange={this.onChangeDoctor}>
+                        className={isValid(this.state.data.doctor != null)} onChange={this.onChangeDoctor}>
                         {this.state.doctors?.map(doctor => {
                           return (<Option key={doctor.id} value={doctor.id}>{doctor.employee.firstName + " " + doctor.employee.lastName}</Option>)
                         })}
@@ -145,7 +145,7 @@ class AddSchedule extends Component {
                     <div className="form-group">
                       <label>Available Days</label>
                       <Select name='availableDays' maxLength={7} mode='multiple' bordered={false} size={"small"} style={{ width: '100%' }}
-                        className={this.state.data.availableDays ? "form-control is-valid" : "form-control is-invalid"} optionLabelProp="label" onChange={this.onChangeAvailableDays}>
+                        className={isValid(this.state.data.availableDays)} optionLabelProp="label" onChange={this.onChangeAvailableDays}>
                         {DayOptions?.map((day, idx) => {
                           return (<Option key={idx} value={day.value} label={day.shortLabel} >{day.label}</Option>)
                         })}
@@ -158,16 +158,16 @@ class AddSchedule extends Component {
                   <div className="col-md-6">
                     <div className="form-group">
                       <label>Start Time</label>
-                      <TimePicker name='start' showSecond={false} format={"HH:mm"} disabledHours={this.disabledHours} disabledMinutes={this.disabledMinutes} className={this.state.data.start ? "form-control is-valid" : "form-control is-invalid"}
-                        minuteStep={15} onChange={this.onChangeStartTime} onSelect={this.onChangeStartTime}></TimePicker>
+                      <TimePicker name='start' showSecond={false} format={"HH:mm"} disabledHours={this.disabledHours} disabledMinutes={this.disabledMinutes} className={isValid(this.state.data.start)}
+                        minuteStep={30} onChange={this.onChangeStartTime} onSelect={this.onChangeStartTime}></TimePicker>
                       <div className="invalid-feedback">Start time cannot be empty</div>
                     </div>
                   </div>
                   <div className="col-md-6">
                     <div className="form-group">
                       <label>End Time</label>
-                      <TimePicker name='end' showSecond={false} format={"HH:mm"} disabledHours={this.disabledHours} disabledMinutes={this.disabledMinutes} className={this.state.data.end ? "form-control is-valid" : "form-control is-invalid"}
-                        minuteStep={15} onChange={this.onChangeEndTime} onSelect={this.onChangeEndTime}></TimePicker>
+                      <TimePicker name='end' showSecond={false} format={"HH:mm"} disabledHours={this.disabledHours} disabledMinutes={this.disabledMinutes} className={isValid(this.state.data.end)}
+                       minuteStep={30} onChange={this.onChangeEndTime} onSelect={this.onChangeEndTime}></TimePicker>
                       <div className="invalid-feedback">End time cannot be empty</div>
                     </div>
                   </div>

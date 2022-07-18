@@ -24,7 +24,7 @@ class Patients extends Component {
     this.handleDel = this.handleDel.bind(this);
     this.filterData = this.filterData.bind(this);
     this.resetFilter = this.resetFilter.bind(this);
-    
+
   }
 
   filterData(e) {
@@ -176,7 +176,7 @@ class Patients extends Component {
       },
     ];
 
-    return (!this.state.loading &&
+    return (
       <div className="page-wrapper">
         <div className="content">
           <div className="row">

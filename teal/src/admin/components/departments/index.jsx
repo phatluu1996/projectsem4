@@ -5,7 +5,7 @@ import { Sent_img } from "../imagepath"
 import { Tag } from 'antd';
 import { Link } from 'react-router-dom';
 import { itemRender, onShowSizeChange, } from "../../components/paginationfunction";
-import { axiosAction, notify, numberSort, stringSort } from '../../../actions';
+import { axiosAction, axiosActions, notify, numberSort, stringSort } from '../../../actions';
 import { GET, DELETE } from "../../../constants";
 
 class Departments extends Component {
@@ -13,14 +13,12 @@ class Departments extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      isComponentWillUnMount: false,
       loading: true,
       data: [],
       filterData: [],
-      idDtl: ""
+      selectId: ""
     };
-    this.handleDel = this.handleDel.bind(this);
-    this.onClickDlt = this.onClickDlt.bind(this);
+    this.deleteData = this.deleteData.bind(this);
     this.fetchData = this.fetchData.bind(this);
     this.filterData = this.filterData.bind(this);
     this.resetFilter = this.resetFilter.bind(this);
@@ -49,12 +47,10 @@ class Departments extends Component {
 
 
   componentDidMount() {
-    this.isComponentWillUnMount = true;
     this.fetchData();
-  }
-
-  componentWillUnmount() {
-    this.isComponentWillUnMount = false
+    $('.floating').on('focus blur', function (e) {
+      $(this).parents('.form-focus').toggleClass('focused', (e.type === 'focus' || this.value.length > 0));
+    }).trigger('blur');
   }
 
   fetchData = () => {
@@ -67,29 +63,31 @@ class Departments extends Component {
     }, (err) => notify('error', "Error"));
   }
 
-  handleClose = () => {
-    this.setState({
-      loading: false,
-    });
-  };
+  deleteData() {
+    const deleteReq = {
+      url: "/departments/" + this.state.selectId,
+      method: DELETE,
+      callback: (res) => {
+        axiosActions([fetchReq]);
+      },
+      data: {}
+    }
 
-  handleShow = (id) => {
-    this.setState({
-      loading: id,
-    });
-  };
-
-  handleDel = (id) => {
-    this.setState({
-      idDtl: id,
-    });
-  };
-
-  onClickDlt = () => {
-    axiosAction("/departments/" + this.state.idDtl, DELETE, res => {
-      notify('success', '', 'Success')
-      this.fetchData();
-    }, (err) => notify('error', "Error"));
+    const fetchReq = {
+      url: "/departments",
+      method: GET,
+      callback: (res) => {
+        notify('success', '', 'Success');
+        this.setState({
+          data: res.data,
+          filterData: res.data,
+          loading: false,
+          selectId: 0
+        });
+      },
+      data: {}
+    }
+    axiosActions([deleteReq]);
   }
 
   render() {
@@ -108,7 +106,7 @@ class Departments extends Component {
         render: (text, record) =>
           <div className="table-avatar">
             <a href="#0" className="avatar avatar-sm mr-2">
-              {record.imageByteArr &&  <img alt="" src={record.imageByteArr} />}
+              {record.imageByteArr && <img alt="" src={record.imageByteArr} />}
             </a>
             {record.name}
           </div>,
@@ -134,15 +132,15 @@ class Departments extends Component {
             <a href="#" className="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i className="fas fa-ellipsis-v" /></a>
             <div className="dropdown-menu dropdown-menu-right">
               <Link className="dropdown-item" to={"/admin/departments/update/" + record.id}><i className="fas fa-pencil-alt m-r-5" /> Edit</Link>
-              <a className="dropdown-item" onClick={() => this.handleDel(record.id)} href="#" data-toggle="modal" data-target="#delete_department"><i className="fas fa-trash m-r-5" /> Delete</a>
-            </div>
+              <a className="dropdown-item" onClick={() => this.setState({selectId: record.id})} href="#" data-toggle="modal" data-target="#delete_department"><i className="fas fa-trash m-r-5" /> Delete</a>
           </div>
+          </div >
         ),
-      },
+  },
     ];
 
-    return (
-      <div className="page-wrapper">
+  return(
+      <div className = "page-wrapper" >
         <div className="content">
           <div className="row">
             <div className="col-sm-4 col-3">
@@ -211,8 +209,7 @@ class Departments extends Component {
                 <h3>Are you sure want to delete this Department?</h3>
                 <div className="m-t-20">
                   <a className="btn btn-white mr-0" data-dismiss="modal">Close</a>
-                  <a className="btn btn-danger" onClick={this.onClickDlt} data-dismiss="modal">Delete</a>
-                  {/* <button onClick={() => this.onClickDlt()} className="btn btn-danger">Delete</button> */}
+                  <a className="btn btn-danger" onClick={this.deleteData} data-dismiss="modal">Delete</a>
                 </div>
               </div>
             </div>

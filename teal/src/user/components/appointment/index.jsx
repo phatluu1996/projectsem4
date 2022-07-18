@@ -220,7 +220,7 @@ class Appointment extends Component {
                           </div>
                         </div>
                         <div className="form-group">
-                          <p><strong>Date Of Birth:</strong> &ensp;{this.state.patient.dateOfBirth}</p>
+                          <p><strong>Date Of Birth:</strong> &ensp;{moment(this.state.patient.dateOfBirth).format("DD-MM-YYYY")}</p>
                         </div>
                         <div className="form-group">
                           <p><strong>Email:</strong> &ensp;{this.state.patient.email}</p>

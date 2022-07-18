@@ -3,6 +3,7 @@ package com.hospitalbooking.backend.controller;
 
 import com.hospitalbooking.backend.models.Asset;
 import com.hospitalbooking.backend.repository.AssetRepos;
+import com.hospitalbooking.backend.security.payload.response.MessageResponse;
 import com.hospitalbooking.backend.specification.DBSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
@@ -32,16 +33,28 @@ public class AssetController {
     }
 
     @PostMapping("/assets")
-    public ResponseEntity<Asset> add(@RequestBody Asset asset){
-        return new ResponseEntity<>(assetRepos.save(asset), HttpStatus.OK);
+    public ResponseEntity add(@RequestBody Asset asset){
+        Specification<?> spec = DBSpecification.createSpecification(Boolean.FALSE).and(((root, cq, cb) -> cb.equal(root.get("serialNumber"), asset.getSerialNumber())));
+        if(assetRepos.exists(spec)){
+            return new ResponseEntity(new MessageResponse("Duplicated serial number !", false), HttpStatus.OK);
+        }
+        assetRepos.save(asset);
+        return new ResponseEntity<>(new MessageResponse("Done !", true), HttpStatus.OK);
     }
 
     @PutMapping("/assets/{id}")
-    public ResponseEntity<Asset> update(@RequestBody Asset asset, @PathVariable Long id){
+    public ResponseEntity update(@RequestBody Asset asset, @PathVariable Long id){
         Optional<Asset> optional = assetRepos.findById(id);
         return optional.map(model -> {
+            Specification<?> spec = DBSpecification.createSpecification(Boolean.FALSE)
+                    .and(((root, cq, cb) -> cb.equal(root.get("serialNumber"), asset.getSerialNumber())))
+                    .and(((root, cq, cb) -> cb.notEqual(root.get("id"), id)));
+            if(assetRepos.exists(spec)){
+                return new ResponseEntity(new MessageResponse("Duplicated serial number !", false), HttpStatus.OK);
+            }
             asset.setId(model.getId());
-            return new ResponseEntity<>(assetRepos.save(asset), HttpStatus.OK);
+            assetRepos.save(asset);
+            return new ResponseEntity<>(new MessageResponse("Done !", true), HttpStatus.OK);
         }).orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 

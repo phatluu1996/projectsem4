@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { axiosActions, axiosAction, isValid, isFormValid , notify } from "../../../../actions";
 import { GET , UPDATE } from "../../../../constants";
 import OpenChat from "../../sidebar/openchatheader";
-import { DatePicker, Select } from 'antd';
+import { DatePicker, Modal, Select } from 'antd';
 import { toMoment } from '../../../../utils';
 
 class EditAssets extends Component {
@@ -88,8 +88,19 @@ class EditAssets extends Component {
     console.log(tmp);
     if (!isFormValid(e)) return;
     axiosAction("/assets/"+this.id,UPDATE, res => {
-      notify('success', '','Success')
-      this.props.history.push("/admin/assets");
+      if (res.data.success) {
+        notify('success', '', 'Success')
+        this.props.history.push("/admin/assets");
+      } else {
+        Modal.error({
+          title: `Add new asset fail"`,
+          content: (
+            <>
+              {res.data.message}
+            </>
+          )
+        });
+      }
     },(err) => notify('error', "Error"),tmp);
   }
 
@@ -165,7 +176,6 @@ class EditAssets extends Component {
                       <label className="focus-label">Purchase Date <span className="text-danger">*</span></label>
                       <div className="cal-icon">
                         <DatePicker
-                          defaultOpen
                           className={isValid(this.state.data?.purchaseDate != null)} aria-required
                           value={toMoment(this.state.data?.purchaseDate)}
                           showTime={false}
@@ -180,20 +190,6 @@ class EditAssets extends Component {
                     </div>
                   </div>
                 </div>
-                {/* <div className="row"> */}
-                {/* <div className="col-md-6">
-                    <div className="form-group">
-                      <label>Asset Id</label>
-                      <input className="form-control"  type="text" readOnly />
-                    </div>
-                  </div> */}
-                {/* <div className="col-md-6">
-                    <div className="form-group">
-                      <label>Purchase From</label>
-                      <input className="form-control" type="text" />
-                    </div>
-                  </div> */}
-                {/* </div> */}
                 <div className="row">
                   <div className="col-md-6">
                     <div className="form-group">

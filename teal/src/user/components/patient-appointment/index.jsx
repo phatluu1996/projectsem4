@@ -223,7 +223,7 @@ class PatientCalendar extends React.Component {
 													selectMirror={true}
 													expandRows={true}
 													dayMaxEvents={true}
-													contentHeight={600}													
+													contentHeight={600}
 													weekends={this.state.weekendsVisible}
 													// initialEvents={defaultEvents}
 													// select={this.handleDateSelect}
@@ -366,11 +366,11 @@ class PatientCalendar extends React.Component {
 						</Modal.Body>
 						<Modal.Footer>
 							{moment(this.state.selectAppointment?.date).isAfter(moment()) && this.state.selectAppointment.status != "canceled" && this.state.selectAppointment.status != "rejected" &&
-								<Popconfirm className='btn btn-warning submit-btn delete-event centered' data-dismiss="modal"
+								<Popconfirm className='btn btn-danger submit-btn delete-event centered' data-dismiss="modal"
 									title="Sure to cancel?" onConfirm={() => this.cancelAppointment(this.state.selectAppointment.id)}>
 									<a>Cancel</a>
 								</Popconfirm>}
-							<button type="button" className="btn btn-danger submit-btn delete-event centered"
+							<button type="button" className="btn btn-warning submit-btn delete-event centered"
 								data-dismiss="modal" onClick={() => this.setState({ iseditdelete: false })}>Back</button>
 						</Modal.Footer>
 					</Modal>

@@ -85,7 +85,9 @@ class EmployeeList extends Component {
   }
 
   resetFilter(e) {
-    e.target.role.value = '';
+    e.target.id.value = '';
+    e.target.role.value
+    e.target.name.value = '';
   }
 
   componentDidMount() {
@@ -115,7 +117,7 @@ class EmployeeList extends Component {
         render: (text, record) => (
           <div className="table-avatar">
             <a href="#0" className="avatar avatar-sm mr-2">
-            {record.imageByteArr && <img alt="" src={record.imageByteArr} />}
+              {record.imageByteArr && <img alt="" src={record.imageByteArr} />}
             </a>
             {record.lastName + " " + record.firstName}
           </div>
@@ -198,20 +200,20 @@ class EmployeeList extends Component {
             <div className="col-sm-4">
               <div className="form-group form-focus">
                 <label className="focus-label" >Employee ID</label>
-                <input type="text" className="form-control floating" name="id"/>
+                <input type="text" className="form-control floating" name="id" />
               </div>
             </div>
             <div className="col-sm-4">
               <div className="form-group form-focus">
                 <label className="focus-label">Employee Name</label>
-                <input type="text" className="form-control floating" name="name"/>
+                <input type="text" className="form-control floating" name="name" />
               </div>
             </div>
             <div className="col-sm-2">
               <div className="form-group form-focus select-focus">
                 <label className="focus-label">Role</label>
                 <select className="form-control floating" name="role">
-                  <option value={null}>None</option>
+                  <option value={""}>None</option>
                   {employeeRoles.map((role, idx) => { return (<option key={idx} value={role.value}>{role.label}</option>) })}
                 </select>
               </div>

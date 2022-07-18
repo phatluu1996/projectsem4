@@ -103,6 +103,7 @@ class ReceptionAppointments extends Component {
         notify('success', '', 'Success');
         this.setState({
           data: res.data,
+          filterData: res.data,
           loading: false,
           selectdId: 0
         });
@@ -193,8 +194,8 @@ class ReceptionAppointments extends Component {
           <div className="dropdown dropdown-action">
             <a href="#" className="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i className="fas fa-ellipsis-v" /></a>
             <div className="dropdown-menu dropdown-menu-right">
-              <Link className="dropdown-item" to={"/reception/appointments/update/" + record.id}><i className="fas fa-pencil-alt m-r-5" /> Edit</Link>
-              <a className="dropdown-item" href="#" data-toggle="modal" data-target="#delete_appointment" onClick={() => this.setState({ selectdId: record.id })}><i className="fas fa-trash m-r-5" /> Delete</a>
+              {record.status == "pending" && <Link className="dropdown-item" to={"/reception/appointments/update/" + record.id}><i className="fas fa-pencil-alt m-r-5" /> Edit</Link>}
+              {record.status == "rejected" && <a className="dropdown-item" href="#" data-toggle="modal" data-target="#delete_appointment" onClick={() => this.setState({ selectdId: record.id })}><i className="fas fa-trash m-r-5" /> Delete</a>}
             </div>
           </div>
         ),

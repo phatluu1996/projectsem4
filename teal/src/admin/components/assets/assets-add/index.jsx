@@ -1,15 +1,15 @@
 import React, { Component } from "react";
-import { axiosAction, isValid, isFormValid , notify } from "../../../../actions";
-import { GET , ADD} from "../../../../constants";
+import { axiosAction, isValid, isFormValid, notify } from "../../../../actions";
+import { GET, ADD } from "../../../../constants";
 import OpenChat from "../../sidebar/openchatheader";
-import { DatePicker, Select } from 'antd';
+import { DatePicker, Modal, Select } from 'antd';
 
 class AssetsAdd extends Component {
   constructor(props) {
     super(props);
     this.state = {
       loading: true,
-      employees:[],
+      employees: [],
       data: {
         assetName: null, // 
         purchaseDate: null, //
@@ -68,11 +68,21 @@ class AssetsAdd extends Component {
     const tmp = { ...this.state.data }
     console.log(tmp);
     if (!isFormValid(e)) return;
-    axiosAction("/assets", ADD , res => {
-      console.log(res);
-      notify('success', '','Success')
-      this.props.history.push("/admin/assets");
-    },(err) => notify('error', "Error"),tmp);
+    axiosAction("/assets", ADD, res => {
+      if (res.data.success) {
+        notify('success', '', 'Success')
+        this.props.history.push("/admin/assets");
+      } else {
+        Modal.error({
+          title: `Add new asset fail"}`,
+          content: (
+            <>
+              {res.data.message}
+            </>
+          )
+        });
+      }
+    }, (err) => notify('error', "Error"), tmp);
   }
 
   onChange = (e, feild) => {
@@ -160,20 +170,6 @@ class AssetsAdd extends Component {
                     </div>
                   </div>
                 </div>
-                {/* <div className="row"> */}
-                {/* <div className="col-md-6">
-                    <div className="form-group">
-                      <label>Asset Id</label>
-                      <input className="form-control"  type="text" readOnly />
-                    </div>
-                  </div> */}
-                {/* <div className="col-md-6">
-                    <div className="form-group">
-                      <label>Purchase From</label>
-                      <input className="form-control" type="text" />
-                    </div>
-                  </div> */}
-                {/* </div> */}
                 <div className="row">
                   <div className="col-md-6">
                     <div className="form-group">
@@ -185,7 +181,7 @@ class AssetsAdd extends Component {
                   <div className="col-md-6">
                     <div className="form-group">
                       <label>Model <span className="text-danger">*</span></label>
-                      <input  className={isValid(this.state.data?.model)} onChange={(e) => this.onChange(e, "model")} type="text" />
+                      <input className={isValid(this.state.data?.model)} onChange={(e) => this.onChange(e, "model")} type="text" />
                       <div className="invalid-feedback">Model cannot be empty</div>
                     </div>
                   </div>
@@ -215,7 +211,7 @@ class AssetsAdd extends Component {
                   <div className="col-md-6">
                     <div className="form-group">
                       <label>Cost</label>
-                      <input className={isValid(this.state.data?.cost)}  placeholder="$" onChange={(e) => this.onChange(e, "cost")} type="text" />
+                      <input className={isValid(this.state.data?.cost)} placeholder="$" onChange={(e) => this.onChange(e, "cost")} type="text" />
                       <div className="invalid-feedback">Cost cannot be empty</div>
                     </div>
                   </div>
