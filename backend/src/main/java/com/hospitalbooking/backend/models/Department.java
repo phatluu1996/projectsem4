@@ -39,6 +39,10 @@ public class Department {
         this.retired = retired;
     }
 
+    public Department(Long id){
+        this.id = id;
+    }
+
     public Long getId() {
         return id;
     }

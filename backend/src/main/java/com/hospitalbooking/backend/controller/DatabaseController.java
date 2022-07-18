@@ -2,6 +2,7 @@ package com.hospitalbooking.backend.controller;
 
 import com.hospitalbooking.backend.constant.EmployeeRole;
 import com.hospitalbooking.backend.constant.Gender;
+import com.hospitalbooking.backend.constant.ImportSampleData;
 import com.hospitalbooking.backend.constant.UserRole;
 import com.hospitalbooking.backend.models.*;
 import com.hospitalbooking.backend.repository.*;
@@ -22,7 +23,6 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 
 @RestController
@@ -50,10 +50,21 @@ public class DatabaseController {
     private AddressRepos addressRepos;
 
     @Autowired
+    private DoctorScheduleRepos doctorScheduleRepos;
+
+    @Autowired
     private PasswordEncoder encoder;
 
     @Autowired
     private Environment env;
+
+    //http://localhost:8080/api/all-data
+    @GetMapping("/all-data")
+    public ResponseEntity initAllData(){
+        initAdminData();
+        ImportSampleData.importAll(addressRepos, userRepos, doctorRepos, patientRepos, employeeRepos, doctorScheduleRepos, encoder);
+        return new ResponseEntity<>("Done !", HttpStatus.OK);
+    }
 
     //http://localhost:8080/api/admin-data
     @GetMapping("/admin-data")
@@ -84,43 +95,38 @@ public class DatabaseController {
         if(!userRepos.existsByUsername("duyle")){
             Address adminAddress =  addressRepos.save(new Address(null, "590 CMT8 ,phường 11", "70000", "Ho Chi Minh City", "Tân Bình","Vietnam", false));
             User adminUser = userRepos.save(new User("duyle", encoder.encode("123456789Aa@"), UserRole.ADMIN));
-            Employee adminEmployee = employeeRepos.save(new Employee(null, "297097185", "Duy", "Lê Bá", Gender.Male, new Date("1990/05/25"), "administrator@mediap.com", "361-218-1685", null, null, adminAddress, false, EmployeeRole.ADMIN, true, 10, new Date(), adminUser));
+            Employee adminEmployee = employeeRepos.save(new Employee(null, "297097185", "Duy", "Lê Bá", Gender.Male, new Date("1990/05/25"), "administrator@mediap.com", "361-218-1685", null, "https://randomuser.me/api/portraits/men/62.jpg", adminAddress, false, EmployeeRole.ADMIN, true, 10, new Date(), adminUser));
         }
 
         if(!userRepos.existsByUsername("nhulieu")) {
             //Reception
             Address receptionAddress = addressRepos.save(new Address(null, "192 Tạ Quang Bửu", "70000", "Ho Chi Minh City", "8", "Vietnam", false));
             User receptionUser = userRepos.save(new User("nhulieu", encoder.encode("123456789Aa@"), UserRole.RECEPTIONIST));
-            Employee receptionEmployee = employeeRepos.save(new Employee(null, "851478620", "Như", "Liêu Quỳnh", Gender.Female, new Date("1994/ 01/ 10"), "lieu.nhu@mediap.com", "706-678-3230", null, null, receptionAddress, false, EmployeeRole.RECEPTIONIST, true, 2, new Date(), receptionUser));
+            Employee receptionEmployee = employeeRepos.save(new Employee(null, "851478620", "Như", "Liêu Quỳnh", Gender.Female, new Date("1994/ 01/ 10"), "lieu.nhu@mediap.com", "706-678-3230", null, "https://healthcareuniformsaustralia.com.au/wp-content/uploads/2019/02/receptionist_portrait.jpg", receptionAddress, false, EmployeeRole.RECEPTIONIST, true, 2, new Date(), receptionUser));
         }
 
         if(!userRepos.existsByUsername("khoale")) {
             //Reception
             Address patientAddress = addressRepos.save(new Address(null, "50 Huỳnh Văn Bánh", "70000", "Ho Chi Minh City", "Phú Nhuận", "Vietnam", false));
             User patientUser = userRepos.save(new User("khoale", encoder.encode("123456789Aa@"), UserRole.PATIENT));
-            Patient patient = patientRepos.save(new Patient(null, "428610785", "Khoa", "Lê Quốc Anh", Gender.Male, new Date("1987/ 04/ 23"), "khoa.le@gmail.com", "567-167-6784", null, null, patientAddress, false, patientUser, null));
+            Patient patient = patientRepos.save(new Patient(null, "428610785", "Khoa", "Lê Quốc Anh", Gender.Male, new Date("1987/ 04/ 23"), "khoa.le@gmail.com", "567-167-6784", null, "https://randomuser.me/api/portraits/men/65.jpg", patientAddress, false, patientUser, null));
         }
 
         if(!userRepos.existsByUsername("bachnguyen")) {
-            //Reception
+            //Patient
             Address patientAddress = addressRepos.save(new Address(null, "100 Huỳnh Văn Bánh", "70000", "Ho Chi Minh City", "Phú Nhuận", "Vietnam", false));
             User patientUser = userRepos.save(new User("bachnguyen", encoder.encode("123456789Aa@"), UserRole.PATIENT));
-            Patient patient = patientRepos.save(new Patient(null, "428610785", "Bạch", "Nguyễn Thanh", Gender.Male, new Date("1997/04/23"), "bach.nguyen@gmail.com", "675-890-3674", null, null, patientAddress, false, patientUser, null));
+            Patient patient = patientRepos.save(new Patient(null, "428610785", "Bạch", "Nguyễn Thanh", Gender.Male, new Date("1997/04/23"), "bach.nguyen@gmail.com", "675-890-3674", null, "https://randomuser.me/api/portraits/men/63.jpg", patientAddress, false, patientUser, null));
         }
 
         if(!userRepos.existsByUsername("nguyenphuc")) {
-            //Reception
             Address doctorAddress = addressRepos.save(new Address(null, "69 Trường Sa",  "70000", "Ho Chi Minh City", "Tân Bình", "Vietnam", false));
             User doctorUser = userRepos.save(new User("nguyenphuc", encoder.encode("123456789Aa@"), UserRole.DOCTOR));
-            Employee doctorEmployee = employeeRepos.save(new Employee(null, "786851420", "Phúc", "Nguyễn Thiên", Gender.Male, new Date("1997/05/10"), "nguyen.phuc@mediap.com", "189-678-4518", null, null, doctorAddress, false, EmployeeRole.DOCTOR, true, 8, new Date(), doctorUser));
+            Employee doctorEmployee = employeeRepos.save(new Employee(null, "786851420", "Phúc", "Nguyễn Thiên", Gender.Male, new Date("1997/05/10"), "nguyen.phuc@mediap.com", "189-678-4518", null, "https://as2.ftcdn.net/v2/jpg/02/60/04/09/1000_F_260040900_oO6YW1sHTnKxby4GcjCvtypUCWjnQRg5.jpg", doctorAddress, false, EmployeeRole.DOCTOR, true, 8, new Date(), doctorUser));
             Doctor doctor = doctorRepos.save(new Doctor(null, "", savedDepartment.get(0), doctorEmployee, null, null, null, null, false));
+//            doctorScheduleRepos.save(new DoctorSchedule(null, doctor, "start", "end", "", "", false));
         }
 
-        return new ResponseEntity<>("Done !", HttpStatus.OK);
-    }
-
-    @GetMapping("client-data")
-    public ResponseEntity initClientData(){
         return new ResponseEntity<>("Done !", HttpStatus.OK);
     }
 

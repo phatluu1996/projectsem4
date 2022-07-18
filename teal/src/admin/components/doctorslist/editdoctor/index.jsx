@@ -557,7 +557,7 @@ class EditDoctor extends Component {
                   <div className="col-sm-6">
                     <div className="form-group">
                       <label>Citizen Identification <span className="text-danger">*</span></label>
-                      <input name="cid" className={isValid(this.state.data.employee.cId)} type="number" onChange={this.onChange} value={this.state.data.employee.cId} />
+                      <input name="cid" className={isValid(this.state.data.employee.cId)} onChange={this.onChange} value={this.state.data.employee.cId} />
                       <div className="invalid-feedback">Citizen identification cannot be empty</div>
                     </div>
                   </div>

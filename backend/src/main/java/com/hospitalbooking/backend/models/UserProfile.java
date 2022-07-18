@@ -11,7 +11,7 @@ public class UserProfile {
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name = "cId", length = 30, columnDefinition = "nvarchar(30)")
+    @Column(name = "cId", length = 50, columnDefinition = "nvarchar(50)")
     private String cId;
     @Column(name = "first_name", length = 250, columnDefinition = "nvarchar(250)")
     private String firstName;

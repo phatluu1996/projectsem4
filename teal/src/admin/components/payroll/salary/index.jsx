@@ -234,6 +234,7 @@ class Salary extends Component {
                   rowKey={(record) => record.id}
                   showSizeChanger={true}
                   pagination={{
+                    pageSize: 10,
                     total: this.state.filterData.length,
                     showTotal: (total, range) =>
                       `Showing ${range[0]} to ${range[1]} of ${total} entries`,

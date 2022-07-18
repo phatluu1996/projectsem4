@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { ADD, GET } from '../../../constants';
+import { ADD, appointment_timeranges, GET } from '../../../constants';
 import { axiosActions, axiosAction, isFormValid, notify, isFormValidNoNotify } from '../../../actions';
 import { DatePicker, Modal, Radio, Select } from "antd";
 import moment from "moment";

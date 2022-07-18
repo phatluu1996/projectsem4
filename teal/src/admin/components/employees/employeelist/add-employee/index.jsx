@@ -234,7 +234,7 @@ class AddEmployee extends Component {
                   <div className="col-sm-12">
                     <div className="form-group">
                       <label>Citizen Identification <span className="text-danger">*</span></label>
-                      <input name="cid" className={isValid(this.state.data.cId)} type="number" onChange={(arg) => this.onChange(arg, "cid")} value={this.state.data.cId} />
+                      <input name="cid" className={isValid(this.state.data.cId)} onChange={(arg) => this.onChange(arg, "cid")} value={this.state.data.cId} />
                       <div className="invalid-feedback">Citizen identification cannot be empty</div>
                     </div>
                   </div>

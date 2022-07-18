@@ -46,7 +46,7 @@ public class DoctorScheduleController {
     @GetMapping("/schedules-doctor/{username}")
     public ResponseEntity<List<DoctorSchedule>> allByDoctorUsername(@PathVariable String username){
         return userRepos.findByUsername(username).map(user ->
-            new ResponseEntity<>(user.getEmployee().getDoctor().getDoctorSchedules(false), HttpStatus.OK))
+            new ResponseEntity<>(user.getEmployee().getDoctor().getDoctorSchedules(), HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 

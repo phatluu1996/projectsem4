@@ -281,7 +281,7 @@ class AddPatient extends Component {
                           <input type="text" name='district' className={isValid(this.state.data.address.district)} onChange={(e) => this.onChange(e)} />
                           <div className="invalid-feedback">District cannot be empty</div>
                         </div>
-                      </div>
+                    </div>
                       <div className="col-sm-6 col-md-6 col-lg-3">
                         <div className="form-group">
                           <label>Postal Code<span className="text-danger">*</span></label>

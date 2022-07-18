@@ -11,7 +11,7 @@ public class Address {
     private Long id;
     @Column(name = "line", length = 250, columnDefinition = "nvarchar(250)")
     private String line;
-    @Column(name = "postal_code", length = 10, columnDefinition = "nvarchar(10)")
+    @Column(name = "postal_code", length = 50, columnDefinition = "nvarchar(50)")
     private String postalCode;
     @Column(name = "province", length = 150, columnDefinition = "nvarchar(150)")
     private String province;
