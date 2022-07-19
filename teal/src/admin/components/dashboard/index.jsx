@@ -205,22 +205,24 @@ class Dashboard extends Component {
                 <div className="card-block">
                   <div className="table-responsive">
                     <table className="table m-b-0 new-patient-table">
-                    <thead>
+                      <thead>
                         <td>Name</td>
                         <td>Email</td>
                         <td>Phone</td>
                       </thead>
                       <tbody>
-                        
+                        <tr></tr>
                         {this.state.data?.newPatients?.map((patient) => {
-                          <tr>
-                            <td>
-                              <img width={28} height={28} className="rounded-circle" src={patient.imageByteArr} />
-                              <h2>{patient.lastName + " " + patient.firstName}</h2>
-                            </td>
-                            <td>{patient.email}</td>
-                            <td>{patient.phoneNumber}</td>
-                          </tr>
+                          return (
+                            <tr>
+                              <td>
+                                <img width={28} height={28} className="rounded-circle" src={patient.imageByteArr} />
+                                <h2>{patient.lastName + " " + patient.firstName}</h2>
+                              </td>
+                              <td>{patient.email}</td>
+                              <td>{patient.phoneNumber}</td>
+                            </tr>
+                          );
                         })}
                       </tbody>
                     </table>
