@@ -31,9 +31,9 @@ class Calendar extends React.Component {
 		selectAppointment: {}
 	}
 
-	cancelAppointment = () => {
+	cancelAppointment = (value) => {
 		const appointmentParam = {
-			url: `/appointments/cancel/${this.state.selectAppointment.id}`,
+			url: `/appointments/cancel/${value}`,
 			method: GET,
 			callback: (res) => {
 				notify('success', '', 'Success');
@@ -248,7 +248,7 @@ class Calendar extends React.Component {
 				</div>
 				<OpenChat />
 				{/* Page Content */}
-				<Modal id="details" size='xl' centered show={iseditdelete} onHide={this.handleClose} backdrop={true} style={{zIndex:10000000}}>
+				<Modal id="details" size='xl' centered show={iseditdelete} onHide={this.handleClose} backdrop={true}>
 					<Modal.Header closeButton toggle={() => this.oncreateeventModalClose()}>
 						<h3>Appointment Details</h3>
 					</Modal.Header>

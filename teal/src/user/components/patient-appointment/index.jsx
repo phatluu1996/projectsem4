@@ -30,9 +30,9 @@ class PatientCalendar extends React.Component {
 		selectAppointment: {}
 	}
 
-	cancelAppointment = () => {
+	cancelAppointment = (value) => {
 		const appointmentParam = {
-			url: `/appointments/cancel/${this.state.selectAppointment.id}`,
+			url: `/appointments/cancel/${value}`,
 			method: GET,
 			callback: (res) => {
 				notify('success', '', 'Success');
@@ -101,15 +101,6 @@ class PatientCalendar extends React.Component {
 			iseditdelete: false,
 			show: false
 		});
-	}
-
-	handleEventClick = (clickInfo) => {
-		this.setState({
-			iseditdelete: true,
-			event_title: clickInfo.event.title,
-			calenderevent: clickInfo.event,
-			selectAppointment: clickInfo.event.extendedProps.data
-		})
 	}
 
 	handleDateSelect = (selectInfo) => {
@@ -254,7 +245,7 @@ class PatientCalendar extends React.Component {
 						</div>
 					</div>
 
-					<Modal size='xl' centered show={iseditdelete} onHide={this.handleClose} backdrop={true} style={{zIndex:10000000}}>
+					<Modal size='xl' centered show={iseditdelete} onHide={this.handleClose} backdrop={true}>
 						<Modal.Header closeButton toggle={() => this.oncreateeventModalClose()}>
 							<h3>Appointment Details</h3>
 						</Modal.Header>
