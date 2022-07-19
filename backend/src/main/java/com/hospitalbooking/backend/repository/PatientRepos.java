@@ -14,7 +14,7 @@ public interface PatientRepos extends JpaRepository<Patient, Long>, JpaSpecifica
     Patient getPatientByUser(User user);
 
     @Query(value = "SELECT COUNT(1) \n" +
-                    "FROM mediap.user U, mediap.patient P\n" +
+                    "FROM [user] U, patient P\n" +
                     "WHERE 1=1\n" +
                     "AND U.id = P.user_id\n" +
                     "AND U.retired = 0\n" +

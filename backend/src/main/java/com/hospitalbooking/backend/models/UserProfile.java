@@ -2,7 +2,6 @@ package com.hospitalbooking.backend.models;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-import org.springframework.data.annotation.CreatedDate;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
@@ -41,11 +40,9 @@ public class UserProfile{
     @Column(name = "retired")
     private boolean retired;
 
-    @CreatedDate
-    @Column(name = "created_at", nullable = false, updatable = false, insertable = true)
     private Date createdAt;
 
-    @Column(name = "updated_at", nullable = false, updatable = false, insertable = true)
+    @UpdateTimestamp
     private Date updatedAt;
 
     public UserProfile() {

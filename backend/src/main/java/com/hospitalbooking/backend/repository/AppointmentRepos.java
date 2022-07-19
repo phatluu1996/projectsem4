@@ -24,6 +24,6 @@ public interface AppointmentRepos extends JpaRepository<Appointment, Long>, JpaS
     @Query(value = "SELECT COUNT(1)\n" +
                     "FROM appointment\n" +
                     "WHERE 1=1\n" +
-                    "AND status LIKE \"pending\"",nativeQuery = true)
+                    "AND status LIKE 'pending'",nativeQuery = true)
     int totalAppointmentPending();
 }

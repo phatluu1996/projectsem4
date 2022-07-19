@@ -13,7 +13,7 @@ public interface EmployeeRepos extends JpaRepository<Employee, Long>, JpaSpecifi
     Employee getEmpByEmail(String email);
 
     @Query(value = "SELECT COUNT(1) \n" +
-                    "FROM mediap.user U, mediap.employee EMP\n" +
+                    "FROM [user] U, employee EMP\n" +
                     "WHERE 1=1\n" +
                     "AND U.id = EMP.user_id\n" +
                     "AND U.retired = 0\n" +

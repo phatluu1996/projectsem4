@@ -127,6 +127,7 @@ public class AuthorizeController {
             patient.setDateOfBirth(registerRequest.getDateOfBirth());
             patient.setGender(registerRequest.getGender());
             patient.setUser(user);
+            patient.setCreatedAt(new Date());
 
             addressRepos.save(patient.getAddress());
             userRepos.save(patient.getUser());

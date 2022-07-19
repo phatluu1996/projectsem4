@@ -6,11 +6,13 @@ import com.hospitalbooking.backend.constant.ImportSampleData;
 import com.hospitalbooking.backend.constant.UserRole;
 import com.hospitalbooking.backend.models.*;
 import com.hospitalbooking.backend.repository.*;
+import com.hospitalbooking.backend.specification.DBSpecification;
 import org.aspectj.util.FileUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -22,8 +24,7 @@ import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.Date;
+import java.util.*;
 
 @RestController
 @CrossOrigin
@@ -171,11 +172,23 @@ public class DatabaseController {
 
     @GetMapping("/dashboard-info")
     public ResponseEntity dashboardInfo() {
-        int totalPatient = patientRepos.totalPatient();
-        int totalDoctor = doctorRepos.totalDoctor();
-        int totalEmployee = employeeRepos.totalEmployee();
+        int totalPatient = patientRepos.findAll().size();
+        int totalDoctor = doctorRepos.findAll().size();
+        int totalEmployee = employeeRepos.findAll().size();
         int totalAppointment = appointmentRepos.totalAppointmentPending();
+        int[] data = {0,0,0,0,0,0,0,0,0,0,0,0};
 
-        return new ResponseEntity<>(new DashboardInfo(totalPatient,totalEmployee, totalDoctor, totalAppointment), HttpStatus.OK);
+        Specification<?> spec = DBSpecification.createSpecification(Boolean.FALSE);
+        List<Patient> patients = patientRepos.findAll(spec);
+        patients.forEach(patient -> {
+            for (int i = 0; i < 12; i++) {
+                if (patient.getCreatedAt().getMonth() == i) {
+                    data[i]++;
+                }
+            }
+        });
+
+//        return new ResponseEntity<>(new DashboardInfo(totalPatient,totalEmployee, totalDoctor, totalAppointment), HttpStatus.OK);
+        return new ResponseEntity<>(data, HttpStatus.OK);
     }
 }
