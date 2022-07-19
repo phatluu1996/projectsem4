@@ -221,7 +221,7 @@ class Register extends Component {
           }
         }
         if (res.data.success) {
-          Modal.success(modalConfig(res.data.success, res.data.message), () => { this.props.history.push("/") })
+          Modal.success(modalConfig(res.data.success, res.data.message, () => { this.props.history.push("/")}))
         } else {
           Modal.error(modalConfig(res.data.success, res.data.message))
         }
