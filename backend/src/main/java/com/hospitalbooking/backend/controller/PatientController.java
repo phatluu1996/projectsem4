@@ -21,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -78,6 +79,7 @@ public class PatientController {
         user.setRole(UserRole.PATIENT);
         User savedUser = userRepos.save(user);
         patient.setUser(savedUser);
+        patient.setCreatedAt(new Date());
         return new ResponseEntity<>(patientRepos.save(patient), HttpStatus.OK);
     }
 
@@ -107,7 +109,6 @@ public class PatientController {
             user.setRole(UserRole.PATIENT);
             User savedUser = userRepos.save(user);
             patient.setUser(savedUser);
-            //address update
             addressRepos.save(patient.getAddress());
             return new ResponseEntity<>(patientRepos.save(patient), HttpStatus.OK);
         }).orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));

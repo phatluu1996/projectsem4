@@ -19,6 +19,7 @@ import javax.print.Doc;
 import javax.xml.ws.Response;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -82,6 +83,7 @@ public class DoctorController {
         user.setRole(UserRole.DOCTOR);
         User savedUser = userRepos.save(user);
         doctor.getEmployee().setUser(savedUser);
+        doctor.getEmployee().setCreatedAt(new Date());
         Employee saveEmployee = employeeRepos.save(doctor.getEmployee());
         doctor.setEmployee(saveEmployee);
         doctor.getEducationDetails().forEach(educationDetail -> {
@@ -90,6 +92,7 @@ public class DoctorController {
         doctor.getExperienceDetails().forEach(experienceDetail -> {
             docExperienceRepos.save(experienceDetail);
         });
+
         return new ResponseEntity<>(doctorRepos.save(doctor), HttpStatus.OK);
     }
 

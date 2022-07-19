@@ -50,6 +50,16 @@ public class Employee  extends UserProfile{
         this.user = user;
     }
 
+    public Employee(Long id, String cId, String firstName, String lastName, String gender, Date dateOfBirth, String email, String phoneNumber, String image, String imageByteArr, Address address, boolean retired, String employeeRole, boolean status, int remainingLeave, Date joiningDate, User user, boolean defaultCreateDate) {
+        super(id, cId, firstName, lastName, gender, dateOfBirth, email, phoneNumber, image, imageByteArr, address, retired);
+        this.employeeRole = employeeRole;
+        this.status = status;
+        this.remainingLeave = remainingLeave;
+        this.joiningDate = joiningDate;
+        this.user = user;
+        this.setCreatedAt(new Date());
+    }
+
     public String getEmployeeRole() {
         return employeeRole;
     }

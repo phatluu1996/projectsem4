@@ -115,6 +115,8 @@ public class EmployeeController {
             }
             User savedUser = userRepos.save(user);
             employee.setUser(savedUser);
+            employee.setJoiningDate(new Date());
+            employee.setCreatedAt(new Date());
             Employee savedEmployee = employeeRepos.save(employee);
             return new ResponseEntity<>(savedEmployee, HttpStatus.OK);
         }).orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));

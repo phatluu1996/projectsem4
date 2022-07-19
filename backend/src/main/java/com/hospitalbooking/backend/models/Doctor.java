@@ -61,6 +61,19 @@ public class Doctor{
         this.retired = retired;
     }
 
+    public Doctor(Long id, String shortBiography, Department department, Employee employee, List<DoctorSchedule> doctorSchedules, List<Appointment> appointments, List<DoctorEducationDetail> educationDetails, List<DoctorExperienceDetail> experienceDetails, boolean retired, boolean defaultCreateDate) {
+        this.id = id;
+        this.shortBiography = shortBiography;
+        this.department = department;
+        this.employee = employee;
+        this.doctorSchedules = doctorSchedules;
+        this.appointments = appointments;
+        this.educationDetails = educationDetails;
+        this.experienceDetails = experienceDetails;
+        this.retired = retired;
+        this.employee.setCreatedAt(new Date());
+    }
+
     public Long getId() {
         return id;
     }
