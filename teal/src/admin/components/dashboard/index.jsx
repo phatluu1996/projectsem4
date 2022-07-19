@@ -5,33 +5,76 @@ import LineChart from "./linechart";
 import BarChart from "./barchart";
 import { GET } from '../../../constants';
 import { axiosAction, notify } from '../../../actions';
+import { Table } from "antd";
+import { toMoment } from "../../../utils";
 
 class Dashboard extends Component {
 
-constructor(props) {
-  super(props);
-  this.state = {
-    data: null,
-    loading: true
+  constructor(props) {
+    super(props);
+    this.state = {
+      data: null,
+      loading: true
+    }
   }
-}
 
-componentDidMount(){
-  $('.bar-chart').find('.item-progress').each(function () {
-    var itemProgress = $(this),
-      itemProgressWidth = $(this).parent().width() * ($(this).data('percent') / 100);
-    itemProgress.css('width', itemProgressWidth);
-  });
+  componentDidMount() {
+    $('.bar-chart').find('.item-progress').each(function () {
+      var itemProgress = $(this),
+        itemProgressWidth = $(this).parent().width() * ($(this).data('percent') / 100);
+      itemProgress.css('width', itemProgressWidth);
+    });
 
-  axiosAction("/dashboard-info", GET, (res) => {
-    this.setState({data : res.data});
-    this.setState({loading : false});
-  }, (err) => notify('error', 'Error'));
-}
-  render() {   
+    axiosAction("/dashboard-info", GET, (res) => {
+      this.setState({ data: res.data });
+      this.setState({ loading: false });
+    }, (err) => notify('error', 'Error'));
+  }
+  render() {
+    const columns = [
+      {
+        title: "Patient Name",
+        render: (text, record) => (
+          <div>
+            <div className="table-avatar">
+              <a href="#0" className="avatar avatar-sm mr-2">
+                {record.patient?.imageByteArr && <img alt="" src={record.patient?.imageByteArr} />}
+              </a>
+              {record.patient?.lastName + " " + record.patient?.firstName}
+            </div>
+          </div>
+        ),
+        sorter: (a, b) => numberSort(a.id, b.id)
+      },
+      {
+        title: "Doctor Name",
+        render: (text, record) => (
+          <div>
+            <div className="table-avatar">
+              <a href="#0" className="avatar avatar-sm mr-2">
+                {record.doctor.employee.imageByteArr && <img alt="" src={record.doctor.employee.imageByteArr} />}
+              </a>
+              {record.doctor?.employee.lastName + " " + record.doctor?.employee.firstName}
+            </div>
+          </div>
+        ),
+        sorter: (a, b) => numberSort(a.id, b.id)
+      },
+      {
+        title: "Timing",
+        render: (text, record) => (
+          <div>
+            <p>{record.date ? toMoment(record.date).format('DD-MM-YYYY HH:mm') : ""}</p>
+          </div>
+        ),
+        sorter: (a, b) => numberSort(a.id, b.id)
+      }
+    ];
+
     return (
-    !this.state.loading &&
-		<div className="page-wrapper">
+
+      !this.state.loading &&
+      <div className="page-wrapper">
         <div className="content">
           <div className="row">
             <div className="col-md-6 col-sm-6 col-lg-6 col-xl-3">
@@ -78,7 +121,7 @@ componentDidMount(){
                   <div className="chart-title">
                     <h4 className="title is-3">Patient Total</h4>
                   </div>
-                  <LineChart data={this.state.data?.patientYear}/>
+                  <LineChart data={this.state.data?.patientYear} />
                   {/* <canvas id="canvas" /> */}
                 </div>
               </div>
@@ -89,7 +132,7 @@ componentDidMount(){
                   <div className="chart-title">
                     <h4 className="title is-3">Patients In June</h4>
                   </div>
-                  <BarChart data={this.state.data?.patientMonth}/>
+                  <BarChart data={this.state.data?.patientMonth} />
                   {/* <canvas id="bargraph" /> */}
                 </div>
               </div>
@@ -100,108 +143,26 @@ componentDidMount(){
               <div className="card">
                 <div className="card-header">
                   <h4 className="card-title d-inline-block">Upcoming Appointments</h4>
-                  <Link to="/appointments" className="btn btn-primary float-right">View all</Link>
                 </div>
                 <div className="card-body p-0">
-                  <div className="table-responsive">
-                    <table className="table mb-0">
-                      <thead className="d-none">
-                        <tr>
-                          <th>Patient Name</th>
-                          <th>Doctor Name</th>
-                          <th>Timing</th>
-                          <th className="text-right">Status</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr>
-                          <td>
-                            <Link  className="avatar" to="/profile">B</Link>
-                            <h2><Link to="/profile">Bernardo Galaviz <span>New York, USA</span></Link></h2>
-                          </td>
-                          <td>
-                            <h5 className="time-title p-0">Appointment With</h5>
-                            <p>Dr. Cristina Groves</p>
-                          </td>
-                          <td>
-                            <h5 className="time-title p-0">Timing</h5>
-                            <p>7.00 PM</p>
-                          </td>
-                          <td className="text-right">
-                            <span className="btn btn-outline-primary">Take up</span>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>
-                            <Link className="avatar" to="/profile">B</Link>
-                            <h2><Link to="/profile">Bernardo Galaviz <span>New York, USA</span></Link></h2>
-                          </td>
-                          <td>
-                            <h5 className="time-title p-0">Appointment With</h5>
-                            <p>Dr. Cristina Groves</p>
-                          </td>
-                          <td>
-                            <h5 className="time-title p-0">Timing</h5>
-                            <p>7.00 PM</p>
-                          </td>
-                          <td className="text-right">
-                            <span className="btn btn-outline-primary">Take up</span>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>
-                            <Link className="avatar" to="/profile">B</Link>
-                            <h2><Link to="/profile">Bernardo Galaviz <span>New York, USA</span></Link></h2>
-                          </td>
-                          <td>
-                            <h5 className="time-title p-0">Appointment With</h5>
-                            <p>Dr. Cristina Groves</p>
-                          </td>
-                          <td>
-                            <h5 className="time-title p-0">Timing</h5>
-                            <p>7.00 PM</p>
-                          </td>
-                          <td className="text-right">
-                            <span className="btn btn-outline-primary">Take up</span>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>
-                            <Link className="avatar" to="/profile">B</Link>
-                            <h2><Link to="/profile">Bernardo Galaviz <span>New York, USA</span></Link></h2>
-                          </td>
-                          <td>
-                            <h5 className="time-title p-0">Appointment With</h5>
-                            <p>Dr. Cristina Groves</p>
-                          </td>
-                          <td>
-                            <h5 className="time-title p-0">Timing</h5>
-                            <p>7.00 PM</p>
-                          </td>
-                          <td className="text-right">
-                            <span className="btn btn-outline-primary">Take up</span>
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>
-                            <Link className="avatar" to="/profile">B</Link>
-                            <h2><Link to="/profile">Bernardo Galaviz <span>New York, USA</span></Link></h2>
-                          </td>
-                          <td>
-                            <h5 className="time-title p-0">Appointment With</h5>
-                            <p>Dr. Cristina Groves</p>
-                          </td>
-                          <td>
-                            <h5 className="time-title p-0">Timing</h5>
-                            <p>7.00 PM</p>
-                          </td>
-                          <td className="text-right">
-                            <span className="btn btn-outline-primary">Take up</span>
-                          </td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
+                  <Table
+                    loading={this.state.loading}
+
+                    className="table-striped"
+                    style={{ overflowX: "scroll" }}
+                    columns={columns}
+                    // bordered
+                    dataSource={this.state.data?.appointments?.content}
+                    rowKey={(record) => record.id}
+                    showSizeChanger={true}
+                    pagination={{
+                      pageSize: 5,
+                      total: this.state.data?.appointments?.content.length,
+                      showTotal: (total, range) =>
+                        `Showing ${range[0]} to ${range[1]} of ${total} entries`,
+                      showSizeChanger: true,
+                    }}
+                  />
                 </div>
               </div>
             </div>
@@ -212,127 +173,55 @@ componentDidMount(){
                 </div>
                 <div className="card-body">
                   <ul className="contact-list">
-                    <li>
-                      <div className="contact-cont">
-                        <div className="float-left user-img m-r-10">
-                          <Link to="/profile" title="John Doe"><img src={User_img} alt="" className="w-40 rounded-circle" /><span className="status online" /></Link>
+                    {this.state.data?.doctors.map((doctor) => {
+                      return (<li>
+                        <div className="contact-cont">
+                          <div className="float-left user-img m-r-10">
+                            <a><img src={doctor.employee.imageByteArr} alt="" className="w-40 rounded-circle" /><span className="status online" /></a>
+                          </div>
+                          <div className="contact-info">
+                            <span className="contact-name text-ellipsis">{doctor.employee.lastName + " " + doctor.employee.firstName}</span>
+                            <span className="contact-date">{doctor.department?.name}</span>
+                          </div>
                         </div>
-                        <div className="contact-info">
-                          <span className="contact-name text-ellipsis">John Doe</span>
-                          <span className="contact-date">MBBS, MD</span>
-                        </div>
-                      </div>
-                    </li>
-                    <li>
-                      <div className="contact-cont">
-                        <div className="float-left user-img m-r-10">
-                          <Link to="/profile" title="Richard Miles"><img src={User_img} alt="" className="w-40 rounded-circle" /><span className="status offline" /></Link>
-                        </div>
-                        <div className="contact-info">
-                          <span className="contact-name text-ellipsis">Richard Miles</span>
-                          <span className="contact-date">MD</span>
-                        </div>
-                      </div>
-                    </li>
-                    <li>
-                      <div className="contact-cont">
-                        <div className="float-left user-img m-r-10">
-                          <Link to="/profile" title="John Doe"><img src={User_img} alt="" className="w-40 rounded-circle" /><span className="status away" /></Link>
-                        </div>
-                        <div className="contact-info">
-                          <span className="contact-name text-ellipsis">John Doe</span>
-                          <span className="contact-date">BMBS</span>
-                        </div>
-                      </div>
-                    </li>
-                    <li>
-                      <div className="contact-cont">
-                        <div className="float-left user-img m-r-10">
-                          <Link to="/profile" title="Richard Miles"><img src={User_img} alt="" className="w-40 rounded-circle" /><span className="status online" /></Link>
-                        </div>
-                        <div className="contact-info">
-                          <span className="contact-name text-ellipsis">Richard Miles</span>
-                          <span className="contact-date">MS, MD</span>
-                        </div>
-                      </div>
-                    </li>
-                    <li>
-                      <div className="contact-cont">
-                        <div className="float-left user-img m-r-10">
-                          <Link to="/profile" title="John Doe"><img src={User_img} alt="" className="w-40 rounded-circle" /><span className="status offline" /></Link>
-                        </div>
-                        <div className="contact-info">
-                          <span className="contact-name text-ellipsis">John Doe</span>
-                          <span className="contact-date">MBBS</span>
-                        </div>
-                      </div>
-                    </li>
-                    <li>
-                      <div className="contact-cont">
-                        <div className="float-left user-img m-r-10">
-                          <Link to="/profile" title="Richard Miles"><img src={User_img} alt="" className="w-40 rounded-circle" /><span className="status away" /></Link>
-                        </div>
-                        <div className="contact-info">
-                          <span className="contact-name text-ellipsis">Richard Miles</span>
-                          <span className="contact-date">MBBS, MD</span>
-                        </div>
-                      </div>
-                    </li>
+                      </li>);
+                    })}
+
                   </ul>
                 </div>
                 <div className="card-footer text-center bg-white">
-                  <Link to="/doctors" className="text-muted">View all Doctors</Link>
+                  <Link to="/admin/doctors" className="text-muted">View all Doctors</Link>
                 </div>
               </div>
             </div>
           </div>
+
           <div className="row">
             <div className="col-12 col-md-8 col-lg-8 col-xl-8">
               <div className="card">
                 <div className="card-header">
                   <h4 className="card-title d-inline-block">New Patients </h4>
-                  <Link to="/patients" className="btn btn-primary float-right">View all</Link>
                 </div>
                 <div className="card-block">
                   <div className="table-responsive">
                     <table className="table m-b-0 new-patient-table">
+                    <thead>
+                        <td>Name</td>
+                        <td>Email</td>
+                        <td>Phone</td>
+                      </thead>
                       <tbody>
-                        <tr>
-                          <td>
-                            <img width={28} height={28} className="rounded-circle" src={User_img} /> 
-                            <h2>John Doe</h2>
-                          </td>
-                          <td>Johndoe21@gmail.com</td>
-                          <td>+1-202-555-0125</td>
-                          <td><button className="btn btn-primary btn-primary-one float-right">Fever</button></td>
-                        </tr>
-                        <tr>
-                          <td>
-                            <img width={28} height={28} className="rounded-circle" src={User_img} /> 
-                            <h2>Richard</h2>
-                          </td>
-                          <td>Richard123@yahoo.com</td>
-                          <td>202-555-0127</td>
-                          <td><button className="btn btn-primary btn-primary-two float-right">Cancer</button></td>
-                        </tr>
-                        <tr>
-                          <td>
-                            <img width={28} height={28} className="rounded-circle" src={User_img} /> 
-                            <h2>Villiam</h2>
-                          </td>
-                          <td>Richard123@yahoo.com</td>
-                          <td>+1-202-555-0106</td>
-                          <td><button className="btn btn-primary btn-primary-three float-right">Eye</button></td>
-                        </tr>
-                        <tr>
-                          <td>
-                            <img width={28} height={28} className="rounded-circle" src={User_img} /> 
-                            <h2>Martin</h2>
-                          </td>
-                          <td>Richard123@yahoo.com</td>
-                          <td>776-2323 89562015</td>
-                          <td><button className="btn btn-primary btn-primary-four float-right">Fever</button></td>
-                        </tr>
+                        
+                        {this.state.data?.newPatients?.map((patient) => {
+                          <tr>
+                            <td>
+                              <img width={28} height={28} className="rounded-circle" src={patient.imageByteArr} />
+                              <h2>{patient.lastName + " " + patient.firstName}</h2>
+                            </td>
+                            <td>{patient.email}</td>
+                            <td>{patient.phoneNumber}</td>
+                          </tr>
+                        })}
                       </tbody>
                     </table>
                   </div>
@@ -361,41 +250,41 @@ componentDidMount(){
                 <div className="chart clearfix">
                   <div className="item">
                     <div className="bar">
-                      <span className="percent">12%</span>
+                      <span className="percent">{this.state.data?.countDoctor}%</span>
                       <div className="item-progress" data-percent={12}>
-                        <span className="title">OPD Patient</span>
+                        <span className="title">Doctor</span>
                       </div>
                     </div>
                   </div>
                   <div className="item">
                     <div className="bar">
-                      <span className="percent">71%</span>
+                      <span className="percent">{this.state.data?.countReceptionist}%</span>
                       <div className="item-progress" data-percent={71}>
-                        <span className="title">New Patient</span>
+                        <span className="title">Receptionist</span>
                       </div>
                     </div>
                   </div>
                   <div className="item">
                     <div className="bar">
-                      <span className="percent">82%</span>
+                      <span className="percent">{this.state.data?.countNurse}%</span>
                       <div className="item-progress" data-percent={82}>
-                        <span className="title">Laboratory Test</span>
+                        <span className="title">Nurse</span>
                       </div>
                     </div>
                   </div>
                   <div className="item">
                     <div className="bar">
-                      <span className="percent">67%</span>
+                      <span className="percent">{this.state.data?.countAccountant}%</span>
                       <div className="item-progress" data-percent={67}>
-                        <span className="title">Treatment</span>
+                        <span className="title">Accountant</span>
                       </div>
                     </div>
                   </div>
                   <div className="item">
                     <div className="bar">
-                      <span className="percent">67%</span>									
+                      <span className="percent">{this.state.data?.countOther}%</span>
                       <div className="item-progress" data-percent={20}>
-                        <span className="title">Discharge</span>
+                        <span className="title">Orthers</span>
                       </div>
                     </div>
                   </div>

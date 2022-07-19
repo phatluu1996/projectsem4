@@ -6,7 +6,7 @@ export default class BarChart extends React.Component {
 
   data = () => { 
     return {
-    labels: range(1, 30),
+    labels: range(1, 31),
     datasets: [{
       label: 'Dataset 1',
       backgroundColor: 'rgba(1, 181, 199, 0.5)',

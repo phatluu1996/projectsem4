@@ -9,6 +9,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,12 +20,14 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.util.ResourceUtils;
 import org.springframework.web.bind.annotation.*;
 
+
 import java.io.File;
 import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.Statement;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @RestController
 @CrossOrigin
@@ -202,11 +208,34 @@ public class DatabaseController {
             }
         });
 
-        List<Appointment> top5NewAppointment = appointmentRepos.findAll(spec2);
-        top5NewAppointment.forEach(appointment -> {
+        Pageable pageable = PageRequest.of(0, 5, Sort.Direction.DESC, "createdAt").first();
+        Page<Appointment> top5NewAppointment = appointmentRepos.findAll(spec1, pageable);
 
-        });
+        Specification<?> docSpec = DBSpecification.createSpecification(Boolean.FALSE);
+        List<Doctor> doctors = doctorRepos.findAll(docSpec);
+        doctors = doctors.stream().filter(doctor -> doctor.getDoctorSchedules().stream().anyMatch(doctorSchedule -> doctorSchedule.getAvailableDays().contains(String.valueOf(new Date().getDay())))).collect(Collectors.toList());
 
-        return new ResponseEntity<>(new DashboardInfo(totalPatient, totalEmployee, totalDoctor, totalAppointment, dataPatientMonth, dataPatientYear), HttpStatus.OK);
+        Specification<?> patSpec = DBSpecification.createSpecification(Boolean.FALSE);
+        List<Patient> newPatients = patientRepos.findAll(patSpec);
+        newPatients = newPatients.stream().filter(patient -> patient.getCreatedAt().getMonth() == Calendar.JULY).collect(Collectors.toList());
+
+        Specification<?> empSpec = DBSpecification.createSpecification(Boolean.FALSE);
+        float countAllEmployee = employeeRepos.count(empSpec);
+
+        float countDoctor = (doctorRepos.count(empSpec)*100)/countAllEmployee;
+
+        Specification<?> recepSpec = DBSpecification.createSpecification(Boolean.FALSE).and((root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("employeeRole"), EmployeeRole.RECEPTIONIST));
+        float countReceptionist = (employeeRepos.count(recepSpec)*100)/countAllEmployee;
+
+        Specification<?> nurseSpec = DBSpecification.createSpecification(Boolean.FALSE).and((root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("employeeRole"), EmployeeRole.NURSE));
+        float countNurse = (employeeRepos.count(nurseSpec)*100)/countAllEmployee;
+
+        Specification<?> accountantSpec = DBSpecification.createSpecification(Boolean.FALSE).and((root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("employeeRole"), EmployeeRole.ACCOUNTANT));
+        float countAccountant = (employeeRepos.count(accountantSpec)*100)/countAllEmployee;
+
+        Specification<?> otherSpec = DBSpecification.createSpecification(Boolean.FALSE).and((root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("employeeRole"), EmployeeRole.OTHER));
+        float countOther = (employeeRepos.count(otherSpec)*100)/countAllEmployee;
+
+        return new ResponseEntity(new DashboardInfo(totalPatient, totalEmployee, totalDoctor, totalAppointment, dataPatientMonth, dataPatientYear, top5NewAppointment, newPatients, doctors, countDoctor, countReceptionist, countNurse, countAccountant, countOther), HttpStatus.OK);
     }
 }
