@@ -77,9 +77,8 @@ componentDidMount(){
                 <div className="card-body">
                   <div className="chart-title">
                     <h4 className="title is-3">Patient Total</h4>
-                    <span className="float-right"><i className="fas fa-caret-up" aria-hidden="true" /> 15% Higher than Last Month</span>
                   </div>
-                  <LineChart/>
+                  <LineChart data={this.state.data?.patientYear}/>
                   {/* <canvas id="canvas" /> */}
                 </div>
               </div>
@@ -88,15 +87,9 @@ componentDidMount(){
               <div className="card">
                 <div className="card-body">
                   <div className="chart-title">
-                    <h4 className="title is-3">Patients In</h4>
-                    <span className="float-right">
-                      <ul className="chat-user-total">
-                        <li><i className="fas fa-circle current-users" aria-hidden="true" />ICU</li>
-                        <li><i className="fas fa-circle old-users" aria-hidden="true" /> OPD</li>
-                      </ul>
-                    </span>
+                    <h4 className="title is-3">Patients In June</h4>
                   </div>
-                  <BarChart/>
+                  <BarChart data={this.state.data?.patientMonth}/>
                   {/* <canvas id="bargraph" /> */}
                 </div>
               </div>

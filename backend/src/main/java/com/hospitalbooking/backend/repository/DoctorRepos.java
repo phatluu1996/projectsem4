@@ -8,18 +8,4 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface DoctorRepos extends JpaRepository<Doctor, Long>, JpaSpecificationExecutor {
-    @Query(value = "SELECT COUNT(1) \n" +
-                    "FROM [user] U\n" +
-                    "WHERE 1=1\n" +
-                    "AND U.retired = 0\n" +
-                    "AND EXISTS (\n" +
-                    "\tSELECT 1\n" +
-                    "\tFROM doctor DOC, employee EMP\n" +
-                    "\tWHERE 1=1\n" +
-                    "\tAND DOC.employee_id = EMP.id\n" +
-                    "\tAND U.id = EMP.user_id\n" +
-                    "\tAND DOC.retired = 0\n" +
-                    "\tAND EMP.retired = 0\n" +
-                    ")", nativeQuery = true)
-    int totalDoctor();
 }

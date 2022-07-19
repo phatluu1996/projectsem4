@@ -1,9 +1,6 @@
 package com.hospitalbooking.backend.controller;
 
-import com.hospitalbooking.backend.constant.EmployeeRole;
-import com.hospitalbooking.backend.constant.Gender;
-import com.hospitalbooking.backend.constant.ImportSampleData;
-import com.hospitalbooking.backend.constant.UserRole;
+import com.hospitalbooking.backend.constant.*;
 import com.hospitalbooking.backend.models.*;
 import com.hospitalbooking.backend.repository.*;
 import com.hospitalbooking.backend.specification.DBSpecification;
@@ -175,20 +172,41 @@ public class DatabaseController {
         int totalPatient = patientRepos.findAll().size();
         int totalDoctor = doctorRepos.findAll().size();
         int totalEmployee = employeeRepos.findAll().size();
-        int totalAppointment = appointmentRepos.totalAppointmentPending();
-        int[] data = {0,0,0,0,0,0,0,0,0,0,0,0};
+        Specification<?> spec1 = DBSpecification.createSpecification(Boolean.FALSE)
+                .and((root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("status"), AppointmentStatus.PENDING));
+        int totalAppointment = appointmentRepos.findAll(spec1).size();
 
-        Specification<?> spec = DBSpecification.createSpecification(Boolean.FALSE);
-        List<Patient> patients = patientRepos.findAll(spec);
+        int[] dataPatientYear = {0,0,0,0,0,0,0,0,0,0,0,0};
+
+        Specification<?> spec2 = DBSpecification.createSpecification(Boolean.FALSE);
+        List<Patient> patients = patientRepos.findAll(spec2);
         patients.forEach(patient -> {
             for (int i = 0; i < 12; i++) {
                 if (patient.getCreatedAt().getMonth() == i) {
-                    data[i]++;
+                    dataPatientYear[i]++;
                 }
             }
         });
 
-//        return new ResponseEntity<>(new DashboardInfo(totalPatient,totalEmployee, totalDoctor, totalAppointment), HttpStatus.OK);
-        return new ResponseEntity<>(data, HttpStatus.OK);
+        int[] dataPatientMonth = new int[30];
+        for(int i = 0; i < 30; i++){
+            dataPatientMonth[i] = 0;
+        }
+
+        List<Patient> patientMonth = patientRepos.findAll(spec2);
+        patientMonth.forEach(patient -> {
+            for(int j = 0; j < 30; j++) {
+                if (patient.getCreatedAt().getDate() == j+1 && patient.getCreatedAt().getMonth() == 5) {
+                    dataPatientMonth[j]++;
+                }
+            }
+        });
+
+        List<Appointment> top5NewAppointment = appointmentRepos.findAll(spec2);
+        top5NewAppointment.forEach(appointment -> {
+
+        });
+
+        return new ResponseEntity<>(new DashboardInfo(totalPatient, totalEmployee, totalDoctor, totalAppointment, dataPatientMonth, dataPatientYear), HttpStatus.OK);
     }
 }
