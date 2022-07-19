@@ -3,17 +3,34 @@ import { Link } from "react-router-dom";
 import { User_img } from '../imagepath';
 import LineChart from "./linechart";
 import BarChart from "./barchart";
+import { GET } from '../../../constants';
+import { axiosAction, notify } from '../../../actions';
 
 class Dashboard extends Component {
+
+constructor(props) {
+  super(props);
+  this.state = {
+    data: null,
+    loading: true
+  }
+}
+
 componentDidMount(){
   $('.bar-chart').find('.item-progress').each(function () {
     var itemProgress = $(this),
       itemProgressWidth = $(this).parent().width() * ($(this).data('percent') / 100);
     itemProgress.css('width', itemProgressWidth);
   });
+
+  axiosAction("/dashboard-info", GET, (res) => {
+    this.setState({data : res.data});
+    this.setState({loading : false});
+  }, (err) => notify('error', 'Error'));
 }
   render() {   
     return (
+    !this.state.loading &&
 		<div className="page-wrapper">
         <div className="content">
           <div className="row">
@@ -21,7 +38,7 @@ componentDidMount(){
               <div className="dash-widget">
                 <span className="dash-widget-bg1"><i className="fas fa-stethoscope" aria-hidden="true" /></span>
                 <div className="dash-widget-info text-right">
-                  <h3>$998</h3>
+                  <h3>{this.state.data?.totalDoctor}</h3>
                   <span className="widget-title1">Doctors <i className="fas fa-check" aria-hidden="true" /></span>
                 </div>
               </div>
@@ -30,7 +47,7 @@ componentDidMount(){
               <div className="dash-widget">
                 <span className="dash-widget-bg2"><i className="fas fa-user" /></span>
                 <div className="dash-widget-info text-right">
-                  <h3>1072</h3>
+                  <h3>{this.state.data?.totalPatient}</h3>
                   <span className="widget-title2">Patients <i className="fas fa-check" aria-hidden="true" /></span>
                 </div>
               </div>
@@ -39,8 +56,8 @@ componentDidMount(){
               <div className="dash-widget">
                 <span className="dash-widget-bg3"><i className="fas fa-user-md" aria-hidden="true" /></span>
                 <div className="dash-widget-info text-right">
-                  <h3>72</h3>
-                  <span className="widget-title3">Attend <i className="fas fa-check" aria-hidden="true" /></span>
+                  <h3>{this.state.data?.totalEmployee}</h3>
+                  <span className="widget-title3">Employee <i className="fas fa-check" aria-hidden="true" /></span>
                 </div>
               </div>
             </div>
@@ -48,7 +65,7 @@ componentDidMount(){
               <div className="dash-widget">
                 <span className="dash-widget-bg4"><i className="fas fa-heartbeat" aria-hidden="true" /></span>
                 <div className="dash-widget-info text-right">
-                  <h3>618</h3>
+                  <h3>{this.state.data?.totalPending}</h3>
                   <span className="widget-title4">Pending <i className="fas fa-check" aria-hidden="true" /></span>
                 </div>
               </div>

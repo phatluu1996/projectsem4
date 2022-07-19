@@ -1,12 +1,14 @@
 package com.hospitalbooking.backend.models;
 
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.util.Date;
 
 @MappedSuperclass
-public class UserProfile {
+public class UserProfile{
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,7 +28,6 @@ public class UserProfile {
     private String email;
     @Column(name = "phone_number", length = 15, columnDefinition = "nvarchar(15)")
     private String phoneNumber;
-//    @Column(name = "image", columnDefinition = "nvarchar(250)")
     @Lob
     @Column(nullable = true)
     private String image;
@@ -38,6 +39,14 @@ public class UserProfile {
     private Address address;
     @Column(name = "retired")
     private boolean retired;
+
+    @CreationTimestamp
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private Date createdAt;
+
+    @UpdateTimestamp
+    @Column(name = "updated_at", nullable = false, updatable = false)
+    private Date updatedAt;
 
     public UserProfile() {
     }

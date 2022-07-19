@@ -1,11 +1,11 @@
 package com.hospitalbooking.backend.models;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
-import java.time.Instant;
 import java.util.Date;
 
 @Entity
@@ -35,12 +35,20 @@ public class Appointment {
     @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX")
     private Date dateEnd;
     @Column(name = "status")
-    private String status;  
+    private String status;
 
     @Column(name = "message", columnDefinition = "text")
     private String message;
     @Column(name = "retired")
     private boolean retired;
+
+    @CreationTimestamp
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private Date createdAt;
+
+    @UpdateTimestamp
+    @Column(name = "updated_at", nullable = false, updatable = false)
+    private Date updatedAt;
 
     public Appointment() {
     }

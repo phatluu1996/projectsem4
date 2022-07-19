@@ -53,6 +53,9 @@ public class DatabaseController {
     private DoctorScheduleRepos doctorScheduleRepos;
 
     @Autowired
+    private AppointmentRepos appointmentRepos;
+
+    @Autowired
     private PasswordEncoder encoder;
 
     @Autowired
@@ -164,5 +167,15 @@ public class DatabaseController {
             e.printStackTrace();
             return ResponseEntity.ok().body(e.getStackTrace());
         }
+    }
+
+    @GetMapping("/dashboard-info")
+    public ResponseEntity dashboardInfo() {
+        int totalPatient = patientRepos.totalPatient();
+        int totalDoctor = doctorRepos.totalDoctor();
+        int totalEmployee = employeeRepos.totalEmployee();
+        int totalAppointment = appointmentRepos.totalAppointmentPending();
+
+        return new ResponseEntity<>(new DashboardInfo(totalPatient,totalEmployee, totalDoctor, totalAppointment), HttpStatus.OK);
     }
 }
