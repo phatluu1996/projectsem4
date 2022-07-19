@@ -2,11 +2,11 @@ package com.hospitalbooking.backend.controller;
 
 import com.hospitalbooking.backend.constant.AppointmentStatus;
 import com.hospitalbooking.backend.models.Appointment;
-import com.hospitalbooking.backend.models.Doctor;
 import com.hospitalbooking.backend.models.Patient;
 import com.hospitalbooking.backend.repository.AppointmentRepos;
 import com.hospitalbooking.backend.repository.PatientRepos;
 import com.hospitalbooking.backend.repository.UserRepos;
+import com.hospitalbooking.backend.security.payload.response.MessageResponse;
 import com.hospitalbooking.backend.specification.DBSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
@@ -14,6 +14,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -74,9 +76,30 @@ public class AppointmentController {
     }
 
     @PostMapping("/appointments")
-    public ResponseEntity<Appointment> add(@RequestBody Appointment appointment){
-
-        return new ResponseEntity<>(appointmentRepos.save(appointment), HttpStatus.OK);
+    public ResponseEntity add(@RequestBody Appointment appointment){
+        //find if exist any appointment that have the same date and time
+        Specification<?> spec = DBSpecification.createSpecification(Boolean.FALSE)
+                .and((root, cq, cb) -> cb.equal(root.join("doctor").get("id"), appointment.getDoctor().getId()))
+                .and((root, cq, cb) -> cb.notEqual(root.get("status"), AppointmentStatus.REJECTED))
+                .and((root, cq, cb) -> cb.notEqual(root.get("status"), AppointmentStatus.CANCELED));
+        List<Appointment> duplicateList = appointmentRepos.findAll(spec);
+        if(duplicateList.size() > 0 && duplicateList.stream().anyMatch(app -> {
+            Timestamp start = new Timestamp(app.getDate().getTime());
+            Timestamp end = new Timestamp(app.getDateEnd().getTime());
+            Timestamp startApp = new Timestamp(appointment.getDate().getTime());
+            Timestamp endApp = new Timestamp(appointment.getDateEnd().getTime());
+            start.setNanos(0);
+            end.setNanos(0);
+            startApp.setNanos(0);
+            endApp.setNanos(0);
+            return start.toInstant().equals(startApp.toInstant())
+                    && end.toInstant().equals(endApp.toInstant());
+        })){
+            return new ResponseEntity(new MessageResponse("Fail !", false), HttpStatus.OK);
+        }else{
+            appointmentRepos.save(appointment);
+            return new ResponseEntity(new MessageResponse("Done !", true), HttpStatus.OK);
+        }
     }
 
     @PutMapping("/appointments/{id}")

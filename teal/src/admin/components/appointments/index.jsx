@@ -145,7 +145,7 @@ class Appointments extends Component {
             {record.patient?.lastName + " " + record.patient?.firstName}
           </div>
         ),
-        sorter: (a, b) => stringSort(a.doctor?.employee.lastName + " " + a.doctor?.employee.firstName, b.doctor?.employee.lastName + " " + b.doctor?.employee.firstName)
+        sorter: (a, b) => stringSort(a.patient?.lastName + " " + a.patient?.firstName, b.patient?.lastName + " " + b.patient?.firstName)
       },
       {
         title: "Doctor Name",
@@ -160,7 +160,7 @@ class Appointments extends Component {
         sorter: (a, b) => stringSort(a.doctor?.employee.lastName + " " + a.doctor?.employee.firstName, b.doctor?.employee.lastName + " " + b.doctor?.employee.firstName)
       },
       {
-        title: "Appointment Start Time",
+        title: "Start Time",
         render: (text, record) => (
           <div>
             {record.date ? toMoment(record.date).format('DD-MM-YYYY h:mm:ss') : ""}
@@ -169,7 +169,7 @@ class Appointments extends Component {
         sorter: (a, b) => dateSort(a.date, b.date)
       },
       {
-        title: "Appointment End Time",
+        title: "End Time",
         render: (text, record) => (
           <div>
             {record.dateEnd ? toMoment(record.dateEnd).format('DD-MM-YYYY h:mm:ss') : ""}
@@ -186,7 +186,7 @@ class Appointments extends Component {
             </Tag>
           </span>
         ),
-        sorter: (a, b) => stringSort(appointment_status.find(e => e.value == b.status).label, appointment_status.find(e => e.value == b.status).label)
+        sorter: (a, b) => stringSort(appointment_status.find(e => e.value == a.status).label, appointment_status.find(e => e.value == b.status).label)
       },
       {
         title: "Action",

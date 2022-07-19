@@ -93,36 +93,35 @@ public class DatabaseController {
         if(!userRepos.existsByUsername("duyle")){
             Address adminAddress =  addressRepos.save(new Address(null, "590 CMT8 ,phường 11", "70000", "Ho Chi Minh City", "Tân Bình","Vietnam", false));
             User adminUser = userRepos.save(new User("duyle", encoder.encode("123456789Aa@"), UserRole.ADMIN));
-            Employee adminEmployee = employeeRepos.save(new Employee(null, "297097185", "Duy", "Lê Bá", Gender.Male, new Date("1990/05/25"), "administrator@mediap.com", "361-218-1685", null, "https://randomuser.me/api/portraits/men/62.jpg", adminAddress, false, EmployeeRole.ADMIN, true, 10, new Date(), adminUser));
+            Employee adminEmployee = employeeRepos.save(new Employee(null, "ed9a1111-1d0d-49d2-9d31-185c7d2c8167", "Duy", "Lê Bá", Gender.Male, new Date("1990/05/25"), "administrator@mediap.com", "361-218-1685", null, "https://randomuser.me/api/portraits/men/62.jpg", adminAddress, false, EmployeeRole.ADMIN, true, 10, new Date(), adminUser));
         }
 
         if(!userRepos.existsByUsername("nhulieu")) {
             //Reception
             Address receptionAddress = addressRepos.save(new Address(null, "192 Tạ Quang Bửu", "70000", "Ho Chi Minh City", "8", "Vietnam", false));
             User receptionUser = userRepos.save(new User("nhulieu", encoder.encode("123456789Aa@"), UserRole.RECEPTIONIST));
-            Employee receptionEmployee = employeeRepos.save(new Employee(null, "851478620", "Như", "Liêu Quỳnh", Gender.Female, new Date("1994/ 01/ 10"), "lieu.nhu@mediap.com", "706-678-3230", null, "https://healthcareuniformsaustralia.com.au/wp-content/uploads/2019/02/receptionist_portrait.jpg", receptionAddress, false, EmployeeRole.RECEPTIONIST, true, 2, new Date(), receptionUser));
+            Employee receptionEmployee = employeeRepos.save(new Employee(null, "ed9a5502-1d0d-235y-9d31-185c7d2c8167", "Như", "Liêu Quỳnh", Gender.Female, new Date("1994/ 01/ 10"), "lieu.nhu@mediap.com", "706-678-3230", null, "https://healthcareuniformsaustralia.com.au/wp-content/uploads/2019/02/receptionist_portrait.jpg", receptionAddress, false, EmployeeRole.RECEPTIONIST, true, 2, new Date(), receptionUser));
         }
 
         if(!userRepos.existsByUsername("khoale")) {
             //Reception
             Address patientAddress = addressRepos.save(new Address(null, "50 Huỳnh Văn Bánh", "70000", "Ho Chi Minh City", "Phú Nhuận", "Vietnam", false));
             User patientUser = userRepos.save(new User("khoale", encoder.encode("123456789Aa@"), UserRole.PATIENT));
-            Patient patient = patientRepos.save(new Patient(null, "428610785", "Khoa", "Lê Quốc Anh", Gender.Male, new Date("1987/ 04/ 23"), "khoa.le@gmail.com", "567-167-6784", null, "https://randomuser.me/api/portraits/men/65.jpg", patientAddress, false, patientUser, null));
+            Patient patient = patientRepos.save(new Patient(null, "ed9a5502-267d-49d2-9d31-156c7d2t8167", "Khoa", "Lê Quốc Anh", Gender.Male, new Date("1987/ 04/ 23"), "khoa.le@gmail.com", "567-167-6784", null, "https://randomuser.me/api/portraits/men/65.jpg", patientAddress, false, patientUser, null));
         }
 
         if(!userRepos.existsByUsername("bachnguyen")) {
             //Patient
             Address patientAddress = addressRepos.save(new Address(null, "100 Huỳnh Văn Bánh", "70000", "Ho Chi Minh City", "Phú Nhuận", "Vietnam", false));
             User patientUser = userRepos.save(new User("bachnguyen", encoder.encode("123456789Aa@"), UserRole.PATIENT));
-            Patient patient = patientRepos.save(new Patient(null, "428610785", "Bạch", "Nguyễn Thanh", Gender.Male, new Date("1997/04/23"), "bach.nguyen@gmail.com", "675-890-3674", null, "https://randomuser.me/api/portraits/men/63.jpg", patientAddress, false, patientUser, null));
+            Patient patient = patientRepos.save(new Patient(null, "f5fffa8f-2f80-4250-8bd4-76t982f5b48c", "Bạch", "Nguyễn Thanh", Gender.Male, new Date("1997/04/23"), "bach.nguyen@gmail.com", "675-890-3674", null, "https://randomuser.me/api/portraits/men/63.jpg", patientAddress, false, patientUser, null));
         }
 
         if(!userRepos.existsByUsername("nguyenphuc")) {
             Address doctorAddress = addressRepos.save(new Address(null, "69 Trường Sa",  "70000", "Ho Chi Minh City", "Tân Bình", "Vietnam", false));
             User doctorUser = userRepos.save(new User("nguyenphuc", encoder.encode("123456789Aa@"), UserRole.DOCTOR));
-            Employee doctorEmployee = employeeRepos.save(new Employee(null, "786851420", "Phúc", "Nguyễn Thiên", Gender.Male, new Date("1997/05/10"), "nguyen.phuc@mediap.com", "189-678-4518", null, "https://as2.ftcdn.net/v2/jpg/02/60/04/09/1000_F_260040900_oO6YW1sHTnKxby4GcjCvtypUCWjnQRg5.jpg", doctorAddress, false, EmployeeRole.DOCTOR, true, 8, new Date(), doctorUser));
+            Employee doctorEmployee = employeeRepos.save(new Employee(null, "e2eeda8f-4f23-4250-1bd4-76a982f5b48c", "Phúc", "Nguyễn Thiên", Gender.Male, new Date("1997/05/10"), "nguyen.phuc@mediap.com", "189-678-4518", null, "https://as2.ftcdn.net/v2/jpg/02/60/04/09/1000_F_260040900_oO6YW1sHTnKxby4GcjCvtypUCWjnQRg5.jpg", doctorAddress, false, EmployeeRole.DOCTOR, true, 8, new Date(), doctorUser));
             Doctor doctor = doctorRepos.save(new Doctor(null, "", savedDepartment.get(0), doctorEmployee, null, null, null, null, false));
-//            doctorScheduleRepos.save(new DoctorSchedule(null, doctor, "start", "end", "", "", false));
         }
     }
 

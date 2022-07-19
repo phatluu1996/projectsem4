@@ -14,7 +14,7 @@ import { CheckOutlined, ClearOutlined, HistoryOutlined, LocalDiningOutlined } fr
 
 
 class Calendar extends React.Component {
-
+	
 	state = {
 		loading: true,
 		startDate: new Date(),
@@ -105,14 +105,6 @@ class Calendar extends React.Component {
 		});
 	}
 
-	handleEventClick = (clickInfo) => {
-		this.setState({
-			iseditdelete: true,
-			event_title: clickInfo.event.title,
-			calenderevent: clickInfo.event,
-			selectAppointment: clickInfo.event.extendedProps.data
-		})
-	}
 
 	handleDateSelect = (selectInfo) => {
 		this.setState({
@@ -224,12 +216,13 @@ class Calendar extends React.Component {
 											selectMirror={true}
 											expandRows={true}
 											dayMaxEvents={true}
-											contentHeight={1600}
+											contentHeight={1600}											
 											weekends={this.state.weekendsVisible}
 											// initialEvents={defaultEvents}
 											// select={this.handleDateSelect}
 											eventClick={clickInfo => this.handleEventClick(clickInfo)}
 											eventContent={this.renderEventContent}
+											
 										/>
 										{/* /Calendar */}
 									</div>
@@ -255,7 +248,7 @@ class Calendar extends React.Component {
 				</div>
 				<OpenChat />
 				{/* Page Content */}
-				<Modal size='xl' centered show={iseditdelete} onHide={this.handleClose}>
+				<Modal id="details" size='xl' centered show={iseditdelete} onHide={this.handleClose} backdrop={true} style={{zIndex:10000000}}>
 					<Modal.Header closeButton toggle={() => this.oncreateeventModalClose()}>
 						<h3>Appointment Details</h3>
 					</Modal.Header>

@@ -33,7 +33,7 @@ class Appointment extends Component {
     return result;
   }
 
-  
+
 
   constructor(props) {
     super(props);
@@ -115,10 +115,10 @@ class Appointment extends Component {
     this.setState({ data: tmp, dateTime: datetime });
   }
 
-  onChangeMessage(e){
+  onChangeMessage(e) {
     const tmp = { ...this.state.data };
     tmp.message = e.target.value;
-    this.setState({ data: tmp});
+    this.setState({ data: tmp });
   }
 
   handleSubmit = (e) => {
@@ -135,19 +135,31 @@ class Appointment extends Component {
       });
     } else {
       axiosAction("/appointments", ADD, (res) => {
-        Modal.success({
-          title: `Request Successfully !`,
-          content: (
-            <>
-              Your appointment has been submitted and waiting for approval.
-              Our receptionist will contact you to get confirmation.
-              Thank you.
-            </>
-          ),
-          onOk: () => {
-            this.props.history.push("/appointments");
-          }
-        });
+        if (res.data.success) {
+          Modal.success({
+            title: `Request Successfully !`,
+            content: (
+              <>
+                Your appointment has been submitted and waiting for approval.
+                Our receptionist will contact you to get confirmation.
+                Thank you.
+              </>
+            ),
+            onOk: () => {
+              this.props.history.push("/appointments");
+            }
+          });
+        } else {
+          Modal.error({
+            title: `Request Fail!`,
+            content: (
+              <>
+                There is another appointment at the same time already booked
+                Please choose another appointment time.
+              </>
+            )
+          });
+        }
       }, (err) => notify('error', '', 'Error'), this.state.data);
     }
   }
@@ -298,7 +310,7 @@ class Appointment extends Component {
                             // options={this.options}   
                             onChange={this.handleChangeTime}
                             value={this.state.dateTime.time}
-                            optionType='button'                            
+                            optionType='button'
                           >
                             {appointment_timeranges.map((option, idx) => {
                               return (<Radio.Button key={idx} value={option.value} disabled={this.disableTime(option)}>{option.label}</Radio.Button>)

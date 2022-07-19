@@ -35,6 +35,11 @@ class ReceptionPendingAppointments extends Component {
     const tmp = {...this.state.data.find(e => e.id == id)};
     showConfirm("Are you sure ?", `Change status of this appointment from ${tmp.status} to ${value}`, () => {
       tmp.status = value;
+      if(tmp.status == "approved"){
+        tmp.message = "Approved by receptionist user";
+      }else if(tmp.status == "rejected"){
+        tmp.message = "Rejected by receptionist user";
+      }
 
       axiosAction(`/appointments/${id}`, UPDATE, res => {
         this.fetchData();
@@ -156,7 +161,7 @@ class ReceptionPendingAppointments extends Component {
             {record.patient?.lastName + " " + record.patient?.firstName}
           </div>
         ),
-        sorter: (a, b) => stringSort(a.doctor?.employee.lastName + " " + a.doctor?.employee.firstName, b.doctor?.employee.lastName + " " + b.doctor?.employee.firstName)
+        sorter: (a, b) => stringSort(a.patient?.lastName + " " + a.patient?.firstName, b.patient?.lastName + " " + b.patient?.firstName)
       },
       {
         title: "Doctor Name",
@@ -211,7 +216,7 @@ class ReceptionPendingAppointments extends Component {
             }
           </span>
         ),
-        sorter: (a, b) => stringSort(appointment_status.find(e => e.value == b.status).label, appointment_status.find(e => e.value == b.status).label)
+        sorter: (a, b) => stringSort(appointment_status.find(e => e.value == a.status).label, appointment_status.find(e => e.value == b.status).label)
       },
       // {
       //   title: "Action",

@@ -254,7 +254,7 @@ class PatientCalendar extends React.Component {
 						</div>
 					</div>
 
-					<Modal size='xl' centered show={iseditdelete} onHide={this.handleClose}>
+					<Modal size='xl' centered show={iseditdelete} onHide={this.handleClose} backdrop={true} style={{zIndex:10000000}}>
 						<Modal.Header closeButton toggle={() => this.oncreateeventModalClose()}>
 							<h3>Appointment Details</h3>
 						</Modal.Header>

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import OpenChat from "../../sidebar/openchatheader"
-import { DatePicker, Radio, Select, TimePicker } from 'antd';
+import { DatePicker, Modal, Radio, Select, TimePicker } from 'antd';
 import { ADD, appointment_status, appointment_timeranges, GET, UPDATE } from '../../../../constants';
 import { axiosAction, axiosActions, isFormValid, isValid, notify, range } from '../../../../actions';
 import moment from 'moment';
@@ -118,8 +118,19 @@ class AddAppointment extends Component {
     e.preventDefault();
     if (!isFormValid(e)) return;
     axiosAction("/appointments", ADD, (res) => {
-      notify('success', '', 'Success')
-      this.props.history.push(this.props.pushBack);
+      if (res.data.success) {
+        notify('success', '', 'Success')
+        this.props.history.push(this.props.pushBack);
+      } else {
+        Modal.error({
+          title: `Request Fail!`,
+          content: (
+            <>
+              There is another appointment at the same time already booked.
+            </>
+          )
+        });
+      }      
     }, (err) => notify('error', '', 'Error'), this.state.data);
   }
 
@@ -266,7 +277,7 @@ class AddAppointment extends Component {
                   <div className="col-md-6">
                     <div className="form-group">
                       <label>Choose your Convenient Time<span className="text-red">*</span></label>
-                      <Select bordered={false} size={"small"} style={{ width: '100%' }} 
+                      <Select bordered={false} size={"small"} style={{ width: '100%' }}
                         className={isValid(this.state.datetime.time)}
                         onChange={this.onChangeTime}
                         value={this.state.datetime.time}
@@ -286,14 +297,14 @@ class AddAppointment extends Component {
                   <div className="col-md-6">
                     <div className="form-group">
                       <label>Patient Email</label>
-                      <input name='email' className={isValid(this.state.data.patient?.email != null)} type="email" value={this.state.data.patient?.email} onChange={this.onChange} />
+                      <input name='email' className={isValid(this.state.data.patient?.email != null)} type="email" value={this.state.data.patient?.email} onChange={this.onChange} disabled={true}/>
                       <div className="invalid-feedback">Patient email cannot be empty</div>
                     </div>
                   </div>
                   <div className="col-md-6">
                     <div className="form-group">
                       <label>Patient Phone Number</label>
-                      <input name='phone' className={isValid(this.state.data.patient?.phoneNumber != null)} type="tel" value={this.state.data.patient?.phoneNumber} onChange={this.onChange} />
+                      <input name='phone' className={isValid(this.state.data.patient?.phoneNumber != null)} type="tel" value={this.state.data.patient?.phoneNumber} onChange={this.onChange} disabled={true}/>
                       <div className="invalid-feedback">Patient phone cannot be empty</div>
                     </div>
                   </div>

@@ -301,14 +301,14 @@ class EditAppointment extends Component {
                     <div className="col-md-6">
                       <div className="form-group">
                         <label>Patient Email</label>
-                        <input name='email' className={isValid(this.state.data.patient?.email != null)} type="email" value={this.state.data.patient?.email} onChange={this.onChange} />
+                        <input name='email' className={isValid(this.state.data.patient?.email != null)} type="email" value={this.state.data.patient?.email} onChange={this.onChange} disabled={true}/>
                         <div className="invalid-feedback">Patient email cannot be empty</div>
                       </div>
                     </div>
                     <div className="col-md-6">
                       <div className="form-group">
                         <label>Patient Phone Number</label>
-                        <input name='phone' className={isValid(this.state.data.patient?.phoneNumber != null)} type="tel" value={this.state.data.patient?.phoneNumber} onChange={this.onChange} />
+                        <input name='phone' className={isValid(this.state.data.patient?.phoneNumber != null)} type="tel" value={this.state.data.patient?.phoneNumber} onChange={this.onChange} disabled={true}/>
                         <div className="invalid-feedback">Patient phone cannot be empty</div>
                       </div>
                     </div>
