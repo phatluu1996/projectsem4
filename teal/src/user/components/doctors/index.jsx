@@ -73,7 +73,7 @@ class Doctor extends Component {
                     <div className="doctor-details">
                       <div className="doctor-info">
                         <h4 className="doctor-name">
-                          <Link to="/doctor-details">Dr. Ronald Jacobs MBBS, FDS</Link></h4>
+                          <a>Dr. Ronald Jacobs MBBS, FDS</a></h4>
                         <p>
                           <span className="depart">Oncologist</span>
                         </p>
@@ -104,7 +104,7 @@ class Doctor extends Component {
                     <img className="img-fluid" alt="" src={Doctor_01} />
                     <div className="doctor-details">
                       <div className="doctor-info">
-                        <h4 className="doctor-name"><Link to="/doctor-details">Dr. Albert Sandoval MBBS, FDS</Link></h4>
+                        <h4 className="doctor-name"><a>Dr. Albert Sandoval MBBS, FDS</a></h4>
                         <p>
                           <span className="depart">Neurologist</span>
                         </p>
@@ -136,7 +136,7 @@ class Doctor extends Component {
                     <img className="img-fluid" alt="" src={Doctor_02} />
                     <div className="doctor-details">
                       <div className="doctor-info">
-                        <h4 className="doctor-name"><Link to="/doctor-details">Dr. Linda Barrett MBBS, FDS</Link></h4>
+                        <h4 className="doctor-name"><a>Dr. Linda Barrett MBBS, FDS</a></h4>
                         <p>
                           <span className="depart">Dentist</span>
                         </p>
@@ -169,7 +169,7 @@ class Doctor extends Component {
                     <div className="doctor-details">
                       <div className="doctor-info">
                         <h4 className="doctor-name">
-                          <Link to="/doctor-details">Dr. Cristina Groves MBBS, FDS</Link>
+                          <a>Dr. Cristina Groves MBBS, FDS</a>
                         </h4>
                         <p>
                           <span className="depart">Gynecologist</span>
@@ -203,7 +203,7 @@ class Doctor extends Component {
                     <div className="doctor-details">
                       <div className="doctor-info">
                         <h4 className="doctor-name">
-                          <Link to="/doctor-details">Dr. Henry Daniels MBBS, FDS</Link>
+                          <a>Dr. Henry Daniels MBBS, FDS</a>
                         </h4>
                         <p>
                           <span className="depart">Cardiologist</span>
@@ -237,7 +237,7 @@ class Doctor extends Component {
                     <div className="doctor-details">
                       <div className="doctor-info">
                         <h4 className="doctor-name">
-                          <Link to="/doctor-details">Dr. Diana Bailey MBBS, FDS</Link>
+                          <a>Dr. Diana Bailey MBBS, FDS</a>
                         </h4>
                         <p>
                           <span className="depart">General Surgery</span>
@@ -271,7 +271,7 @@ class Doctor extends Component {
                     <div className="doctor-details">
                       <div className="doctor-info">
                         <h4 className="doctor-name">
-                          <Link to="/doctor-details">Dr. Marie Wells MBBS, FDS</Link>
+                          <a>Dr. Marie Wells MBBS, FDS</a>
                         </h4>
                         <p>
                           <span className="depart">Psychiatrist</span>
@@ -305,7 +305,7 @@ class Doctor extends Component {
                     <div className="doctor-details">
                       <div className="doctor-info">
                         <h4 className="doctor-name">
-                          <Link to="/doctor-details">Dr. Pamela Curtis MBBS, FDS</Link>
+                          <a>Dr. Pamela Curtis MBBS, FDS</a>
                         </h4>
                         <p>
                           <span className="depart">Pediatrics</span>
