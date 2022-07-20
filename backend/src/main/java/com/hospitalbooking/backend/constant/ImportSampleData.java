@@ -614,7 +614,7 @@ public class ImportSampleData {
                 User doctorUser = userRepos.save(new User("doctoruser0", encoder.encode("123456789"), UserRole.DOCTOR));
                 Employee doctorEmployee = employeeRepos.save(new Employee(null, "5159e9bd-8042-418a-9761-bf2f1beba80a", "Jessica", "Fowler", "Female", new Date("1954/07/11"), "doctor.jessica.fowler@example.com", "(822) 277-9636", null, "https://randomuser.me/api/portraits/women/87.jpg", doctorAddress, false, EmployeeRole.DOCTOR, true, 3, new Date(), doctorUser));
                 Doctor doctor = doctorRepos.save(new Doctor(null, "",new Department((long)7), doctorEmployee, null, null, null, null, false));
-                doctorScheduleRepos.save(new DoctorSchedule(null, doctor, "2022-07-18T04:00:00.709Z", "2022-07-18T14:00:00.437Z", "0/2/4/6", "", false));
+                doctorScheduleRepos.save(new DoctorSchedule(null, doctor, "2022-07-18T04:00:00.709Z", "2022-07-18T11:00:00.437Z", "0/2/4/6", "", false));
             }
 
             if(!userRepos.existsByUsername("doctoruser1")) {
@@ -622,7 +622,7 @@ public class ImportSampleData {
                 User doctorUser = userRepos.save(new User("doctoruser1", encoder.encode("123456789"), UserRole.DOCTOR));
                 Employee doctorEmployee = employeeRepos.save(new Employee(null, "2ca79ab8-24f9-4ada-b390-88fa1b7b5405", "Salih", "Kluth", "Male", new Date("1986/10/30"), "doctor.salih.kluth@example.com", "0171-0465796", null, "https://randomuser.me/api/portraits/men/59.jpg", doctorAddress, false, EmployeeRole.DOCTOR, true, 2, new Date(), doctorUser));
                 Doctor doctor = doctorRepos.save(new Doctor(null, "",new Department((long)5), doctorEmployee, null, null, null, null, false));
-                doctorScheduleRepos.save(new DoctorSchedule(null, doctor, "2022-07-18T06:00:00.709Z", "2022-07-18T16:00:00.437Z", "3/4/5/6", "", false));
+                doctorScheduleRepos.save(new DoctorSchedule(null, doctor, "2022-07-18T06:00:00.709Z", "2022-07-18T11:00:00.437Z", "3/4/5/6", "", false));
             }
 
             if(!userRepos.existsByUsername("doctoruser2")) {
@@ -630,7 +630,7 @@ public class ImportSampleData {
                 User doctorUser = userRepos.save(new User("doctoruser2", encoder.encode("123456789"), UserRole.DOCTOR));
                 Employee doctorEmployee = employeeRepos.save(new Employee(null, "299e7d27-2223-4e66-b82a-fd0c2257fd04", "Billie", "Garza", "Female", new Date("1985/05/23"), "doctor.billie.garza@example.com", "0447-279-502", null, "https://randomuser.me/api/portraits/women/38.jpg", doctorAddress, false, EmployeeRole.DOCTOR, true, 5, new Date(), doctorUser));
                 Doctor doctor = doctorRepos.save(new Doctor(null, "",new Department((long)9), doctorEmployee, null, null, null, null, false));
-                doctorScheduleRepos.save(new DoctorSchedule(null, doctor, "2022-07-18T06:00:00.709Z", "2022-07-18T16:00:00.437Z", "3/4/5/6", "", false));
+                doctorScheduleRepos.save(new DoctorSchedule(null, doctor, "2022-07-18T06:00:00.709Z", "2022-07-18T11:00:00.437Z", "3/4/5/6", "", false));
             }
 
             if(!userRepos.existsByUsername("doctoruser3")) {
@@ -638,7 +638,7 @@ public class ImportSampleData {
                 User doctorUser = userRepos.save(new User("doctoruser3", encoder.encode("123456789"), UserRole.DOCTOR));
                 Employee doctorEmployee = employeeRepos.save(new Employee(null, "a6763458-8b54-4e01-b9d7-894459a0ef48", "Caitlin", "Holland", "Female", new Date("1961/09/28"), "doctor.caitlin.holland@example.com", "081-341-5004", null, "https://randomuser.me/api/portraits/women/49.jpg", doctorAddress, false, EmployeeRole.DOCTOR, true, 3, new Date(), doctorUser));
                 Doctor doctor = doctorRepos.save(new Doctor(null, "",new Department((long)1), doctorEmployee, null, null, null, null, false));
-                doctorScheduleRepos.save(new DoctorSchedule(null, doctor, "2022-07-18T06:00:00.709Z", "2022-07-18T16:00:00.437Z", "3/4/5/6", "", false));
+                doctorScheduleRepos.save(new DoctorSchedule(null, doctor, "2022-07-18T06:00:00.709Z", "2022-07-18T11:00:00.437Z", "3/4/5/6", "", false));
             }
 
             if(!userRepos.existsByUsername("doctoruser4")) {
@@ -646,7 +646,7 @@ public class ImportSampleData {
                 User doctorUser = userRepos.save(new User("doctoruser4", encoder.encode("123456789"), UserRole.DOCTOR));
                 Employee doctorEmployee = employeeRepos.save(new Employee(null, "7f730cb9-4ac9-4914-a3ba-c70d53b30c66", "Liliane", "Schlegel", "Female", new Date("1965/10/20"), "doctor.liliane.schlegel@example.com", "0174-0264497", null, "https://randomuser.me/api/portraits/women/63.jpg", doctorAddress, false, EmployeeRole.DOCTOR, true, 3, new Date(), doctorUser));
                 Doctor doctor = doctorRepos.save(new Doctor(null, "",new Department((long)2), doctorEmployee, null, null, null, null, false));
-                doctorScheduleRepos.save(new DoctorSchedule(null, doctor, "2022-07-18T06:00:00.709Z", "2022-07-18T16:00:00.437Z", "3/4/5/6", "", false));
+                doctorScheduleRepos.save(new DoctorSchedule(null, doctor, "2022-07-18T06:00:00.709Z", "2022-07-18T11:00:00.437Z", "3/4/5/6", "", false));
             }
 
             if(!userRepos.existsByUsername("doctoruser5")) {
@@ -654,7 +654,7 @@ public class ImportSampleData {
                 User doctorUser = userRepos.save(new User("doctoruser5", encoder.encode("123456789"), UserRole.DOCTOR));
                 Employee doctorEmployee = employeeRepos.save(new Employee(null, "3bd75f3c-8c80-474a-9d36-f4335da7ba3a", "Vilma", "Iden", "Female", new Date("1989/08/20"), "doctor.vilma.iden@example.com", "45363312", null, "https://randomuser.me/api/portraits/women/28.jpg", doctorAddress, false, EmployeeRole.DOCTOR, true, 1, new Date(), doctorUser));
                 Doctor doctor = doctorRepos.save(new Doctor(null, "",new Department((long)2), doctorEmployee, null, null, null, null, false));
-                doctorScheduleRepos.save(new DoctorSchedule(null, doctor, "2022-07-18T06:00:00.709Z", "2022-07-18T16:00:00.437Z", "0/1/2/3", "", false));
+                doctorScheduleRepos.save(new DoctorSchedule(null, doctor, "2022-07-18T06:00:00.709Z", "2022-07-18T11:00:00.437Z", "0/1/2/3", "", false));
             }
 
             if(!userRepos.existsByUsername("doctoruser6")) {
@@ -662,7 +662,7 @@ public class ImportSampleData {
                 User doctorUser = userRepos.save(new User("doctoruser6", encoder.encode("123456789"), UserRole.DOCTOR));
                 Employee doctorEmployee = employeeRepos.save(new Employee(null, "3a1b502b-b34b-4178-9cda-5d90a77acfc1", "Edeltrud", "Breier", "Female", new Date("1987/11/27"), "doctor.edeltrud.breier@example.com", "0179-5447424", null, "https://randomuser.me/api/portraits/women/66.jpg", doctorAddress, false, EmployeeRole.DOCTOR, true, 1, new Date(), doctorUser));
                 Doctor doctor = doctorRepos.save(new Doctor(null, "",new Department((long)5), doctorEmployee, null, null, null, null, false));
-                doctorScheduleRepos.save(new DoctorSchedule(null, doctor, "2022-07-18T06:00:00.709Z", "2022-07-18T16:00:00.437Z", "3/4/5/6", "", false));
+                doctorScheduleRepos.save(new DoctorSchedule(null, doctor, "2022-07-18T06:00:00.709Z", "2022-07-18T11:00:00.437Z", "3/4/5/6", "", false));
             }
 
             if(!userRepos.existsByUsername("doctoruser7")) {
@@ -670,7 +670,7 @@ public class ImportSampleData {
                 User doctorUser = userRepos.save(new User("doctoruser7", encoder.encode("123456789"), UserRole.DOCTOR));
                 Employee doctorEmployee = employeeRepos.save(new Employee(null, "cc72c42b-e19b-455c-af65-4abe25764d2f", "Tanya", "Gregory", "Female", new Date("1959/09/05"), "doctor.tanya.gregory@example.com", "(610) 807-4376", null, "https://randomuser.me/api/portraits/women/28.jpg", doctorAddress, false, EmployeeRole.DOCTOR, true, 5, new Date(), doctorUser));
                 Doctor doctor = doctorRepos.save(new Doctor(null, "",new Department((long)6), doctorEmployee, null, null, null, null, false));
-                doctorScheduleRepos.save(new DoctorSchedule(null, doctor, "2022-07-18T06:00:00.709Z", "2022-07-18T16:00:00.437Z", "0/1/2/3", "", false));
+                doctorScheduleRepos.save(new DoctorSchedule(null, doctor, "2022-07-18T06:00:00.709Z", "2022-07-18T11:00:00.437Z", "0/1/2/3", "", false));
             }
 
             if(!userRepos.existsByUsername("doctoruser8")) {
@@ -678,7 +678,7 @@ public class ImportSampleData {
                 User doctorUser = userRepos.save(new User("doctoruser8", encoder.encode("123456789"), UserRole.DOCTOR));
                 Employee doctorEmployee = employeeRepos.save(new Employee(null, "fd760cb8-2241-4326-86e4-9d39598675eb", "Liam", "Denys", "Male", new Date("1981/11/06"), "doctor.liam.denys@example.com", "F75 P78-0743", null, "https://randomuser.me/api/portraits/men/35.jpg", doctorAddress, false, EmployeeRole.DOCTOR, true, 0, new Date(), doctorUser));
                 Doctor doctor = doctorRepos.save(new Doctor(null, "",new Department((long)6), doctorEmployee, null, null, null, null, false));
-                doctorScheduleRepos.save(new DoctorSchedule(null, doctor, "2022-07-18T06:00:00.709Z", "2022-07-18T16:00:00.437Z", "3/4/5/6", "", false));
+                doctorScheduleRepos.save(new DoctorSchedule(null, doctor, "2022-07-18T06:00:00.709Z", "2022-07-18T11:00:00.437Z", "3/4/5/6", "", false));
             }
 
             if(!userRepos.existsByUsername("doctoruser9")) {
@@ -686,7 +686,7 @@ public class ImportSampleData {
                 User doctorUser = userRepos.save(new User("doctoruser9", encoder.encode("123456789"), UserRole.DOCTOR));
                 Employee doctorEmployee = employeeRepos.save(new Employee(null, "d5a1a1f1-ad07-4b0e-b421-32a4db954664", "Franklin", "Wells", "Male", new Date("1984/07/06"), "doctor.franklin.wells@example.com", "0472-972-248", null, "https://randomuser.me/api/portraits/men/3.jpg", doctorAddress, false, EmployeeRole.DOCTOR, true, 3, new Date(), doctorUser));
                 Doctor doctor = doctorRepos.save(new Doctor(null, "",new Department((long)7), doctorEmployee, null, null, null, null, false));
-                doctorScheduleRepos.save(new DoctorSchedule(null, doctor, "2022-07-18T06:00:00.709Z", "2022-07-18T16:00:00.437Z", "3/4/5/6", "", false));
+                doctorScheduleRepos.save(new DoctorSchedule(null, doctor, "2022-07-18T06:00:00.709Z", "2022-07-18T11:00:00.437Z", "3/4/5/6", "", false));
             }
 
             if(!userRepos.existsByUsername("doctoruser10")) {
@@ -694,7 +694,7 @@ public class ImportSampleData {
                 User doctorUser = userRepos.save(new User("doctoruser10", encoder.encode("123456789"), UserRole.DOCTOR));
                 Employee doctorEmployee = employeeRepos.save(new Employee(null, "80d832d9-d1b5-4e1e-9236-61da26ea4397", "Mason", "Gibson", "Male", new Date("1970/04/17"), "doctor.mason.gibson@example.com", "081-007-4003", null, "https://randomuser.me/api/portraits/men/28.jpg", doctorAddress, false, EmployeeRole.DOCTOR, true, 5, new Date(), doctorUser));
                 Doctor doctor = doctorRepos.save(new Doctor(null, "",new Department((long)6), doctorEmployee, null, null, null, null, false));
-                doctorScheduleRepos.save(new DoctorSchedule(null, doctor, "2022-07-18T06:00:00.709Z", "2022-07-18T16:00:00.437Z", "0/1/2/3", "", false));
+                doctorScheduleRepos.save(new DoctorSchedule(null, doctor, "2022-07-18T06:00:00.709Z", "2022-07-18T11:00:00.437Z", "0/1/2/3", "", false));
             }
 
             if(!userRepos.existsByUsername("doctoruser11")) {
@@ -702,7 +702,7 @@ public class ImportSampleData {
                 User doctorUser = userRepos.save(new User("doctoruser11", encoder.encode("123456789"), UserRole.DOCTOR));
                 Employee doctorEmployee = employeeRepos.save(new Employee(null, "8d5964fa-7678-4076-8c33-ff0cdf32ea94", "Pierre", "Lecomte", "Male", new Date("1969/11/10"), "doctor.pierre.lecomte@example.com", "06-62-24-07-58", null, "https://randomuser.me/api/portraits/men/16.jpg", doctorAddress, false, EmployeeRole.DOCTOR, true, 8, new Date(), doctorUser));
                 Doctor doctor = doctorRepos.save(new Doctor(null, "",new Department((long)9), doctorEmployee, null, null, null, null, false));
-                doctorScheduleRepos.save(new DoctorSchedule(null, doctor, "2022-07-18T04:00:00.709Z", "2022-07-18T14:00:00.437Z", "0/2/4/6", "", false));
+                doctorScheduleRepos.save(new DoctorSchedule(null, doctor, "2022-07-18T04:00:00.709Z", "2022-07-18T11:00:00.437Z", "0/2/4/6", "", false));
             }
 
             if(!userRepos.existsByUsername("doctoruser12")) {
@@ -710,7 +710,7 @@ public class ImportSampleData {
                 User doctorUser = userRepos.save(new User("doctoruser12", encoder.encode("123456789"), UserRole.DOCTOR));
                 Employee doctorEmployee = employeeRepos.save(new Employee(null, "7eed40ab-06a7-4c28-a51b-2aab641e888c", "Ethan", "Park", "Male", new Date("1987/10/02"), "doctor.ethan.park@example.com", "J14 R21-2045", null, "https://randomuser.me/api/portraits/men/98.jpg", doctorAddress, false, EmployeeRole.DOCTOR, true, 4, new Date(), doctorUser));
                 Doctor doctor = doctorRepos.save(new Doctor(null, "",new Department((long)7), doctorEmployee, null, null, null, null, false));
-                doctorScheduleRepos.save(new DoctorSchedule(null, doctor, "2022-07-18T06:00:00.709Z", "2022-07-18T16:00:00.437Z", "3/4/5/6", "", false));
+                doctorScheduleRepos.save(new DoctorSchedule(null, doctor, "2022-07-18T06:00:00.709Z", "2022-07-18T11:00:00.437Z", "3/4/5/6", "", false));
             }
 
             if(!userRepos.existsByUsername("doctoruser13")) {
@@ -718,7 +718,7 @@ public class ImportSampleData {
                 User doctorUser = userRepos.save(new User("doctoruser13", encoder.encode("123456789"), UserRole.DOCTOR));
                 Employee doctorEmployee = employeeRepos.save(new Employee(null, "0a386415-2336-4890-89d1-9c37df9f425f", "Jeanne", "Walters", "Female", new Date("1987/08/31"), "doctor.jeanne.walters@example.com", "0439-448-687", null, "https://randomuser.me/api/portraits/women/51.jpg", doctorAddress, false, EmployeeRole.DOCTOR, true, 3, new Date(), doctorUser));
                 Doctor doctor = doctorRepos.save(new Doctor(null, "",new Department((long)7), doctorEmployee, null, null, null, null, false));
-                doctorScheduleRepos.save(new DoctorSchedule(null, doctor, "2022-07-18T06:00:00.709Z", "2022-07-18T16:00:00.437Z", "3/4/5/6", "", false));
+                doctorScheduleRepos.save(new DoctorSchedule(null, doctor, "2022-07-18T06:00:00.709Z", "2022-07-18T11:00:00.437Z", "3/4/5/6", "", false));
             }
 
             if(!userRepos.existsByUsername("doctoruser14")) {
@@ -726,7 +726,7 @@ public class ImportSampleData {
                 User doctorUser = userRepos.save(new User("doctoruser14", encoder.encode("123456789"), UserRole.DOCTOR));
                 Employee doctorEmployee = employeeRepos.save(new Employee(null, "7356b522-d7a1-420f-9679-eb7b3789f0b9", "Anne", "Perkins", "Female", new Date("1993/06/14"), "doctor.anne.perkins@example.com", "(296) 750-3302", null, "https://randomuser.me/api/portraits/women/0.jpg", doctorAddress, false, EmployeeRole.DOCTOR, true, 9, new Date(), doctorUser));
                 Doctor doctor = doctorRepos.save(new Doctor(null, "",new Department((long)5), doctorEmployee, null, null, null, null, false));
-                doctorScheduleRepos.save(new DoctorSchedule(null, doctor, "2022-07-18T06:00:00.709Z", "2022-07-18T16:00:00.437Z", "0/1/2/3", "", false));
+                doctorScheduleRepos.save(new DoctorSchedule(null, doctor, "2022-07-18T06:00:00.709Z", "2022-07-18T11:00:00.437Z", "0/1/2/3", "", false));
             }
 
             if(!userRepos.existsByUsername("doctoruser15")) {
@@ -734,7 +734,7 @@ public class ImportSampleData {
                 User doctorUser = userRepos.save(new User("doctoruser15", encoder.encode("123456789"), UserRole.DOCTOR));
                 Employee doctorEmployee = employeeRepos.save(new Employee(null, "9251885e-4d94-4311-ba3f-4ce003fd9be6", "Ray", "Burns", "Male", new Date("1958/07/15"), "doctor.ray.burns@example.com", "(720) 484-2203", null, "https://randomuser.me/api/portraits/men/47.jpg", doctorAddress, false, EmployeeRole.DOCTOR, true, 8, new Date(), doctorUser));
                 Doctor doctor = doctorRepos.save(new Doctor(null, "",new Department((long)7), doctorEmployee, null, null, null, null, false));
-                doctorScheduleRepos.save(new DoctorSchedule(null, doctor, "2022-07-18T04:00:00.709Z", "2022-07-18T14:00:00.437Z", "0/2/4/6", "", false));
+                doctorScheduleRepos.save(new DoctorSchedule(null, doctor, "2022-07-18T04:00:00.709Z", "2022-07-18T11:00:00.437Z", "0/2/4/6", "", false));
             }
 
             if(!userRepos.existsByUsername("doctoruser16")) {
@@ -742,7 +742,7 @@ public class ImportSampleData {
                 User doctorUser = userRepos.save(new User("doctoruser16", encoder.encode("123456789"), UserRole.DOCTOR));
                 Employee doctorEmployee = employeeRepos.save(new Employee(null, "9ff01e21-7dcf-4a8f-9620-7ff2ff8e4c20", "Noelle", "Bowman", "Female", new Date("1995/04/15"), "doctor.noelle.bowman@example.com", "0470-250-771", null, "https://randomuser.me/api/portraits/women/77.jpg", doctorAddress, false, EmployeeRole.DOCTOR, true, 9, new Date(), doctorUser));
                 Doctor doctor = doctorRepos.save(new Doctor(null, "",new Department((long)10), doctorEmployee, null, null, null, null, false));
-                doctorScheduleRepos.save(new DoctorSchedule(null, doctor, "2022-07-18T06:00:00.709Z", "2022-07-18T16:00:00.437Z", "0/1/2/3", "", false));
+                doctorScheduleRepos.save(new DoctorSchedule(null, doctor, "2022-07-18T06:00:00.709Z", "2022-07-18T11:00:00.437Z", "0/1/2/3", "", false));
             }
 
             if(!userRepos.existsByUsername("doctoruser17")) {
@@ -758,7 +758,7 @@ public class ImportSampleData {
                 User doctorUser = userRepos.save(new User("doctoruser18", encoder.encode("123456789"), UserRole.DOCTOR));
                 Employee doctorEmployee = employeeRepos.save(new Employee(null, "cbbe6ffb-b816-4f49-8006-ad5a328255d4", "Lucas", "Jean-Baptiste", "Male", new Date("1962/06/03"), "doctor.lucas.jean-baptiste@example.com", "D21 L55-9924", null, "https://randomuser.me/api/portraits/men/49.jpg", doctorAddress, false, EmployeeRole.DOCTOR, true, 1, new Date(), doctorUser));
                 Doctor doctor = doctorRepos.save(new Doctor(null, "",new Department((long)9), doctorEmployee, null, null, null, null, false));
-                doctorScheduleRepos.save(new DoctorSchedule(null, doctor, "2022-07-18T06:00:00.709Z", "2022-07-18T16:00:00.437Z", "0/1/2/3", "", false));
+                doctorScheduleRepos.save(new DoctorSchedule(null, doctor, "2022-07-18T06:00:00.709Z", "2022-07-18T11:00:00.437Z", "0/1/2/3", "", false));
             }
 
             if(!userRepos.existsByUsername("doctoruser19")) {
@@ -774,7 +774,7 @@ public class ImportSampleData {
                 User doctorUser = userRepos.save(new User("doctoruser20", encoder.encode("123456789"), UserRole.DOCTOR));
                 Employee doctorEmployee = employeeRepos.save(new Employee(null, "e024aaf9-e5a8-429c-a3c9-1186600bce2c", "Othilie", "Mahamed", "Female", new Date("1956/12/17"), "doctor.othilie.mahamed@example.com", "48220220", null, "https://randomuser.me/api/portraits/women/68.jpg", doctorAddress, false, EmployeeRole.DOCTOR, true, 4, new Date(), doctorUser));
                 Doctor doctor = doctorRepos.save(new Doctor(null, "",new Department((long)11), doctorEmployee, null, null, null, null, false));
-                doctorScheduleRepos.save(new DoctorSchedule(null, doctor, "2022-07-18T06:00:00.709Z", "2022-07-18T16:00:00.437Z", "3/4/5/6", "", false));
+                doctorScheduleRepos.save(new DoctorSchedule(null, doctor, "2022-07-18T06:00:00.709Z", "2022-07-18T11:00:00.437Z", "3/4/5/6", "", false));
             }
 
             if(!userRepos.existsByUsername("doctoruser21")) {
@@ -782,7 +782,7 @@ public class ImportSampleData {
                 User doctorUser = userRepos.save(new User("doctoruser21", encoder.encode("123456789"), UserRole.DOCTOR));
                 Employee doctorEmployee = employeeRepos.save(new Employee(null, "d71079ef-8404-4c7a-abfd-4e47ee5ed029", "Diane", "Ramirez", "Female", new Date("1945/01/30"), "doctor.diane.ramirez@example.com", "0446-199-838", null, "https://randomuser.me/api/portraits/women/70.jpg", doctorAddress, false, EmployeeRole.DOCTOR, true, 2, new Date(), doctorUser));
                 Doctor doctor = doctorRepos.save(new Doctor(null, "",new Department((long)9), doctorEmployee, null, null, null, null, false));
-                doctorScheduleRepos.save(new DoctorSchedule(null, doctor, "2022-07-18T06:00:00.709Z", "2022-07-18T16:00:00.437Z", "3/4/5/6", "", false));
+                doctorScheduleRepos.save(new DoctorSchedule(null, doctor, "2022-07-18T06:00:00.709Z", "2022-07-18T11:00:00.437Z", "3/4/5/6", "", false));
             }
 
             if(!userRepos.existsByUsername("doctoruser22")) {
@@ -790,7 +790,7 @@ public class ImportSampleData {
                 User doctorUser = userRepos.save(new User("doctoruser22", encoder.encode("123456789"), UserRole.DOCTOR));
                 Employee doctorEmployee = employeeRepos.save(new Employee(null, "ef150f48-f101-4e26-8174-2d28a13733cc", "Mirella", "Eckart", "Female", new Date("1990/03/18"), "doctor.mirella.eckart@example.com", "0179-6684486", null, "https://randomuser.me/api/portraits/women/39.jpg", doctorAddress, false, EmployeeRole.DOCTOR, true, 6, new Date(), doctorUser));
                 Doctor doctor = doctorRepos.save(new Doctor(null, "",new Department((long)7), doctorEmployee, null, null, null, null, false));
-                doctorScheduleRepos.save(new DoctorSchedule(null, doctor, "2022-07-18T06:00:00.709Z", "2022-07-18T16:00:00.437Z", "3/4/5/6", "", false));
+                doctorScheduleRepos.save(new DoctorSchedule(null, doctor, "2022-07-18T06:00:00.709Z", "2022-07-18T11:00:00.437Z", "3/4/5/6", "", false));
             }
 
             if(!userRepos.existsByUsername("doctoruser23")) {
@@ -806,7 +806,7 @@ public class ImportSampleData {
                 User doctorUser = userRepos.save(new User("doctoruser24", encoder.encode("123456789"), UserRole.DOCTOR));
                 Employee doctorEmployee = employeeRepos.save(new Employee(null, "0d7fdc1c-4b5e-415f-bb3f-95f4631f89ee", "Ella", "Ruiz", "Female", new Date("2001/04/28"), "doctor.ella.ruiz@example.com", "(797) 441-0280", null, "https://randomuser.me/api/portraits/women/40.jpg", doctorAddress, false, EmployeeRole.DOCTOR, true, 6, new Date(), doctorUser));
                 Doctor doctor = doctorRepos.save(new Doctor(null, "",new Department((long)2), doctorEmployee, null, null, null, null, false));
-                doctorScheduleRepos.save(new DoctorSchedule(null, doctor, "2022-07-18T04:00:00.709Z", "2022-07-18T14:00:00.437Z", "0/2/4/6", "", false));
+                doctorScheduleRepos.save(new DoctorSchedule(null, doctor, "2022-07-18T04:00:00.709Z", "2022-07-18T11:00:00.437Z", "0/2/4/6", "", false));
             }
 
             if(!userRepos.existsByUsername("doctoruser25")) {
@@ -814,7 +814,7 @@ public class ImportSampleData {
                 User doctorUser = userRepos.save(new User("doctoruser25", encoder.encode("123456789"), UserRole.DOCTOR));
                 Employee doctorEmployee = employeeRepos.save(new Employee(null, "2c2c8bcb-6bcd-463e-ae32-9950e8086f13", "Ava", "Clark", "Female", new Date("1977/03/28"), "doctor.ava.clark@example.com", "S17 Z19-2445", null, "https://randomuser.me/api/portraits/women/20.jpg", doctorAddress, false, EmployeeRole.DOCTOR, true, 2, new Date(), doctorUser));
                 Doctor doctor = doctorRepos.save(new Doctor(null, "",new Department((long)3), doctorEmployee, null, null, null, null, false));
-                doctorScheduleRepos.save(new DoctorSchedule(null, doctor, "2022-07-18T04:00:00.709Z", "2022-07-18T14:00:00.437Z", "0/2/4/6", "", false));
+                doctorScheduleRepos.save(new DoctorSchedule(null, doctor, "2022-07-18T04:00:00.709Z", "2022-07-18T11:00:00.437Z", "0/2/4/6", "", false));
             }
 
             if(!userRepos.existsByUsername("doctoruser26")) {
@@ -846,7 +846,7 @@ public class ImportSampleData {
                 User doctorUser = userRepos.save(new User("doctoruser29", encoder.encode("123456789"), UserRole.DOCTOR));
                 Employee doctorEmployee = employeeRepos.save(new Employee(null, "8595ef3d-efcf-4fc9-8fce-02aae06d88c3", "Vickie", "Mccoy", "Female", new Date("1996/02/16"), "doctor.vickie.mccoy@example.com", "(752) 510-8060", null, "https://randomuser.me/api/portraits/women/55.jpg", doctorAddress, false, EmployeeRole.DOCTOR, true, 7, new Date(), doctorUser));
                 Doctor doctor = doctorRepos.save(new Doctor(null, "",new Department((long)4), doctorEmployee, null, null, null, null, false));
-                doctorScheduleRepos.save(new DoctorSchedule(null, doctor, "2022-07-18T06:00:00.709Z", "2022-07-18T16:00:00.437Z", "0/1/2/3", "", false));
+                doctorScheduleRepos.save(new DoctorSchedule(null, doctor, "2022-07-18T06:00:00.709Z", "2022-07-18T11:00:00.437Z", "0/1/2/3", "", false));
             }
 
             if(!userRepos.existsByUsername("employeeuser0")) {

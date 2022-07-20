@@ -3,9 +3,10 @@ import { Select, DatePicker, TimePicker } from 'antd';
 import OpenChat from "../../sidebar/openchatheader"
 import $ from "jquery"
 import { toMoment } from '../../../../utils';
-import { axiosActions, isFormValid, axiosAction, notify, isValid } from '../../../../actions';
+import { axiosActions, isFormValid, axiosAction, notify, isValid, range } from '../../../../actions';
 import { GET, ADD, DayOptions, UPDATE } from '../../../../constants';
 const { Option } = Select;
+import moment from 'moment';
 
 class EditSchedule extends Component {
   id = this.props.match.params.id;
@@ -24,7 +25,8 @@ class EditSchedule extends Component {
       },
       doctors: [],
     };
-    this.disabledHours = this.disabledHours.bind(this);
+    this.disabledStartHours = this.disabledStartHours.bind(this);
+    this.disabledEndHours = this.disabledEndHours.bind(this);
     this.disabledMinutes = this.disabledMinutes.bind(this);
     this.onChangeDoctor = this.onChangeDoctor.bind(this);
     this.onChangeAvailableDays = this.onChangeAvailableDays.bind(this);
@@ -38,8 +40,15 @@ class EditSchedule extends Component {
     this.disabledMinutes = this.disabledMinutes.bind(this);
   }
 
-  disabledHours() {
+  
+  disabledStartHours() {
     return [0, 1, 2, 3, 4, 5, 6, 7, 19, 20, 21, 22, 23, 24];
+  }
+
+  disabledEndHours(){
+    var d = [0, 1, 2, 3, 4, 5, 6, 7, 19, 20, 21, 22, 23, 24];
+    range(8, 18).filter(e => e <= moment(this.state.data.start).hour()).map(e => d.push(e));
+    return d;
   }
 
   disabledMinutes(selectHour) {
@@ -190,7 +199,7 @@ class EditSchedule extends Component {
                   <div className="col-md-6">
                     <div className="form-group">
                       <label>Start Time</label>
-                      <TimePicker name='start' showSecond={false} format={"HH:mm"} disabledHours={this.disabledHours2} disabledMinutes={this.disabledMinutes} className={this.state.data.start ? "form-control is-valid" : "form-control is-invalid"}
+                      <TimePicker name='start' showSecond={false} format={"HH:mm"} disabledHours={this.disabledStartHours} disabledMinutes={this.disabledMinutes} className={this.state.data.start ? "form-control is-valid" : "form-control is-invalid"}
                         minuteStep={30} onChange={this.onChangeStartTime} onSelect={this.onChangeStartTime} value={toMoment(this.state.data.start)}></TimePicker>
                       <div className="invalid-feedback">Start time cannot be empty</div>
                     </div>
@@ -198,7 +207,7 @@ class EditSchedule extends Component {
                   <div className="col-md-6">
                     <div className="form-group">
                       <label>End Time</label>
-                      <TimePicker name='end' showSecond={false} format={"HH:mm"} disabledHours={this.disabledHours} disabledMinutes={this.disabledMinutes} className={this.state.data.end ? "form-control is-valid" : "form-control is-invalid"}
+                      <TimePicker name='end' showSecond={false} format={"HH:mm"} disabledHours={this.disabledEndHours} disabledMinutes={this.disabledMinutes} className={this.state.data.end ? "form-control is-valid" : "form-control is-invalid"}
                         minuteStep={30} onChange={this.onChangeEndTime} onSelect={this.onChangeEndTime} value={toMoment(this.state.data.end)} 
                         ></TimePicker>
                       <div className="invalid-feedback">End time cannot be empty</div>

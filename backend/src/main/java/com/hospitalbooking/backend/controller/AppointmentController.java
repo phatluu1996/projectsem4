@@ -103,18 +103,41 @@ public class AppointmentController {
     }
 
     @PutMapping("/appointments/{id}")
-    public ResponseEntity<Appointment> update(@RequestBody Appointment appointment, @PathVariable Long id){
-        Optional<Appointment> optional = appointmentRepos.findById(id);
-        return optional.map(model -> {
-            appointment.setId(model.getId());
-            Patient patient = appointment.getPatient();
-            patientRepos.findById(patient.getId()).map(pat -> {
-                pat.setEmail(patient.getEmail());
-                pat.setPhoneNumber(patient.getPhoneNumber());
-                return patientRepos.save(pat);
-            });
-            return new ResponseEntity<>(appointmentRepos.save(appointment), HttpStatus.OK);
-        }).orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    public ResponseEntity update(@RequestBody Appointment appointment, @PathVariable Long id){
+        //find if exist any appointment that have the same date and time
+        Specification<?> spec = DBSpecification.createSpecification(Boolean.FALSE)
+                .and((root, cq, cb) -> cb.equal(root.join("doctor").get("id"), appointment.getDoctor().getId()))
+                .and((root, cq, cb) -> cb.notEqual(root.get("status"), AppointmentStatus.REJECTED))
+                .and((root, cq, cb) -> cb.notEqual(root.get("status"), AppointmentStatus.CANCELED));
+        List<Appointment> duplicateList = appointmentRepos.findAll(spec);
+        if(duplicateList.size() > 0 && duplicateList.stream().anyMatch(app -> {
+            Timestamp start = new Timestamp(app.getDate().getTime());
+            Timestamp end = new Timestamp(app.getDateEnd().getTime());
+            Timestamp startApp = new Timestamp(appointment.getDate().getTime());
+            Timestamp endApp = new Timestamp(appointment.getDateEnd().getTime());
+            start.setNanos(0);
+            end.setNanos(0);
+            startApp.setNanos(0);
+            endApp.setNanos(0);
+            return app.getId() != appointment.getId()
+                    && start.toInstant().equals(startApp.toInstant())
+                    && end.toInstant().equals(endApp.toInstant());
+        })){
+            return new ResponseEntity(new MessageResponse("Fail !", false), HttpStatus.OK);
+        }else{
+            Optional<Appointment> optional = appointmentRepos.findById(id);
+            return optional.map(model -> {
+                appointment.setId(model.getId());
+                Patient patient = appointment.getPatient();
+                patientRepos.findById(patient.getId()).map(pat -> {
+                    pat.setEmail(patient.getEmail());
+                    pat.setPhoneNumber(patient.getPhoneNumber());
+                    return patientRepos.save(pat);
+                });
+                appointmentRepos.save(appointment);
+                return new ResponseEntity(new MessageResponse("Done !", true), HttpStatus.OK);
+            }).orElseGet(() -> new ResponseEntity(new MessageResponse("Fail !", false), HttpStatus.OK));
+        }
     }
 
     @DeleteMapping("/appointments/{id}")

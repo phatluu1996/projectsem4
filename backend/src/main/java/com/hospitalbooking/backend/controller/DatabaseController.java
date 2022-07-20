@@ -175,9 +175,9 @@ public class DatabaseController {
 
     @GetMapping("/dashboard-info")
     public ResponseEntity dashboardInfo() {
-        int totalPatient = patientRepos.findAll().size();
-        int totalDoctor = doctorRepos.findAll().size();
-        int totalEmployee = employeeRepos.findAll().size();
+        long totalPatient = patientRepos.count(DBSpecification.createSpecification(Boolean.FALSE));
+        long totalDoctor = doctorRepos.count(DBSpecification.createSpecification(Boolean.FALSE));
+        long totalEmployee = employeeRepos.count(DBSpecification.createSpecification(Boolean.FALSE));
         Specification<?> spec1 = DBSpecification.createSpecification(Boolean.FALSE)
                 .and((root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("status"), AppointmentStatus.PENDING));
         int totalAppointment = appointmentRepos.findAll(spec1).size();
@@ -233,9 +233,8 @@ public class DatabaseController {
         Specification<?> accountantSpec = DBSpecification.createSpecification(Boolean.FALSE).and((root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("employeeRole"), EmployeeRole.ACCOUNTANT));
         float countAccountant = (employeeRepos.count(accountantSpec)*100)/countAllEmployee;
 
-        Specification<?> otherSpec = DBSpecification.createSpecification(Boolean.FALSE).and((root, query, criteriaBuilder) -> criteriaBuilder.equal(root.get("employeeRole"), EmployeeRole.OTHER));
-        float countOther = (employeeRepos.count(otherSpec)*100)/countAllEmployee;
+        float countOther = 100 - countDoctor - countReceptionist - countNurse - countAccountant;
 
-        return new ResponseEntity(new DashboardInfo(totalPatient, totalEmployee, totalDoctor, totalAppointment, dataPatientMonth, dataPatientYear, top5NewAppointment, newPatients, doctors, countDoctor, countReceptionist, countNurse, countAccountant, countOther), HttpStatus.OK);
+        return new ResponseEntity(new DashboardInfo((int)totalPatient, (int)totalEmployee, (int)totalDoctor, totalAppointment, dataPatientMonth, dataPatientYear, top5NewAppointment, newPatients, doctors, countDoctor, countReceptionist, countNurse, countAccountant, countOther), HttpStatus.OK);
     }
 }

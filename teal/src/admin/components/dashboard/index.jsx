@@ -252,7 +252,7 @@ class Dashboard extends Component {
                 <div className="chart clearfix">
                   <div className="item">
                     <div className="bar">
-                      <span className="percent">{this.state.data?.countDoctor}%</span>
+                      <span className="percent">{this.state.data?.countDoctor?.toFixed(2)}%</span>
                       <div className="item-progress" data-percent={12}>
                         <span className="title">Doctor</span>
                       </div>
@@ -260,7 +260,7 @@ class Dashboard extends Component {
                   </div>
                   <div className="item">
                     <div className="bar">
-                      <span className="percent">{this.state.data?.countReceptionist}%</span>
+                      <span className="percent">{this.state.data?.countReceptionist?.toFixed(2)}%</span>
                       <div className="item-progress" data-percent={71}>
                         <span className="title">Receptionist</span>
                       </div>
@@ -268,7 +268,7 @@ class Dashboard extends Component {
                   </div>
                   <div className="item">
                     <div className="bar">
-                      <span className="percent">{this.state.data?.countNurse}%</span>
+                      <span className="percent">{this.state.data?.countNurse?.toFixed(2)}%</span>
                       <div className="item-progress" data-percent={82}>
                         <span className="title">Nurse</span>
                       </div>
@@ -276,7 +276,7 @@ class Dashboard extends Component {
                   </div>
                   <div className="item">
                     <div className="bar">
-                      <span className="percent">{this.state.data?.countAccountant}%</span>
+                      <span className="percent">{this.state.data?.countAccountant?.toFixed(2)}%</span>
                       <div className="item-progress" data-percent={67}>
                         <span className="title">Accountant</span>
                       </div>
@@ -284,7 +284,7 @@ class Dashboard extends Component {
                   </div>
                   <div className="item">
                     <div className="bar">
-                      <span className="percent">{this.state.data?.countOther}%</span>
+                      <span className="percent">{this.state.data?.countOther?.toFixed(2)}%</span>
                       <div className="item-progress" data-percent={20}>
                         <span className="title">Orthers</span>
                       </div>

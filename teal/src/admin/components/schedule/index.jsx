@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import OpenChat from "../sidebar/openchatheader"
 import { itemRender, onShowSizeChange, } from "../../components/paginationfunction";
 import { User_img, Sent_img } from "../imagepath"
-import { axiosAction, axiosActions, dateSort, notify, stringSort } from '../../../actions';
+import { axiosAction, axiosActions, dateSort, notify, numberSort, stringSort } from '../../../actions';
 import "../../../constants";
 import { DELETE, GET, DayOptions } from "../../../constants";
 import { toMoment } from "../../../utils";
