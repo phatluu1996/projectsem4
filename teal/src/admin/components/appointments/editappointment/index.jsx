@@ -68,7 +68,7 @@ class EditAppointment extends Component {
   }
 
   disabledDate(current) {
-    return (current && current < moment().startOf("day")) || !this.state.data.doctor?.doctorSchedules?.some(sche => sche.availableDays.includes(current.day()));
+    return (current && current < moment().endOf("day")) || !this.state.data.doctor?.doctorSchedules?.some(sche => sche.availableDays.includes(current.day()));
   }
 
   componentDidMount() {
