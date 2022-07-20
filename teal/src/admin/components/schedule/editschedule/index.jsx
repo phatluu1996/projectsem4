@@ -47,7 +47,9 @@ class EditSchedule extends Component {
 
   disabledEndHours(){
     var d = [0, 1, 2, 3, 4, 5, 6, 7, 19, 20, 21, 22, 23, 24];
-    range(8, 18).filter(e => e <= moment(this.state.data.start).hour()).map(e => d.push(e));
+    if(this.state.data.start){
+      range(8, 18).filter(e => e <= this.state.data.start.hour()).map(e => d.push(e));
+    }
     return d;
   }
 
@@ -208,7 +210,7 @@ class EditSchedule extends Component {
                     <div className="form-group">
                       <label>End Time</label>
                       <TimePicker name='end' showSecond={false} format={"HH:mm"} disabledHours={this.disabledEndHours} disabledMinutes={this.disabledMinutes} className={this.state.data.end ? "form-control is-valid" : "form-control is-invalid"}
-                        minuteStep={30} onChange={this.onChangeEndTime} onSelect={this.onChangeEndTime} value={toMoment(this.state.data.end)} 
+                        minuteStep={30} onChange={this.onChangeEndTime} onSelect={this.onChangeEndTime} value={toMoment(this.state.data.end)} disabled={!this.state.data.start}
                         ></TimePicker>
                       <div className="invalid-feedback">End time cannot be empty</div>
                     </div>
