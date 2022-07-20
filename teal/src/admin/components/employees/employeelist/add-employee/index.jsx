@@ -2,10 +2,10 @@ import React, { Component } from 'react';
 import OpenChat from "../../../sidebar/openchatheader"
 import $ from "jquery"
 import { countries } from '../../../../../address';
-import { DatePicker, Select } from 'antd';
+import { DatePicker, Modal, Select } from 'antd';
 import { isValid, isFormValid, axiosAction, notify, encodeBase64, validReg } from '../../../../../actions'
 const { Option } = Select;
-import { ADD, GET, employeeRoles } from '../../../../../constants';
+import { ADD, GET, employeeRoles, RECEPTION } from '../../../../../constants';
 import { toMoment } from '../../../../../utils';
 import moment from 'moment';
 
@@ -98,10 +98,12 @@ class AddEmployee extends Component {
           tmp.user.username = "nouser";
           tmp.user.password = "nouser";
           tmp.user.retired = true;
-        } else {
+          tmp.user.role = "OTHER";
+        } else {          
           tmp.user.retired = false;
           tmp.user.username = "";
           tmp.user.password = "";
+          tmp.user.role = "RECEPTIONIST"
         }
         break;
       case "username":
@@ -136,9 +138,21 @@ class AddEmployee extends Component {
   onSubmit(e) {
     e.preventDefault();
     if (!isFormValid(e)) return;
-    axiosAction("/employees", ADD, (res) => {
-      notify('success', '', 'Success')
-      this.props.history.push("/admin/employees");
+    axiosAction("/employees", ADD, (res) => {      
+      if (res.data.success) {
+        notify('success', '', 'Success')
+        this.props.history.push("/admin/employees");
+      } else {
+        Modal.error({
+          title: `Fail!`,
+          content: (
+            <>
+              There is another user exists. Please use other email or username.
+            </>
+          )
+        });
+      }    
+
     }, (err) => notify('error', '', 'Error'), this.state.data);
   }
 

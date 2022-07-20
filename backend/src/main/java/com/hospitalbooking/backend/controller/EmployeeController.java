@@ -8,6 +8,7 @@ import com.hospitalbooking.backend.repository.AddressRepos;
 import com.hospitalbooking.backend.repository.DoctorRepos;
 import com.hospitalbooking.backend.repository.EmployeeRepos;
 import com.hospitalbooking.backend.repository.UserRepos;
+import com.hospitalbooking.backend.security.payload.response.MessageResponse;
 import com.hospitalbooking.backend.specification.DBSpecification;
 import com.hospitalbooking.backend.utils.FileUploadUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -74,7 +75,7 @@ public class EmployeeController {
     }
 
     @PostMapping("/employees")
-    public ResponseEntity<Employee> add(@RequestBody Employee employee) throws IOException {
+    public ResponseEntity add(@RequestBody Employee employee) throws IOException {
         if(employee.getImage() != null && !employee.getImage().isEmpty()){
             String fileName = employee.getFirstName()+employee.getLastName()+employee.getcId()+".png";
             String filePath = FileUploadUtil.UPLOAD_DIR + fileName;
@@ -88,8 +89,17 @@ public class EmployeeController {
         User savedUser = userRepos.save(user);
         employee.setUser(savedUser);
         employee.setJoiningDate(new Date());
+        if (userRepos.existsByUsername(employee.getUser().getUsername())) {
+            return ResponseEntity.ok(new MessageResponse("Username is already in use!", false));
+        }
+
+        if (employeeRepos.existsByEmail(employee.getEmail())) {
+            return ResponseEntity.ok(new MessageResponse("Email is already in use!",false));
+        }
+
         Employee savedEmployee = employeeRepos.save(employee);
-        return new ResponseEntity<>(savedEmployee, HttpStatus.OK);
+
+        return ResponseEntity.ok(new MessageResponse("Done",true));
     }
 
     @PutMapping("/employees/{id}")

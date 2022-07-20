@@ -134,18 +134,6 @@ public class AuthorizeController {
             patientRepos.save(patient);
 
         }
-
-//        StringBuilder linkReset = new StringBuilder();
-//        linkReset.append("http://localhost:3000/activateAccount?id=");
-//        linkReset.append(user.getId());
-//
-//        Map<String, Object> emailMap = new HashMap<>();
-//        emailMap.put("username", registerRequest.getUserFirstName()+" "+registerRequest.getUserLastName());
-//        emailMap.put("changePasswordlink", linkReset.toString());
-
-//        String templateHtml = emailService.templateResolve("confirm_account", emailMap);
-//        emailService.sendSimpleMessage(signUpRequest.getEmail(), null, "Confirm account", templateHtml);
-
         return ResponseEntity.ok(new MessageResponse("User registered successfully!", true));
     }
 
