@@ -40,7 +40,7 @@ class Doctor extends Component {
                     <img className="img-fluid" alt="" src={Doctor_06} />
                     <div className="doctor-details">
                       <div className="doctor-info">
-                        <h4 className="doctor-name"><Link to="/doctor-details">Dr. Justin Parker MBBS, FDS</Link></h4>
+                        <h4 className="doctor-name"><a>Dr. Justin Parker MBBS, FDS</a></h4>
                         <p>
                           <span className="depart">Physical Therapist</span>
                         </p>

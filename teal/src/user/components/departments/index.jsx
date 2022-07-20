@@ -89,23 +89,15 @@ class Departments extends Component {
                     <div key={index} className="col-md-4">
                       <div className="dept-box">
                         <div className="dept-img">
-                          <Link to="/department-details"><img width={67} height={80} alt="Dentists" src={Icon_04} /></Link>
+                          <a><img width={67} height={80} alt="Dentists" src={Icon_04} /></a>
                         </div>
-                        <h4><Link to="/department-details">{department.name}</Link></h4>
+                        <h4><a>{department.name}</a></h4>
                         <p>{department.description}</p>
                       </div>
                     </div>
                   )
                 })}
-              </div>
-              <div className="row">
-                <div className="col-12">
-                  <div className="see-all m-t-0">
-                    <button type="button" className="btn btn-primary see-all-btn">Load More</button>
-                  </div>
-                </div>
-              </div>
-
+              </div>             
             </div>
           </section>
           <section className="section meet-doctors">

@@ -32,13 +32,10 @@ class Footer extends Component {
                   <h4 className="footer-title">Sitemap</h4>
                   <ul className="footer-menu">
                     <li>
-                      <Link to="/about-us">About Us</Link>
+                      <Link to="/aboutus">About Us</Link>
                     </li>
                     <li>
                       <Link to="/departments">Departments</Link>
-                    </li>
-                    <li>
-                      <Link to="/services">Services</Link>
                     </li>
                     <li>
                       <Link to="/doctors">Doctors</Link>
@@ -48,29 +45,7 @@ class Footer extends Component {
                     </li>
                   </ul>
                 </div>
-              </div>
-              <div className="col-lg-3 col-md-3">
-                <div className="footer-widget">
-                  <h4 className="footer-title">Blog</h4>
-                  <ul className="footer-menu">
-                    <li>
-                      <Link to="/blog">Right Sidebar</Link>
-                    </li>
-                    <li>
-                      <Link to="/blog-left-sidebar">Left Sidebar</Link>
-                    </li>
-                    <li>
-                      <Link to="/blog-full-width">Full Width</Link>
-                    </li>
-                    <li>
-                      <Link to="/blog-grid">Blog Grid</Link>
-                    </li>
-                    <li>
-                      <Link to="/blog-details">Blog Details</Link>
-                    </li>
-                  </ul>
-                </div>
-              </div>
+              </div>              
               <div className="col-lg-3 col-md-3">
                 <div className="footer-widget">
                   <h4 className="footer-title">Appointment</h4>

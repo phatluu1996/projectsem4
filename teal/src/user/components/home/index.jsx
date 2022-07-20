@@ -148,83 +148,83 @@ class Home extends Component {
               >
                 <div className="item">
                   <div className="doctor text-center">
-                    <Link to="/doctor-details">
+                    <a >
                       <img src={Doctor_thumb_01} alt="Dr. Albert Sandoval" className="rounded-circle" width={150} height={150} />
                       <div className="doctors-name">Dr. Albert Sandoval</div>
                       <div className="doctors-position">Neurologist</div>
-                    </Link>
+                    </a>
                   </div>
                 </div>
                 <div className="item">
-                  <Link to="/doctor-details">
+                  <a >
                     <div className="doctor text-center">
                       <img src={Doctor_thumb_02} alt="Dr. Linda Barrett" className="rounded-circle" width={150} height={150} />
                       <div className="doctors-name">Dr. Linda Barrett</div>
                       <div className="doctors-position">Dentist</div>
                     </div>
-                  </Link>
+                  </a>
                 </div>
                 <div className="item">
                   <div className="doctor text-center">
-                    <Link to="/doctor-details">
+                    <a >
                       <img src={Doctor_thumb_03} alt="Dr. Cristina Groves" className="rounded-circle" width={150} height={150} />
                       <div className="doctors-name">Dr. Cristina Groves</div>
                       <div className="doctors-position">Gynecologist</div>
-                    </Link>
+                    </a>
                   </div>
                 </div>
                 <div className="item">
                   <div className="doctor text-center">
-                    <Link to="/doctor-details">
+                    <a >
                       <img src={Doctor_thumb_04} alt="Dr. Henry Daniels" className="rounded-circle" width={150} height={150} />
                       <div className="doctors-name">Dr. Henry Daniels</div>
                       <div className="doctors-position">Cardiologist</div>
-                    </Link>
+                    </a>
                   </div>
                 </div>
                 <div className="item">
                   <div className="doctor text-center">
-                    <Link to="/doctor-details">
+                    <a >
                       <img src={Doctor_thumb_05} alt="Dr. Diana Bailey" className="rounded-circle" width={150} height={150} />
                       <div className="doctors-name">Dr. Diana Bailey</div>
                       <div className="doctors-position">General Surgery</div>
-                    </Link>
+                    </a>
                   </div>
                 </div>
                 <div className="item">
                   <div className="doctor text-center">
-                    <Link to="/doctor-details">
+                    <a >
                       <img src={Doctor_thumb_06} alt="Dr. Justin Parker" className="rounded-circle" width={150} height={150} />
                       <div className="doctors-name">Dr. Justin Parker</div>
                       <div className="doctors-position">Physical Therapist</div>
-                    </Link>
+                    </a>
                   </div>
                 </div>
                 <div className="item">
                   <div className="doctor text-center">
-                    <Link to="/doctor-details">
+                    <a >
                       <img src={Doctor_thumb_07} alt="Dr. Marie Wells" className="rounded-circle" width={150} height={150} />
                       <div className="doctors-name">Dr. Marie Wells</div>
                       <div className="doctors-position">Psychiatrist</div>
-                    </Link>
+                    </a>
                   </div>
                 </div>
                 <div className="item">
                   <div className="doctor text-center">
-                    <Link to="/doctor-details">
+                    <a >
                       <img src={Doctor_thumb_08} alt="Dr. Pamela Curtis" className="rounded-circle" width={150} height={150} />
                       <div className="doctors-name">Dr. Pamela Curtis</div>
                       <div className="doctors-position">Pediatrics</div>
-                    </Link>
+                    </a>
                   </div>
                 </div>
                 <div className="item">
                   <div className="doctor text-center">
-                    <Link to="/doctor-details">
+                    <a >
                       <img src={Doctor_thumb_09} alt="Dr. Ronald Jacobs" className="rounded-circle" width={150} height={150} />
                       <div className="doctors-name">Dr. Ronald Jacobs</div>
                       <div className="doctors-position">Oncologist</div>
-                    </Link>
+                    </a>
                   </div>
                 </div>
               </OwlCarousel>
@@ -258,9 +258,9 @@ class Home extends Component {
                         <div key={index} className="col-md-4">
                           <div className="dept-box">
                             <div className="dept-img">
-                              <Link to="/department-details"><img width={67} height={80} alt="Dentists" src={Icon_04} /></Link>
+                              <a><img width={67} height={80} alt="Dentists" src={Icon_04} /></a>
                             </div>
-                            <h4><Link to="/department-details">{department.name}</Link></h4>
+                            <h4><a>{department.name}</a></h4>
                             <p>{department.description}</p>
                           </div>
                         </div>
