@@ -89,11 +89,11 @@ public class EmployeeController {
         User savedUser = userRepos.save(user);
         employee.setUser(savedUser);
         employee.setJoiningDate(new Date());
-        if (userRepos.existsByUsername(employee.getUser().getUsername())) {
+        if (userRepos.existsByUsername(employee.getUser().getUsername()) && employee.getEmployeeRole() == EmployeeRole.RECEPTIONIST) {
             return ResponseEntity.ok(new MessageResponse("Username is already in use!", false));
         }
 
-        if (employeeRepos.existsByEmail(employee.getEmail())) {
+        if (employeeRepos.existsByEmail(employee.getEmail()) && employee.getEmployeeRole() == EmployeeRole.RECEPTIONIST) {
             return ResponseEntity.ok(new MessageResponse("Email is already in use!",false));
         }
 
