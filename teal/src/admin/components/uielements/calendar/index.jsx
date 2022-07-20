@@ -14,7 +14,7 @@ import { CheckOutlined, ClearOutlined, HistoryOutlined, LocalDiningOutlined } fr
 
 
 class Calendar extends React.Component {
-	
+
 	state = {
 		loading: true,
 		startDate: new Date(),
@@ -78,11 +78,11 @@ class Calendar extends React.Component {
 	renderEventContent = (eventInfo) => {
 		return (eventInfo.event.extendedProps.data.status == "canceled" || eventInfo.event.extendedProps.data.status == "rejected" ?
 			<Typography.Text delete>
-				<i><ClearOutlined /><b>{moment(eventInfo.event.start).format("HH:mm") + " - " + moment(eventInfo.event.end).format("HH:mm")}</b></i>				
+				<i><ClearOutlined /><b>{moment(eventInfo.event.start).format("HH:mm") + " - " + moment(eventInfo.event.end).format("HH:mm")}</b></i>
 			</Typography.Text> :
 			<Typography.Text>
 				{moment(eventInfo.event.extendedProps.data.date).isBefore(moment()) ? <CheckOutlined /> : <HistoryOutlined />}
-				<b>{moment(eventInfo.event.start).format("HH:mm") + " - " + moment(eventInfo.event.end).format("HH:mm")}</b>				
+				<b>{moment(eventInfo.event.start).format("HH:mm") + " - " + moment(eventInfo.event.end).format("HH:mm")}</b>
 			</Typography.Text>
 		)
 	}
@@ -216,13 +216,13 @@ class Calendar extends React.Component {
 											selectMirror={true}
 											expandRows={true}
 											dayMaxEvents={true}
-											contentHeight={1600}											
+											contentHeight={1600}
 											weekends={this.state.weekendsVisible}
 											// initialEvents={defaultEvents}
 											// select={this.handleDateSelect}
 											eventClick={clickInfo => this.handleEventClick(clickInfo)}
 											eventContent={this.renderEventContent}
-											
+
 										/>
 										{/* /Calendar */}
 									</div>
@@ -324,6 +324,12 @@ class Calendar extends React.Component {
 							</div>
 							<div className="col-md-6">
 								<div className="row">
+									<div className="col-md-12">
+										<div className="form-group">
+											<label>Doctor</label>
+											<input className='form-control' type="text" readOnly value={this.state.selectAppointment?.doctor?.employee?.lastName + " " + this.state.selectAppointment?.doctor?.employee?.firstName} />
+										</div>
+									</div>
 									<div className="col-md-6">
 										<div className="form-group">
 											<label>Department</label>

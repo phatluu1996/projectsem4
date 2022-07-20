@@ -321,6 +321,12 @@ class PatientCalendar extends React.Component {
 								</div>
 								<div className="col-md-6">
 									<div className="row">
+									<div className="col-md-12">
+											<div className="form-group">
+												<label>Doctor</label>
+												<input className='form-control' type="text" readOnly value={this.state.selectAppointment?.doctor?.employee?.lastName + " " + this.state.selectAppointment?.doctor?.employee?.firstName} />
+											</div>
+										</div>
 										<div className="col-md-6">
 											<div className="form-group">
 												<label>Department</label>
